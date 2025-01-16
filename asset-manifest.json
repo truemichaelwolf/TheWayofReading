@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/TheWayofReading/static/css/main.e2c03c76.chunk.css",
+    "main.css": "/TheWayofReading/static/css/main.f2d6261c.chunk.css",
     "main.js": "/TheWayofReading/static/js/main.fb58e980.chunk.js",
     "main.js.map": "/TheWayofReading/static/js/main.fb58e980.chunk.js.map",
     "runtime~main.js": "/TheWayofReading/static/js/runtime~main.6d602d51.js",
@@ -8,8 +8,8 @@
     "static/js/2.4a2250cc.chunk.js": "/TheWayofReading/static/js/2.4a2250cc.chunk.js",
     "static/js/2.4a2250cc.chunk.js.map": "/TheWayofReading/static/js/2.4a2250cc.chunk.js.map",
     "index.html": "/TheWayofReading/index.html",
-    "precache-manifest.b6a3aa5ee5706b21da842a82ccdca89d.js": "/TheWayofReading/precache-manifest.b6a3aa5ee5706b21da842a82ccdca89d.js",
+    "precache-manifest.e1a7a4f832414446da1cd455e4895b74.js": "/TheWayofReading/precache-manifest.e1a7a4f832414446da1cd455e4895b74.js",
     "service-worker.js": "/TheWayofReading/service-worker.js",
-    "static/css/main.e2c03c76.chunk.css.map": "/TheWayofReading/static/css/main.e2c03c76.chunk.css.map"
+    "static/css/main.f2d6261c.chunk.css.map": "/TheWayofReading/static/css/main.f2d6261c.chunk.css.map"
   }
 }
