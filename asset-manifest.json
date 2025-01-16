@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.js": "/TheWayofReading/static/js/main.0e26da73.chunk.js",
+    "main.js.map": "/TheWayofReading/static/js/main.0e26da73.chunk.js.map",
+    "runtime~main.js": "/TheWayofReading/static/js/runtime~main.6d602d51.js",
+    "runtime~main.js.map": "/TheWayofReading/static/js/runtime~main.6d602d51.js.map",
+    "static/js/2.e230c356.chunk.js": "/TheWayofReading/static/js/2.e230c356.chunk.js",
+    "static/js/2.e230c356.chunk.js.map": "/TheWayofReading/static/js/2.e230c356.chunk.js.map",
+    "index.html": "/TheWayofReading/index.html",
+    "precache-manifest.7b126e38df0d1d4ae83c6517b1bf4001.js": "/TheWayofReading/precache-manifest.7b126e38df0d1d4ae83c6517b1bf4001.js",
+    "service-worker.js": "/TheWayofReading/service-worker.js"
+  }
+}
