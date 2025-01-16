@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/TheWayofReading/static/css/main.f2d6261c.chunk.css",
-    "main.js": "/TheWayofReading/static/js/main.7ae9e111.chunk.js",
-    "main.js.map": "/TheWayofReading/static/js/main.7ae9e111.chunk.js.map",
+    "main.js": "/TheWayofReading/static/js/main.5c140fc5.chunk.js",
+    "main.js.map": "/TheWayofReading/static/js/main.5c140fc5.chunk.js.map",
     "runtime~main.js": "/TheWayofReading/static/js/runtime~main.6d602d51.js",
     "runtime~main.js.map": "/TheWayofReading/static/js/runtime~main.6d602d51.js.map",
     "static/js/2.4a2250cc.chunk.js": "/TheWayofReading/static/js/2.4a2250cc.chunk.js",
     "static/js/2.4a2250cc.chunk.js.map": "/TheWayofReading/static/js/2.4a2250cc.chunk.js.map",
     "index.html": "/TheWayofReading/index.html",
-    "precache-manifest.34bd6ed6f3bb229312b664ce43bab545.js": "/TheWayofReading/precache-manifest.34bd6ed6f3bb229312b664ce43bab545.js",
+    "precache-manifest.369c6f07a95c5233cd9eda842451b953.js": "/TheWayofReading/precache-manifest.369c6f07a95c5233cd9eda842451b953.js",
     "service-worker.js": "/TheWayofReading/service-worker.js",
     "static/css/main.f2d6261c.chunk.css.map": "/TheWayofReading/static/css/main.f2d6261c.chunk.css.map"
   }
