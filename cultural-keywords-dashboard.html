@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cultural Keywords in World Englishes</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        
+        .language-toggle {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        
+        .language-toggle button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .language-toggle button:hover {
+            background-color: #2980b9;
+        }
+        
+        .section {
+            background-color: white;
+            margin-bottom: 30px;
+            padding: 25px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .definition-card {
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+            margin: 20px 0;
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        
+        .approach-card {
+            display: inline-block;
+            width: 30%;
+            margin: 1%;
+            padding: 15px;
+            text-align: center;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            vertical-align: top;
+            transition: transform 0.3s;
+            min-height: 200px;
+        }
+        
+        .approach-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .approach-card h3 {
+            color: #2c3e50;
+        }
+        
+        .study-region {
+            background-color: #f1f8e9;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .study-region:hover {
+            background-color: #dcedc8;
+        }
+        
+        .study-details {
+            display: none;
+            padding: 15px;
+            background-color: #f5f5f5;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        
+        .active .study-details {
+            display: block;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: #3498db;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -10px;
+            background-color: white;
+            border: 4px solid #3498db;
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .left {
+            left: 0;
+        }
+        
+        .right {
+            left: 50%;
+        }
+        
+        .right::after {
+            left: -10px;
+        }
+        
+        .timeline-content {
+            padding: 20px;
+            background-color: white;
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .quote {
+            font-style: italic;
+            padding: 15px;
+            margin: 20px 0;
+            background-color: #f9f9f9;
+            border-left: 5px solid #3498db;
+        }
+        
+        .keyword-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .keyword-table th, .keyword-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .keyword-table th {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .keyword-table tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            border-radius: 5px 5px 0 0;
+        }
+        
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+        }
+        
+        .tab button:hover {
+            background-color: #ddd;
+        }
+        
+        .tab button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .tabcontent {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+            background-color: white;
+        }
+        
+        .english-content, .chinese-content {
+            display: none;
+        }
+        
+        .english-content.active, .chinese-content.active {
+            display: block;
+        }
+        
+        @media screen and (max-width: 768px) {
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item::after {
+                left: 21px;
+            }
+            
+            .left::after, .right::after {
+                left: 21px;
+            }
+            
+            .right {
+                left: 0;
+            }
+            
+            .approach-card {
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 id="title">Cultural Keywords in World Englishes</h1>
+            <p id="author">Marcus Callies, University of Bremen</p>
+        </div>
+        
+        <div class="language-toggle">
+            <button onclick="toggleLanguage()">Switch to 中文</button>
+        </div>
+        
+        <div class="english-content active">
+            <div class="section">
+                <h2>What are Cultural Keywords?</h2>
+                <div class="definition-card">
+                    <p>"Cultural keywords are words and phrases that have a particular cultural significance in a speech community. According to Levisen and Waters (2017a), cultural keywords are 'culturally laden words around which whole discourses are organised'"</p>
+                    <p>"They 'govern the shared cognitive outlook of speakers and encode certain culture-specific logics, and impose on their speakers a certain interpretative grid through which they make sense of the world'"</p>
+                </div>
+                <p>Stubbs (2010) identifies three different senses of the term "keyword":</p>
+                <ul>
+                    <li><strong>Cultural studies perspective</strong> (e.g., Williams, 1976)</li>
+                    <li><strong>Corpus linguistics</strong>: words identified as statistically prominent in particular texts and collections</li>
+                    <li><strong>Lexicogrammatical research</strong>: focus on phrases and schemas</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h2>Conceptual and Methodological Approaches</h2>
+                <p>Various approaches have been used to study cultural keywords:</p>
+                
+                <div class="approach-card">
+                    <h3>Lexicographic Approach</h3>
+                    <p>Williams (1976): Identified ~120 culturally important words in British English through intuition and scholarly expertise</p>
+                    <p>Modern examples: <em>Keywords for American Cultural Studies</em> (Burgett & Hendler, 2014) and <em>Keywords for India</em> (Nair & deSouza, 2020)</p>
+                </div>
+                
+                <div class="approach-card">
+                    <h3>Natural Semantic Metalanguage</h3>
+                    <p>Wierzbicka and colleagues use ~65 universal conceptual primes (e.g., someone, something, people, good, bad, know, think, want, feel) to analyze cultural keywords</p>
+                    <p>Focus on meaning analysis and cultural scripts</p>
+                </div>
+                
+                <div class="approach-card">
+                    <h3>Corpus-Based Approach</h3>
+                    <p>Uses large electronic text corpora to identify frequent lexical items and their collocations</p>
+                    <p>Frequency serves as proxy for cultural salience and significance</p>
+                    <p>Key examples: Work by Stubbs (1996, 2002), Leech & Fallon (1992)</p>
+                </div>
+                
+                <div class="approach-card">
+                    <h3>Cognitive & Cultural Linguistics</h3>
+                    <p>Wolf & Polzenhagen's work on cultural conceptualizations</p>
+                    <p>Focus on cultural background knowledge essential for interpreting lexis and phraseology</p>
+                    <p>Examines cultural categories, metaphors, and schemas</p>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>Research on Cultural Keywords in World Englishes</h2>
+                
+                <div class="tab">
+                    <button class="tablinks active" onclick="openTab(event, 'Australia')">Australia</button>
+                    <button class="tablinks" onclick="openTab(event, 'Asia')">Southeast Asia</button>
+                    <button class="tablinks" onclick="openTab(event, 'Africa')">Africa</button>
+                    <button class="tablinks" onclick="openTab(event, 'Others')">Other Regions</button>
+                </div>
+                
+                <div id="Australia" class="tabcontent" style="display: block;">
+                    <h3>Australian English</h3>
+                    <p>Wierzbicka (1997, 2002) examined how Australian cultural values are reflected in:</p>
+                    <ul>
+                        <li>Speech act verbs: chiack, yarn, shout, dob in, whinge</li>
+                        <li>Characteristic swearwords: bloody, bastard, bugger, bullshit</li>
+                    </ul>
+                    <p>Recent studies include:</p>
+                    <ul>
+                        <li>Waters (2017): Analysis of "nice" as a cultural keyword in Australian sociality discourse</li>
+                        <li>Rowan (2017): Study of "bogan" (similar to British "chav" or American "white trash/redneck") as a cultural keyword that has evolved from negative concept to a way of positive self-identification</li>
+                    </ul>
+                </div>
+                
+                <div id="Asia" class="tabcontent">
+                    <h3>Asian Englishes</h3>
+                    <p><strong>Singapore English:</strong></p>
+                    <ul>
+                        <li>Wierzbicka (2003): Detailed semantic analysis of Singaporean keywords reflecting unique Singaporean experience</li>
+                        <li>Wong (2006): Analysis of "aunty" as a cultural keyword in Singapore English</li>
+                    </ul>
+                    <p><strong>South Asian Englishes:</strong></p>
+                    <ul>
+                        <li>Mukherjee & Bernaisch (2015): Examination of lexicogrammatical patterns of sociopolitically relevant keywords in Indian, Pakistani, and Sri Lankan English</li>
+                        <li>Peters (2021): Investigation of keywords of Persian, Sanskrit, Prakrit, and Arabic origin in Indian English</li>
+                    </ul>
+                    <p><strong>Philippine English:</strong></p>
+                    <ul>
+                        <li>Peters (2020): Focus on the durability of cultural keywords through different historical phases, tracing Spanish-derived keywords that survive from colonial regime</li>
+                    </ul>
+                    <p><strong>Family as Cultural Domain:</strong></p>
+                    <ul>
+                        <li>Wolf & Polzenhagen's work on family-related expressions in Hong Kong and Indian English</li>
+                        <li>Polzenhagen (2021): Analysis of linguistic expressions in the cultural key domain of family in Indian English</li>
+                        <li>Latic (2021): Examination of marriage-related references within the domain of ghosts in Hong Kong English</li>
+                    </ul>
+                </div>
+                
+                <div id="Africa" class="tabcontent">
+                    <h3>African Englishes</h3>
+                    <p><strong>West African Englishes:</strong></p>
+                    <ul>
+                        <li>Wolf & Polzenhagen (2007, 2021): Studies on corruption and related concepts</li>
+                        <li>Investigation of the African cultural model of community/family</li>
+                        <li>Analysis of interrelated aspects: cultural keywords, culturally motivated collocational patterns, and cultural conceptualizations</li>
+                    </ul>
+                </div>
+                
+                <div id="Others" class="tabcontent">
+                    <h3>Other Regional Studies</h3>
+                    <p><strong>Irish English:</strong></p>
+                    <ul>
+                        <li>Peters (2017): Discussion of cultural keywords, cultural schemas involving banshees and fairies, and conceptual metonymies like "the church is authority"</li>
+                    </ul>
+                    <p><strong>Comparative Studies:</strong></p>
+                    <ul>
+                        <li>Collins (2021): Comparison of eight different varieties of English using data from the Global Web-based English corpus</li>
+                        <li>Identified keywords from 16 domains such as education, mass media, and arts</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>Examples of Cultural Keywords in Different World Englishes</h2>
+                <table class="keyword-table">
+                    <tr>
+                        <th>Variety</th>
+                        <th>Cultural Keywords</th>
+                        <th>Cultural Domain</th>
+                    </tr>
+                    <tr>
+                        <td>Australian English</td>
+                        <td>chiack, yarn, shout, dob in, whinge, bloody, bogan, nice</td>
+                        <td>Speech acts, social evaluation, sociality</td>
+                    </tr>
+                    <tr>
+                        <td>Singapore English</td>
+                        <td>aunty</td>
+                        <td>Forms of address, family</td>
+                    </tr>
+                    <tr>
+                        <td>Indian English</td>
+                        <td>rupee, crore, lakh/lac, hawala, shroff, sarkar, munshi, babu, adalat, chai, masala, sabzi, tamasha, haveli, shalwar, baba, sahib, bhai, yaar, bibi</td>
+                        <td>Money/commerce, civil administration, material culture, forms of address</td>
+                    </tr>
+                    <tr>
+                        <td>Hong Kong English</td>
+                        <td>ghost bride, ghost marriage, ghost wedding</td>
+                        <td>Cultural beliefs, marriage, family</td>
+                    </tr>
+                    <tr>
+                        <td>Irish English</td>
+                        <td>References to banshees and fairies</td>
+                        <td>Cultural beliefs, folklore</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="section">
+                <h2>Timeline of Major Studies</h2>
+                <div class="timeline">
+                    <div class="timeline-item left">
+                        <div class="timeline-content">
+                            <h3>1976</h3>
+                            <p>Williams publishes "Keywords: A vocabulary of culture and society" - one of the first studies on cultural keywords</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item right">
+                        <div class="timeline-content">
+                            <h3>1992</h3>
+                            <p>Leech & Fallon conduct one of the first comparative corpus-based studies on vocabulary differences between American and British English</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item left">
+                        <div class="timeline-content">
+                            <h3>1996-2002</h3>
+                            <p>Stubbs' influential work establishes corpus-based approach to studying keywords and their cultural significance</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item right">
+                        <div class="timeline-content">
+                            <h3>1997-2003</h3>
+                            <p>Wierzbicka conducts key studies on cultural keywords in English, Russian, Polish, German, Japanese, and Singapore English</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item left">
+                        <div class="timeline-content">
+                            <h3>2007-2009</h3>
+                            <p>Wolf & Polzenhagen publish seminal work on cultural conceptualizations and cultural keywords in World Englishes</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item right">
+                        <div class="timeline-content">
+                            <h3>2015-2021</h3>
+                            <p>Growing number of studies on cultural keywords in various world Englishes (Australian, Singaporean, Indian, Philippine, etc.)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>Conclusion</h2>
+                <div class="quote">
+                    <p>"Despite the enormous proliferation of research on world Englishes, the linguistic impact of pragmatic, cognitive and cultural features (as manifest for example, in cultural keywords, but also in different kinds of figurative language use) have largely been neglected. But recently, questions of the role of the local linguistic ecologies in the evolution of New Englishes, and how they interact with sociolinguistic and cultural factors, are receiving increasing attention."</p>
+                </div>
+                <p>Research on cultural keywords in world Englishes provides:</p>
+                <ul>
+                    <li>Exciting insights into culturally diverse settings in which Englishes have developed</li>
+                    <li>Rich potential for exploring how local cultural vocabularies are enriched</li>
+                    <li>Understanding of how cultural background knowledge is essential for interpreting lexis, phraseology, and figurative language use</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="chinese-content">
+            <div class="section">
+                <h2>什么是文化关键词？</h2>
+                <div class="definition-card">
+                    <p>"文化关键词是在语言社区中具有特定文化意义的词语和短语。根据Levisen和Waters（2017a），文化关键词是'具有文化内涵的词语，整个话语都围绕它们组织'"</p>
+                    <p>"它们'支配着说话者共享的认知视角，编码特定的文化特定逻辑，并为说话者提供一个特定的解释框架，通过这个框架他们理解世界'"</p>
+                </div>
+                <p>Stubbs（2010）确定了"关键词"一词的三种不同含义：</p>
+                <ul>
+                    <li><strong>文化研究视角</strong>（例如，Williams，1976）</li>
+                    <li><strong>语料库语言学</strong>：在特定文本和集合中被确定为统计上显著的词语</li>
+                    <li><strong>词汇语法研究</strong>：关注短语和图式</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h2>概念和方法论方法</h2>
+                <p>研究文化关键词使用了各种方法：</p>
+                
+                <div class="approach-card">
+                    <h3>词典编纂方法</h3>
+                    <p>Williams（1976）：通过直觉和学术专业知识确定英国英语中约120个文化上重要的词语</p>
+                    <p>现代例子：《美国文化研究关键词》（Burgett和Hendler，2014）和《印度关键词》（Nair和deSouza，2020）</p>
+                </div>
+                
+                <div class="approach-card">
+                    <h3>自然语义元语言</h3>
+                    <p>Wierzbicka及其同事使用约65个普遍概念原语（例如，someone，something，people，good，bad，know，think，want，feel）来分析文化关键词</p>
+                    <p>关注意义分析和文化脚本</p>
+                </div>
+                
+                <div class="approach-card">
+                    <h3>基于语料库的方法</h3>
+                    <p>使用大型电子文本语料库识别频繁的词汇项及其搭配</p>
+                    <p>频率作为文化显著性和重要性的代表</p>
+                    <p>关键例子：Stubbs（1996，2002），Leech和Fallon（1992）的工作</p>
+                </div>
+                
+                <div class="approach-card">
+                    <h3>认知与文化语言学</h3>
+                    <p>Wolf和Polzenhagen关于文化概念化的工作</p>
+                    <p>关注解释词汇和措辞所必需的文化背景知识</p>
+                    <p>研究文化类别、隐喻和图式</p>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>世界英语中的文化关键词研究</h2>
+                
+                <div class="tab">
+                    <button class="tablinks active" onclick="openTab(event, 'Australia-zh')">澳大利亚</button>
+                    <button class="tablinks" onclick="openTab(event, 'Asia-zh')">东南亚</button>
+                    <button class="tablinks" onclick="openTab(event, 'Africa-zh')">非洲</button>
+                    <button class="tablinks" onclick="openTab(event, 'Others-zh')">其他地区</button>
+                </div>
+                
+                <div id="Australia-zh" class="tabcontent" style="display: block;">
+                    <h3>澳大利亚英语</h3>
+                    <p>Wierzbicka（1997，2002）研究了澳大利亚文化价值如何反映在：</p>
+                    <ul>
+                        <li>言语行为动词：chiack, yarn, shout, dob in, whinge</li>
+                        <li>特征性脏话：bloody, bastard, bugger, bullshit</li>
+                    </ul>
+                    <p>最近的研究包括：</p>
+                    <ul>
+                        <li>Waters（2017）：分析"nice"作为澳大利亚社交话语中的文化关键词</li>
+                        <li>Rowan（2017）：研究"bogan"（类似于英国的"chav"或美国的"white trash/redneck"）作为一个文化关键词，它已从负面概念演变为积极自我认同的方式</li>
+                    </ul>
+                </div>
+                
+                <div id="Asia-zh" class="tabcontent">
+                    <h3>亚洲英语</h3>
+                    <p><strong>新加坡英语：</strong></p>
+                    <ul>
+                        <li>Wierzbicka（2003）：对反映独特新加坡经验的新加坡关键词进行详细的语义分析</li>
+                        <li>Wong（2006）：分析"aunty"作为新加坡英语中的文化关键词</li>
+                    </ul>
+                    <p><strong>南亚英语：</strong></p>
+                    <ul>
+                        <li>Mukherjee和Bernaisch（2015）：考察印度、巴基斯坦和斯里兰卡英语中具有社会政治相关性的关键词的词汇语法模式</li>
+                        <li>Peters（2021）：调查印度英语中波斯语、梵语、普拉克里特语和阿拉伯语来源的关键词</li>
+                    </ul>
+                    <p><strong>菲律宾英语：</strong></p>
+                    <ul>
+                        <li>Peters（2020）：关注文化关键词在不同历史阶段的持久性，追踪从殖民时期保留下来的西班牙语衍生关键词</li>
+                    </ul>
+                    <p><strong>家庭作为文化领域：</strong></p>
+                    <ul>
+                        <li>Wolf和Polzenhagen关于香港和印度英语中与家庭相关表达的研究</li>
+                        <li>Polzenhagen（2021）：分析印度英语中家庭文化关键领域的语言表达</li>
+                        <li>Latic（2021）：考察香港英语中鬼域内与婚姻相关的引用</li>
+                    </ul>
+                </div>
+                
+                <div id="Africa-zh" class="tabcontent">
+                    <h3>非洲英语</h3>
+                    <p><strong>西非英语：</strong></p>
+                    <ul>
+                        <li>Wolf和Polzenhagen（2007，2021）：关于腐败和相关概念的研究</li>
+                        <li>对非洲社区/家庭文化模式的调查</li>
+                        <li>分析相互关联的方面：文化关键词、文化动机的搭配模式和文化概念化</li>
+                    </ul>
+                </div>
+                
+                <div id="Others-zh" class="tabcontent">
+                    <h3>其他区域研究</h3>
+                    <p><strong>爱尔兰英语：</strong></p>
+                    <ul>
+                        <li>Peters（2017）：讨论文化关键词、涉及banshees和fairies的文化图式，以及"教会是权威"等概念转喻</li>
+                    </ul>
+                    <p><strong>比较研究：</strong></p>
+                    <ul>
+                        <li>Collins（2021）：使用全球网络英语语料库的数据比较八种不同的英语变体</li>
+                        <li>从教育、大众媒体和艺术等16个领域识别关键词</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>不同世界英语中的文化关键词示例</h2>
+                <table class="keyword-table">
+                    <tr>
+                        <th>变体</th>
+                        <th>文化关键词</th>
+                        <th>文化领域</th>
+                    </tr>
+                    <tr>
+                        <td>澳大利亚英语</td>
+                        <td>chiack, yarn, shout, dob in, whinge, bloody, bogan, nice</td>
+                        <td>言语行为，社会评价，社交性</td>
+                    </tr>
+                    <tr>
+                        <td>新加坡英语</td>
+                        <td>aunty</td>
+                        <td>称呼方式，家庭</td>
+                    </tr>
+                    <tr>
+                        <td>印度英语</td>
+                        <td>rupee, crore, lakh/lac, hawala, shroff, sarkar, munshi, babu, adalat, chai, masala, sabzi, tamasha, haveli, shalwar, baba, sahib, bhai, yaar, bibi</td>
+                        <td>金钱/商业，民事管理，物质文化，称呼方式</td>
+                    </tr>
+                    <tr>
+                        <td>香港英语</td>
+                        <td>ghost bride, ghost marriage, ghost wedding</td>
+                        <td>文化信仰，婚姻，家庭</td>
+                    </tr>
+                    <tr>
+                        <td>爱尔兰英语</td>
+                        <td>涉及banshees和fairies的引用</td>
+                        <td>文化信仰，民间传说</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="section">
+                <h2>主要研究时间线</h2>
+                <div class="timeline">
+                    <div class="timeline-item left">
+                        <div class="timeline-content">
+                            <h3>1976年</h3>
+                            <p>Williams出版《关键词：文化和社会词汇》- 文化关键词最早的研究之一</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item right">
+                        <div class="timeline-content">
+                            <h3>1992年</h3>
+                            <p>Leech和Fallon进行了首批基于语料库的比较研究之一，研究美国英语和英国英语之间的词汇差异</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item left">
+                        <div class="timeline-content">
+                            <h3>1996-2002年</h3>
+                            <p>Stubbs的影响力工作建立了基于语料库研究关键词及其文化意义的方法</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item right">
+                        <div class="timeline-content">
+                            <h3>1997-2003年</h3>
+                            <p>Wierzbicka对英语、俄语、波兰语、德语、日语和新加坡英语中的文化关键词进行了关键研究</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item left">
+                        <div class="timeline-content">
+                            <h3>2007-2009年</h3>
+                            <p>Wolf和Polzenhagen发表了关于世界英语中文化概念化和文化关键词的开创性工作</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item right">
+                        <div class="timeline-content">
+                            <h3>2015-2021年</h3>
+                            <p>越来越多关于各种世界英语（澳大利亚、新加坡、印度、菲律宾等）文化关键词的研究</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>结论</h2>
+                <div class="quote">
+                    <p>"尽管世界英语研究急剧增加，但语用、认知和文化特征的语言影响（例如，在文化关键词以及不同类型的比喻语言使用中表现出来）在很大程度上被忽视。但最近，人们越来越关注本地语言生态在新英语演变中的作用，以及它们如何与社会语言学和文化因素相互作用的问题。"</p>
+                </div>
+                <p>世界英语中的文化关键词研究提供：</p>
+                <ul>
+                    <li>对英语发展的文化多样性环境的深入了解</li>
+                    <li>探索本地文化词汇如何丰富的丰富潜力</li>
+                    <li>理解文化背景知识对解释词汇、措辞和比喻语言使用的重要性</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function toggleLanguage() {
+            const englishContent = document.querySelector('.english-content');
+            const chineseContent = document.querySelector('.chinese-content');
+            const toggleButton = document.querySelector('.language-toggle button');
+            const title = document.getElementById('title');
+            const author = document.getElementById('author');
+            
+            if (englishContent.classList.contains('active')) {
+                englishContent.classList.remove('active');
+                chineseContent.classList.add('active');
+                toggleButton.textContent = 'Switch to English';
+                title.textContent = '世界英语中的文化关键词';
+                author.textContent = 'Marcus Callies，不来梅大学';
+            } else {
+                chineseContent.classList.remove('active');
+                englishContent.classList.add('active');
+                toggleButton.textContent = 'Switch to 中文';
+                title.textContent = 'Cultural Keywords in World Englishes';
+                author.textContent = 'Marcus Callies, University of Bremen';
+            }
+        }
+        
+        function openTab(evt, tabName) {
+            let i, tabcontent, tablinks;
+            
+            // Get all elements with class="tabcontent" and hide them
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            
+            // Get all elements with class="tablinks" and remove the class "active"
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+            
+            // If we're in Chinese mode, show the Chinese tabs
+            const englishContent = document.querySelector('.english-content');
+            if (!englishContent.classList.contains('active')) {
+                let chineseTabName = tabName + '-zh';
+                if (document.getElementById(chineseTabName)) {
+                    document.getElementById(chineseTabName).style.display = "block";
+                }
+            }
+        }
+        
+        // Toggle region details
+        document.addEventListener('DOMContentLoaded', function() {
+            const regions = document.querySelectorAll('.study-region');
+            regions.forEach(region => {
+                region.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
