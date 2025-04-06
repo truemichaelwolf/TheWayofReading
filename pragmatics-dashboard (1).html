@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pragmatics Overview Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .header {
+            text-align: center;
+            background-color: #4A90E2;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .language-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .language-btn {
+            background-color: #f8f9fa;
+            border: 1px solid #ccc;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .language-btn.active {
+            background-color: #4A90E2;
+            color: white;
+            border-color: #4A90E2;
+        }
+        .language-btn:first-child {
+            border-radius: 4px 0 0 4px;
+        }
+        .language-btn:last-child {
+            border-radius: 0 4px 4px 0;
+        }
+        .intro-section {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .category-section {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .category-header {
+            background-color: #4A90E2;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .theories-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .theory-card {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            padding: 15px;
+            transition: transform 0.3s;
+        }
+        .theory-card:hover {
+            transform: translateY(-5px);
+        }
+        .theory-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .theory-icon {
+            width: 30px;
+            height: 30px;
+            background-color: #4A90E2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .theory-title {
+            margin: 0;
+            color: #4A90E2;
+            font-size: 18px;
+        }
+        .theory-content {
+            font-size: 14px;
+        }
+        .quote {
+            font-style: italic;
+            background-color: #f0f4f8;
+            border-left: 3px solid #4A90E2;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 13px;
+        }
+        .research-section {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: #4A90E2;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border: 4px solid #4A90E2;
+            border-radius: 50%;
+            top: 15px;
+            z-index: 1;
+        }
+        .left {
+            left: 0;
+        }
+        .right {
+            left: 50%;
+        }
+        .left::after {
+            right: -13px;
+        }
+        .right::after {
+            left: -13px;
+        }
+        .timeline-content {
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .timeline-content h3 {
+            margin-top: 0;
+            color: #4A90E2;
+        }
+        .reference-section {
+            margin-top: 40px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .reference-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .reference-list li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .reference-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #4A90E2;
+        }
+        .lang-en, .lang-zh {
+            display: none;
+        }
+        .active-lang {
+            display: block;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #666;
+            font-size: 12px;
+        }
+        @media (max-width: 768px) {
+            .timeline::after {
+                left: 31px;
+            }
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            .timeline-item::after {
+                left: 18px;
+            }
+            .left::after, .right::after {
+                left: 18px;
+            }
+            .right {
+                left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="lang-en active-lang">Pragmatics: An Overview</h1>
+            <h1 class="lang-zh">语用学概述</h1>
+            <p class="lang-en active-lang">Based on the work of Naoko Taguchi & Dániel Z. Kádár</p>
+            <p class="lang-zh">基于田中直子和卡达尔·丹尼尔的研究</p>
+        </div>
+
+        <div class="language-toggle">
+            <button class="language-btn active" onclick="toggleLanguage('en')">English</button>
+            <button class="language-btn" onclick="toggleLanguage('zh')">中文</button>
+        </div>
+
+        <div class="intro-section">
+            <h2 class="lang-en active-lang">Introduction to Pragmatics and L2 Pragmatics</h2>
+            <h2 class="lang-zh">语用学和二语语用学简介</h2>
+            
+            <div class="lang-en active-lang">
+                <p><strong>Pragmatics</strong> is a field of linguistics concerning linguistic forms and the meaning they produce in a social context. Pragmaticians observe how meaning is produced, understood, and co-constructed among speakers in and across social contexts to achieve specific communicative purposes.</p>
+                
+                <div class="quote">
+                    "Pragmatics is a field of linguistics dedicated to the study of the connection between linguistic forms and the context of their use. Pragmaticians observe how meaning is produced, understood, and co-constructed among speakers in and across social contexts to achieve specific communicative purposes." - Taguchi & Kádár
+                </div>
+                
+                <p><strong>Second language pragmatics (L2 pragmatics)</strong> is a branch of applied linguistics investigating L2 speakers' ability to perform a communicative act in a foreign social context. The field is concerned with how such ability develops over time, what factors (individual and contextual) affect development, and how to teach and assess such ability.</p>
+                
+                <div class="quote">
+                    "Second language pragmatics (L2 pragmatics) is a branch of applied linguistics investigating L2 speakers' ability to perform a communicative act in a foreign social context. The field is concerned with how such ability develops over time, what factors (individual and contextual) affect development, and how to teach and assess such ability." - Taguchi & Kádár
+                </div>
+            </div>
+            
+            <div class="lang-zh">
+                <p><strong>语用学</strong>是语言学的一个领域，研究语言形式及其在社会环境中产生的意义。语用学家观察说话者如何在社会环境中产生、理解和共同构建意义，以达到特定的交际目的。</p>
+                
+                <div class="quote">
+                    "语用学是一门致力于研究语言形式与其使用环境之间联系的语言学领域。语用学家观察说话者如何在社会环境中产生、理解和共同构建意义，以实现特定的交际目的。" - 田中直子与卡达尔
+                </div>
+                
+                <p><strong>二语语用学</strong>是应用语言学的一个分支，研究二语使用者在外国社会环境中执行交际行为的能力。该领域关注这种能力如何随时间发展，哪些因素（个人和环境）影响其发展，以及如何教授和评估这种能力。</p>
+                
+                <div class="quote">
+                    "二语语用学是应用语言学的一个分支，研究二语使用者在外国社会环境中执行交际行为的能力。该领域关注这种能力如何随时间发展，哪些因素（个人和环境）影响其发展，以及如何教授和评估这种能力。" - 田中直子与卡达尔
+                </div>
+            </div>
+        </div>
+
+        <!-- Category 1: Pragmatics as Production of Meaning -->
+        <div class="category-section">
+            <div class="category-header">
+                <h2 class="lang-en active-lang">Pragmatics as Production of Meaning</h2>
+                <h2 class="lang-zh">作为意义产生的语用学</h2>
+            </div>
+            
+            <div class="theories-container">
+                <!-- Speech Act Theory -->
+                <div class="theory-card">
+                    <div class="theory-header">
+                        <div class="theory-icon">1</div>
+                        <h3 class="theory-title lang-en active-lang">Speech Act Theory</h3>
+                        <h3 class="theory-title lang-zh">言语行为理论</h3>
+                    </div>
+                    <div class="theory-content lang-en active-lang">
+                        <p>Speech act theory, developed by John Austin and John Searle, posits that language is not simply a code but can have other functions. Speech acts have locutionary meaning (literal meaning), illocutionary force (intended meaning), and perlocutionary effect (result of the speech act).</p>
+                        <div class="quote">
+                            "The concept of speech act involves the following: an utterance outside of a particular context always represents a locution and it has a related locutionary meaning. However, in a particular context the utterance may have a situated locutionary meaning and a perlocutionary force." - Taguchi & Kádár
+                        </div>
+                    </div>
+                    <div class="theory-content lang-zh">
+                        <p>言语行为理论由约翰·奥斯汀和约翰·塞尔尔发展而来，认为语言不仅仅是一种"编码"，还可以有其他功能。言语行为具有言内行为意义（字面意义）、言外行为力量（意图意义）和言后行为效果（言语行为的结果）。</p>
+                        <div class="quote">
+                            "言语行为的概念包括以下内容：在特定环境之外的话语总是代表一个言内行为，并且具有相关的言内意义。然而，在特定环境中，话语可能具有情境化的言内意义和言后效力。" - 田中直子与卡达尔
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Politeness Theory -->
+                <div class="theory-card">
+                    <div class="theory-header">
+                        <div class="theory-icon">2</div>
+                        <h3 class="theory-title lang-en active-lang">Politeness Theory</h3>
+                        <h3 class="theory-title lang-zh">礼貌理论</h3>
+                    </div>
+                    <div class="theory-content lang-en active-lang">
+                        <p>Politeness theory, developed by Brown and Levinson, focuses on strategies speakers use to mitigate face-threatening acts. Politeness encompasses behaviors through which the speaker expresses care for the addressee's feelings.</p>
+                        <div class="quote">
+                            "In Brown and Levinson's above-outlined classic, politeness is interpreted as a phenomenon through which offense can be mitigated. Following speech act theory, Brown and Levinson argued that some acts such as a request inherently threaten the addressee's face (i.e., self-image), and as such, they need to be mitigated." - Taguchi & Kádár
+                        </div>
+                    </div>
+                    <div class="theory-content lang-zh">
+                        <p>礼貌理论由布朗和莱文森开发，关注说话者用来减轻面子威胁行为的策略。礼貌包括说话者通过表达对听话者感受的关心而表现出的行为。</p>
+                        <div class="quote">
+                            "在布朗和莱文森概述的经典著作中，礼貌被解释为一种可以减轻冒犯的现象。遵循言语行为理论，布朗和莱文森认为，某些行为（如请求）本质上威胁听话者的面子（即自我形象），因此需要被减轻。" - 田中直子与卡达尔
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- L2 Research in Production of Meaning -->
+            <div style="margin-top: 20px;">
+                <h3 class="lang-en active-lang">L2 Pragmatics Research in Production of Meaning</h3>
+                <h3 class="lang-zh">意义产生领域的二语语用学研究</h3>
+                
+                <div class="lang-en active-lang">
+                    <p>Speech act theory and politeness theory have provided a foundation for L2 pragmatics research, especially in early times. Most studies in 1970s–1990s focused on assessing L2 learners' abilities to produce speech acts (e.g., request, apology) using discourse completion tests (DCTs) or closed role plays.</p>
+                    <div class="quote">
+                        "Most studies in 1970s–1990s focused on assessing L2 learners' abilities to produce a variety of speech acts (e.g., request, apology). During this period, researchers often used an instrument such as a discourse completion test (DCT) or a closed role play to elicit speech acts." - Taguchi & Kádár
+                    </div>
+                    <p>Traditionally, learners' speech act strategies were compared with native speakers'. However, this approach has been criticized in light of lingua franca communication, as L2 speakers now produce speech acts to communicate with other L2 speakers rather than to imitate native speakers.</p>
+                    <div class="quote">
+                        "Although the tradition of native and non-native comparison of speech act strategies still continues today (Al Masaeed et al., 2020), it has been criticized in light of the current discourse of lingua franca communication. People now acknowledge that L2 speakers no longer use speech act strategies to imitate native speakers; rather, they produce speech acts to other L2 speakers to achieve mutual communicative goals." - Taguchi & Kádár
+                    </div>
+                </div>
+                
+                <div class="lang-zh">
+                    <p>言语行为理论和礼貌理论为二语语用学研究提供了基础，尤其是在早期。1970年代至1990年代的大多数研究都集中在评估二语学习者产生言语行为（如请求、道歉）的能力，使用言语完成测试（DCTs）或封闭式角色扮演。</p>
+                    <div class="quote">
+                        "1970年代至1990年代的大多数研究都集中在评估二语学习者产生各种言语行为（如请求、道歉）的能力。在此期间，研究人员经常使用言语完成测试（DCT）或封闭式角色扮演等工具来引出言语行为。" - 田中直子与卡达尔
+                    </div>
+                    <p>传统上，学习者的言语行为策略与母语使用者进行比较。然而，这种方法在通用语交流的背景下受到了批评，因为二语使用者现在产生言语行为是为了与其他二语使用者交流，而不是为了模仿母语使用者。</p>
+                    <div class="quote">
+                        "虽然母语使用者和非母语使用者言语行为策略的比较传统至今仍在继续（Al Masaeed等，2020），但在当前通用语交流的话语背景下，这种方法受到了批评。人们现在认识到，二语使用者不再使用言语行为策略来模仿母语使用者；相反，他们向其他二语使用者产生言语行为，以实现共同的交际目标。" - 田中直子与卡达尔
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Category 2: Pragmatics as Comprehension of Meaning -->
+        <div class="category-section">
+            <div class="category-header">
+                <h2 class="lang-en active-lang">Pragmatics as Comprehension of Meaning</h2>
+                <h2 class="lang-zh">作为意义理解的语用学</h2>
+            </div>
+            
+            <div class="theories-container">
+                <!-- Grice's Maxims -->
+                <div class="theory-card">
+                    <div class="theory-header">
+                        <div class="theory-icon">1</div>
+                        <h3 class="theory-title lang-en active-lang">Grice's Maxims</h3>
+                        <h3 class="theory-title lang-zh">格莱斯准则</h3>
+                    </div>
+                    <div class="theory-content lang-en active-lang">
+                        <p>Paul Grice proposed the Cooperative Principle and four maxims: quantity, quality, relevance, and manner. These govern how effective communication should ideally work, though they are often flouted for pragmatic effects like politeness or humor.</p>
+                        <div class="quote">
+                            "Grice set up four maxims through which co-operation comes into existence, including quantity, quality, relevance and manner. These maxims mean that for co-operation to be most efficient, the speaker should provide enough information (quantity), which is true (quality), relevant to the topic of the conversation (relevance), and is realized in a way that fits with the conventions of the context (manner)." - Taguchi & Kádár
+                        </div>
+                    </div>
+                    <div class="theory-content lang-zh">
+                        <p>保罗·格莱斯提出了合作原则和四个准则：数量准则、质量准则、关联准则和方式准则。这些准则规定了有效沟通应该如何运作，尽管它们经常被违反以产生礼貌或幽默等语用效果。</p>
+                        <div class="quote">
+                            "格莱斯设立了四个准则，通过这些准则产生合作，包括数量、质量、关联性和方式。这些准则意味着，为了使合作最有效，说话者应提供足够的信息（数量），这些信息是真实的（质量），与谈话主题相关（关联性），并以符合环境惯例的方式实现（方式）。" - 田中直子与卡达尔
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Relevance Theory -->
+                <div class="theory-card">
+                    <div class="theory-header">
+                        <div class="theory-icon">2</div>
+                        <h3 class="theory-title lang-en active-lang">Relevance Theory</h3>
+                        <h3 class="theory-title lang-zh">关联理论</h3>
+                    </div>
+                    <div class="theory-content lang-en active-lang">
+                        <p>Relevance theory, developed by Sperber and Wilson, proposes that if a speaker utters something, the addressee can assume the information is worth the effort to process. This explains seemingly irrelevant utterances that actually have contextual relevance.</p>
+                        <div class="quote">
+                            "According to relevance theory, if the speaker utters something to the addressee, the addressee can rightly assume that the conveyed information is worth their effort to listen to and comprehend. A particular benefit of this cognitive pragmatic area of research is that it provides insight into the seemingly paradoxical phenomenon that language users often utter things that seem to be irrelevant to the topic of a conversation." - Taguchi & Kádár
+                        </div>
+                    </div>
+                    <div class="theory-content lang-zh">
+                        <p>关联理论由斯佩伯和威尔逊开发，提出如果说话者向听话者说某事，听话者可以假设所传达的信息值得处理。这解释了表面上不相关但实际上具有环境相关性的话语。</p>
+                        <div class="quote">
+                            "根据关联理论，如果说话者向听话者说某事，听话者可以合理地假设所传达的信息值得他们花时间倾听和理解。这一认知语用学研究领域的特殊益处是，它提供了对一种看似矛盾现象的洞察，即语言使用者经常说出似乎与对话主题无关的内容。" - 田中直子与卡达尔
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- L2 Research in Comprehension of Meaning -->
+            <div style="margin-top: 20px;">
+                <h3 class="lang-en active-lang">L2 Pragmatics Research in Comprehension of Meaning</h3>
+                <h3 class="lang-zh">意义理解领域的二语语用学研究</h3>
+                
+                <div class="lang-en active-lang">
+                    <p>L2 comprehension of implied meaning has been studied widely since the 1990s using written and spoken comprehension tests. Researchers create dialogues involving specific types of implicature and analyze accuracy scores and response time across different proficiency levels.</p>
+                    <div class="quote">
+                        "L2 comprehension of implied meaning has been studied widely since the 1990s using written and spoken comprehension tests. Adopting Grice's maxims, researchers have created short dialogues involving a specific type of implicature (e.g., flouting the relevance maxim) and corresponding multiple-choice questions." - Taguchi & Kádár
+                    </div>
+                    <p>Recent studies have explored learners' attention to audio-visual cues (e.g., facial expressions, tone of voice) using relevance theory. Findings show that audio-visual cues serve as contextual effects and facilitate comprehension by reducing processing load.</p>
+                    <div class="quote">
+                        "Adopting relevance theory, several studies have explored L2 learners' attention to audio-visual cues (e.g., speakers' facial expressions and tone of voice). Taguchi et al. (2016) used video-recorded dialogues to assess implicature comprehension in L2 Spanish. They found that L2 Spanish participants attended to visual cues efficiently to identify the speaker's implied intention." - Taguchi & Kádár
+                    </div>
+                </div>
+                
+                <div class="lang-zh">
+                    <p>自1990年代以来，二语隐含意义的理解一直通过书面和口头理解测试进行广泛研究。研究人员创建涉及特定类型含蓄意义的对话，并分析不同熟练程度学习者的准确率和反应时间。</p>
+                    <div class="quote">
+                        "自1990年代以来，二语隐含意义的理解一直通过书面和口头理解测试进行广泛研究。采用格莱斯的准则，研究人员创建了涉及特定类型含蓄意义（如违反关联准则）的简短对话和相应的多项选择题。" - 田中直子与卡达尔
+                    </div>
+                    <p>最近的研究使用关联理论探索了学习者对视听线索（如面部表情、语调）的注意。研究发现，视听线索作为情境效果，通过减少处理负担来促进理解。</p>
+                    <div class="quote">
+                        "采用关联理论，几项研究探索了二语学习者对视听线索（如说话者的面部表情和语调）的注意。Taguchi等人(2016)使用视频记录的对话来评估西班牙语二语含蓄意义的理解。他们发现，西班牙语二语参与者有效地关注视觉线索以识别说话者的隐含意图。" - 田中直子与卡达尔
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Category 3: Pragmatics as Co-construction of Meaning -->
+        <div class="category-section">
+            <div class="category-header">
+                <h2 class="lang-en active-lang">Pragmatics as Co-construction of Meaning</h2>
+                <h2 class="lang-zh">作为意义共同构建的语用学</h2>
+            </div>
+            
+            <div class="theories-container">
+                <!-- Interactional Pragmatics -->
+                <div class="theory-card">
+                    <div class="theory-header">
+                        <div class="theory-icon">1</div>
+                        <h3 class="theory-title lang-en active-lang">Interactional Pragmatics</h3>
+                        <h3 class="theory-title lang-zh">互动语用学</h3>
+                    </div>
+                    <div class="theory-content lang-en active-lang">
+                        <p>Interactional pragmatics focuses on how meaning is made and negotiated in interaction. It emphasizes that pragmatic phenomena emerge in longer stretches of interaction, not just in standalone utterances.</p>
+                        <div class="quote">
+                            "In pragmatics, significant attention has been paid to how meaning is made and negotiated in interaction. This attention has gained particular momentum after the 2000s when more and more scholars argue that pragmatic phenomena come into existence in longer stretches of interaction, instead of stand-alone utterances." - Taguchi & Kádár
+                        </div>
+                    </div>
+                    <div class="theory-content lang-zh">
+                        <p>互动语用学关注意义如何在互动中产生和协商。它强调语用现象在更长的互动过程中产生，而不仅仅是在独立的话语中。</p>
+                        <div class="quote">
+                            "在语用学中，人们非常关注意义如何在互动中产生和协商。这种关注在2000年代后尤为显著，当时越来越多的学者认为，语用现象是在较长的互动过程中产生的，而不是在独立的话语中。" - 田中直子与卡达尔
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- L2 Research in Co-construction of Meaning -->
+            <div style="margin-top: 20px;">
+                <h3 class="lang-en active-lang">L2 Pragmatics Research in Co-construction of Meaning</h3>
+                <h3 class="lang-zh">意义共同构建领域的二语语用学研究</h3>
+                
+                <div class="lang-en active-lang">
+                    <p>The field of L2 pragmatics has recently adopted an interactive view of the meaning-making process, using qualitative methods like conversation analysis (CA) to reveal how speakers collaboratively create meaning via turn-taking.</p>
+                    <div class="quote">
+                        "In response to these criticisms, the field of L2 pragmatics has recently adopted an interactive view of the meaning-making process. Interactional pragmatics has provided a new framework for research, reinforcing a view that meaning arises among speakers as they mutually orient toward their communicative goals." - Taguchi & Kádár
+                    </div>
+                    <p>Some studies have combined conversation analysis with eye-tracking to reveal how L2 learners use multimodal cues (gaze direction, intonation) to perform communicative acts. Learners' use of multiple interactional resources continues to serve as an important indicator of pragmatic ability and development.</p>
+                    <div class="quote">
+                        "Cappellini and Hsu (2022) analyzed video-conference interactions between learners of Chinese and their tutors. Several data sets exported into the Eudico Linguistic Annotator (ELAN)—participants' utterances and turn-taking patterns, screen captures of eye movements, and gaze direction and duration—revealed multiple affordances of successful communication." - Taguchi & Kádár
+                    </div>
+                </div>
+                
+                <div class="lang-zh">
+                    <p>二语语用学领域最近采用了互动式意义构建过程的观点，使用会话分析（CA）等定性方法来揭示说话者如何通过轮流发言协作创造意义。</p>
+                    <div class="quote">
+                        "为了回应这些批评，二语语用学领域最近采用了互动式意义构建过程的观点。互动语用学为研究提供了一个新框架，强化了这样一种观点，即意义产生于说话者之间，当他们相互朝着交际目标努力时。" - 田中直子与卡达尔
+                    </div>
+                    <p>一些研究将会话分析与眼动追踪相结合，揭示二语学习者如何使用多模态线索（目光方向、语调）来执行交际行为。学习者使用多种互动资源继续作为语用能力和发展的重要指标。</p>
+                    <div class="quote">
+                        "Cappellini和Hsu（2022）分析了中文学习者与他们的导师之间的视频会议互动。几组导出到Eudico语言注释器（ELAN）的数据—参与者的话语和轮流发言模式、眼动截图以及目光方向和持续时间—揭示了成功交流的多种可能性。" - 田中直子与卡达尔
+                    </div>
+                </div>
+            </div>

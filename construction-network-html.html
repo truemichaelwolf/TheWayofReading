@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Construction Network Classifications</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .language-toggle {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
+
+        .section {
+            background: white;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 20px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            cursor: pointer;
+        }
+
+        .section-header h2 {
+            margin: 0;
+            color: #1e40af;
+        }
+
+        .section-quote {
+            font-style: italic;
+            color: #6b7280;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .section-content {
+            padding: 20px;
+            display: none;
+        }
+
+        .section.active .section-content {
+            display: block;
+        }
+
+        .subsection {
+            border-left: 4px solid #2563eb;
+            padding: 15px;
+            margin-bottom: 20px;
+            background: #f8fafc;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .subsection h3 {
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+
+        .subsection-content {
+            margin-bottom: 8px;
+        }
+
+        .subsection-desc {
+            font-size: 0.9em;
+            color: #6b7280;
+        }
+
+        .source {
+            font-size: 0.8em;
+            color: #6b7280;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Construction Network Classifications / 构式网络分类系统</h1>
+        <div class="language-toggle">
+            <button class="btn btn-primary" onclick="toggleLanguage('en')">English</button>
+            <button class="btn btn-secondary" onclick="toggleLanguage('zh')">中文</button>
+        </div>
+    </div>
+
+    <div class="sections-container">
+        <!-- Goldberg's Classification -->
+        <div class="section" data-section="goldberg">
+            <div class="section-header" onclick="toggleSection('goldberg')">
+                <h2>Goldberg's Classification (1995) / Goldberg的分类</h2>
+                <div class="section-quote">
+                    "Early on, Goldberg (1995: 74-81) proposed the following four types of constructional links."
+                    <div class="source">Page 224</div>
+                </div>
+            </div>
+            <div class="section-content">
+                <div class="subsection">
+                    <h3>1. Instance Links / 实例连接</h3>
+                    <div class="subsection-content">Links between constructions of different degrees of specificity</div>
+                    <div class="subsection-desc">不同特定程度构式之间的连接</div>
+                </div>
+                <div class="subsection">
+                    <h3>2. Polysemy Links / 多义连接</h3>
+                    <div class="subsection-content">Links between prototypical sense and its extensions</div>
+                    <div class="subsection-desc">原型意义与其扩展意义之间的连接</div>
+                </div>
+                <div class="subsection">
+                    <h3>3. Metaphorical Extension Links / 隐喻扩展连接</h3>
+                    <div class="subsection-content">Links between basic sense and metaphorically extended sense</div>
+                    <div class="subsection-desc">基本意义与隐喻扩展意义之间的连接</div>
+                </div>
+                <div class="subsection">
+                    <h3>4. Subpart Links / 部分连接</h3>
+                    <div class="subsection-content">Links between constructions of different degrees of complexity</div>
+                    <div class="subsection-desc">不同复杂程度构式之间的连接</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diessel's Classification -->
+        <div class="section" data-section="diessel">
+            <div class="section-header" onclick="toggleSection('diessel')">
+                <h2>Diessel's Classification (2019) / Diessel的分类</h2>
+                <div class="section-quote">
+                    "Diessel (2019: 12f., 22) lists the following six relations."
+                    <div class="source">Page 224</div>
+                </div>
+            </div>
+            <div class="section-content">
+                <div class="subsection">
+                    <h3>1. Symbolic Relations / 符号关系</h3>
+                    <div class="subsection-content">Associations between form and meaning</div>
+                    <div class="subsection-desc">形式与意义之间的联系</div>
+                </div>
+                <div class="subsection">
+                    <h3>2. Sequential Relations / 序列关系</h3>
+                    <div class="subsection-content">Associations between linguistic elements in sequence</div>
+                    <div class="subsection-desc">序列中语言元素之间的联系</div>
+                </div>
+                <div class="subsection">
+                    <h3>3. Taxonomic Relations / 分类关系</h3>
+                    <div class="subsection-content">Associations between representations at different levels of specificity</div>
+                    <div class="subsection-desc">不同特定程度表征之间的联系</div>
+                </div>
+                <div class="subsection">
+                    <h3>4. Lexical Relations / 词汇关系</h3>
+                    <div class="subsection-content">Associations between lexemes</div>
+                    <div class="subsection-desc">词位之间的联系</div>
+                </div>
+                <div class="subsection">
+                    <h3>5. Constructional Relations / 构式关系</h3>
+                    <div class="subsection-content">Associations between constructions</div>
+                    <div class="subsection-desc">构式之间的联系</div>
+                </div>
+                <div class="subsection">
+                    <h3>6. Filler-slot Relations / 填充槽位关系</h3>
+                    <div class="subsection-content">Associations between particular items and slots of constructions</div>
+                    <div class="subsection-desc">特定项目与构式槽位之间的联系</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vertical Links -->
+        <div class="section" data-section="vertical">
+            <div class="section-header" onclick="toggleSection('vertical')">
+                <h2>Vertical Links / 垂直连接</h2>
+                <div class="section-quote">
+                    "Constructions are vertically related via so-called 'inheritance' links."
+                    <div class="source">Page 224</div>
+                </div>
+            </div>
+            <div class="section-content">
+                <div class="subsection">
+                    <h3>Complete Inheritance Model / 完全继承模型</h3>
+                    <div class="subsection-content">Information is stored non-redundantly at the highest possible level</div>
+                    <div class="subsection-desc">信息非冗余地存储在最高可能层级</div>
+                </div>
+                <div class="subsection">
+                    <h3>Default Inheritance Model / 默认继承模型</h3>
+                    <div class="subsection-content">Only non-conflicting information is inherited from above</div>
+                    <div class="subsection-desc">只继承上层的非冲突信息</div>
+                </div>
+                <div class="subsection">
+                    <h3>Full Entry Model / 完整条目模型</h3>
+                    <div class="subsection-content">All information is specified redundantly in every node</div>
+                    <div class="subsection-desc">所有信息在每个节点都冗余指定</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Horizontal Links -->
+        <div class="section" data-section="horizontal">
+            <div class="section-header" onclick="toggleSection('horizontal')">
+                <h2>Horizontal Links / 水平连接</h2>
+                <div class="section-quote">
+                    "The 'constructicon' is not a top-down radiating diagram but, rather, a lattice."
+                    <div class="source">Page 229</div>
+                </div>
+            </div>
+            <div class="section-content">
+                <div class="subsection">
+                    <h3>1. Differential Opposition Links / 差异对立连接</h3>
+                    <div class="subsection-content">Links based on minimal formal differences</div>
+                    <div class="subsection-desc">基于最小形式差异的连接</div>
+                </div>
+                <div class="subsection">
+                    <h3>2. Allostruction Links / 异构式连接</h3>
+                    <div class="subsection-content">Links between alternating constructions expressing near-synonymous meanings</div>
+                    <div class="subsection-desc">表达近义意义的交替构式之间的连接</div>
+                </div>
+                <div class="subsection">
+                    <h3>3. Analogical Links / 类比连接</h3>
+                    <div class="subsection-content">Links based on formal similarity influencing each other</div>
+                    <div class="subsection-desc">基于形式相似性相互影响的连接</div>
+                </div>
+                <div class="subsection">
+                    <h3>4. Polysemy/Metaphorical Links / 多义/隐喻连接</h3>
+                    <div class="subsection-content">Links between semantically related meanings</div>
+                    <div class="subsection-desc">语义相关意义之间的连接</div>
+                </div>
+                <div class="subsection">
+                    <h3>5. Syntagmatic Links / 组合关系连接</h3>
+                    <div class="subsection-content">Links between elements that co-occur in sequence</div>
+                    <div class="subsection-desc">序列中共现元素之间的连接</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSection(sectionId) {
+            const section = document.querySelector(`[data-section="${sectionId}"]`);
+            section.classList.toggle('active');
+        }
+
+        function toggleLanguage(lang) {
+            const buttons = document.querySelectorAll('.language-toggle .btn');
+            buttons.forEach(btn => {
+                btn.classList.toggle('btn-primary');
+                btn.classList.toggle('btn-secondary');
+            });
+            
+            // In a full implementation, this would toggle between languages
+            // For now, both languages are shown together
+        }
+    </script>
+</body>
+</html>

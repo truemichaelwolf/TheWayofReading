@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linguistic Complexity in L2 Writing</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #3498db;
+            border-left: 4px solid #3498db;
+            padding-left: 10px;
+            margin-top: 40px;
+        }
+        h3 {
+            color: #2980b9;
+        }
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            border-radius: 4px 4px 0 0;
+        }
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+        }
+        .tab button:hover {
+            background-color: #ddd;
+        }
+        .tab button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        .tabcontent {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            animation: fadeEffect 1s;
+        }
+        @keyframes fadeEffect {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .card h3 {
+            margin-top: 0;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+        .quote {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            font-style: italic;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9em;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .language-selector {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .language-selector button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .language-selector button:hover {
+            background-color: #2980b9;
+        }
+        .lang-content {
+            display: none;
+        }
+        .lang-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="language-selector">
+            <button onclick="switchLanguage('en')" id="en-btn">English</button>
+            <button onclick="switchLanguage('zh')" id="zh-btn">中文</button>
+        </div>
+
+        <header>
+            <div class="lang-content active" id="en-content-header">
+                <h1>Meaning and Function Dimensions of Linguistic Complexity in Second Language Writing</h1>
+                <p class="subtitle">An Interactive Dashboard Based on Research by Xiaofei Lu (2025)</p>
+            </div>
+            <div class="lang-content" id="zh-content-header">
+                <h1>二语写作中语言复杂性的意义和功能维度</h1>
+                <p class="subtitle">基于肖飞·陆（2025年）研究的交互式仪表板</p>
+            </div>
+        </header>
+
+        <div class="tab">
+            <button class="tablinks active" onclick="openTab(event, 'Overview')">Overview / 概述</button>
+            <button class="tablinks" onclick="openTab(event, 'Dimensions')">Complexity Dimensions / 复杂性维度</button>
+            <button class="tablinks" onclick="openTab(event, 'Research')">Research Applications / 研究应用</button>
+            <button class="tablinks" onclick="openTab(event, 'Future')">Future Directions / 未来方向</button>
+        </div>
+
+        <div id="Overview" class="tabcontent" style="display: block;">
+            <div class="lang-content active" id="en-content-overview">
+                <h2>Key Concepts of Linguistic Complexity in L2 Writing</h2>
+                <p>Linguistic complexity analysis has been a fundamental component of second language (L2) writing research. This dashboard summarizes the key findings from Xiaofei Lu's 2025 article on the meaning and function dimensions of linguistic complexity in L2 writing.</p>
+                
+                <div class="quote">
+                    "Linguistic complexity analysis has played a prominent role in second language (L2) writing research. Such analysis has focused primarily on form-based indices of inherent or relative complexity, often without systematic attention to the effect of the meanings with which linguistic forms are used on their complexity or the rhetorical/pragmatic functions that complex forms are used to convey."
+                </div>
+                
+                <p>The traditional approach to linguistic complexity analysis focuses primarily on form-based measures, overlooking two critical dimensions:</p>
+                
+                <div class="grid-container">
+                    <div class="card">
+                        <h3>The Meaning Dimension</h3>
+                        <p>Form-based measures don't account for polysemy (multiple meanings of words). Different meanings of the same word may vary in sophistication, but traditional measures can't capture these differences.</p>
+                    </div>
+                    <div class="card">
+                        <h3>The Function Dimension</h3>
+                        <p>Complex linguistic structures serve specific rhetorical or pragmatic functions in writing. Understanding how linguistic complexity features relate to specific communicative functions is essential for a complete analysis.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="lang-content" id="zh-content-overview">
+                <h2>二语写作中语言复杂性的关键概念</h2>
+                <p>语言复杂性分析一直是二语（L2）写作研究的基本组成部分。该仪表板总结了肖飞·陆2025年关于二语写作中语言复杂性的意义和功能维度的文章中的主要发现。</p>
+                
+                <div class="quote">
+                    "语言复杂性分析在二语（L2）写作研究中发挥了突出作用。这类分析主要关注固有或相对复杂性的基于形式的指标，往往没有系统地关注语言形式所使用的意义对其复杂性的影响，或者复杂形式用于传达的修辞/语用功能。"
+                </div>
+                
+                <p>传统的语言复杂性分析方法主要集中在基于形式的测量上，忽略了两个关键维度：</p>
+                
+                <div class="grid-container">
+                    <div class="card">
+                        <h3>意义维度</h3>
+                        <p>基于形式的测量无法解释多义性（词语的多种含义）。同一个词的不同含义在复杂程度上可能有所不同，但传统测量方法无法捕捉这些差异。</p>
+                    </div>
+                    <div class="card">
+                        <h3>功能维度</h3>
+                        <p>复杂的语言结构在写作中具有特定的修辞或语用功能。了解语言复杂性特征如何与特定交际功能相关对于完整分析至关重要。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="Dimensions" class="tabcontent">
+            <div class="lang-content active" id="en-content-dimensions">
+                <h2>Dimensions of Linguistic Complexity</h2>
+                <p>Linguistic complexity can be understood in terms of absolute complexity (objective features) or relative complexity (cognitive effort required). In L2 writing research, linguistic complexity is commonly analyzed across the following dimensions:</p>
+                
+                <div class="grid-container">
+                    <div class="card">
+                        <h3>Lexical Complexity</h3>
+                        <ul>
+                            <li><strong>Lexical Density:</strong> Proportion of content words in a text</li>
+                            <li><strong>Lexical Diversity:</strong> Variation of words used (e.g., type-token ratio)</li>
+                            <li><strong>Lexical Sophistication:</strong> Use of uncommon/advanced vocabulary</li>
+                        </ul>
+                        <div class="quote">
+                            "Lexical sophistication refers to the extent to which the words used in a text are uncommon or rare, assessed frequently in terms of the reference-corpus frequency of the word types or tokens in a text."
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Syntactic Complexity</h3>
+                        <ul>
+                            <li><strong>Length-based measures:</strong> Mean length of sentence, T-unit, clause</li>
+                            <li><strong>Subordination:</strong> Clauses per T-unit, complex T-units per T-unit</li>
+                            <li><strong>Coordination:</strong> T-units per sentence, coordinate phrases per clause</li>
+                            <li><strong>Phrasal complexity:</strong> Complex nominals per clause/T-unit</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>Phraseological Complexity</h3>
+                        <ul>
+                            <li><strong>Phraseological Diversity:</strong> Variation in word combinations</li>
+                            <li><strong>Phraseological Sophistication:</strong> Use of advanced phraseological units</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>Discoursal Complexity</h3>
+                        <ul>
+                            <li><strong>Local cohesion:</strong> Between sentences (connectives, lexical overlap)</li>
+                            <li><strong>Global cohesion:</strong> Between paragraphs (lexical/semantic overlap)</li>
+                            <li><strong>Text cohesion:</strong> Throughout the text (features of givenness)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="lang-content" id="zh-content-dimensions">
+                <h2>语言复杂性的维度</h2>
+                <p>语言复杂性可以从绝对复杂性（客观特征）或相对复杂性（所需的认知努力）来理解。在二语写作研究中，语言复杂性通常在以下维度上进行分析：</p>
+                
+                <div class="grid-container">
+                    <div class="card">
+                        <h3>词汇复杂性</h3>
+                        <ul>
+                            <li><strong>词汇密度：</strong>文本中内容词的比例</li>
+                            <li><strong>词汇多样性：</strong>使用词语的变化（如词型-词频比）</li>
+                            <li><strong>词汇复杂程度：</strong>使用不常见/高级词汇</li>
+                        </ul>
+                        <div class="quote">
+                            "词汇复杂程度指的是文本中使用的词语的罕见或稀有程度，通常根据文本中词类型或词符在参考语料库中的频率来评估。"
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>句法复杂性</h3>
+                        <ul>
+                            <li><strong>基于长度的测量：</strong>句子、T单位、从句的平均长度</li>
+                            <li><strong>从属关系：</strong>每T单位的从句数，每T单位的复杂T单位</li>
+                            <li><strong>并列关系：</strong>每句话的T单位，每从句的并列短语</li>
+                            <li><strong>短语复杂性：</strong>每从句/T单位的复杂名词性短语</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>短语学复杂性</h3>
+                        <ul>
+                            <li><strong>短语多样性：</strong>词语组合的变化</li>
+                            <li><strong>短语复杂程度：</strong>使用高级短语单位</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>话语复杂性</h3>
+                        <ul>
+                            <li><strong>局部衔接：</strong>句子之间（连接词，词汇重叠）</li>
+                            <li><strong>全局衔接：</strong>段落之间（词汇/语义重叠）</li>
+                            <li><strong>文本衔接：</strong>贯穿整个文本（已知信息特征）</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="Research" class="tabcontent">
+            <div class="lang-content active" id="en-content-research">
+                <h2>Applications of Linguistic Complexity Analysis in L2 Writing Research</h2>
+                <p>Linguistic complexity analysis has been applied in several strands of L2 writing research:</p>
+                
+                <div class="grid-container">
+                    <div class="card">
+                        <h3>Writing Quality Assessment</h3>
+                        <p>Studies have examined correlations between linguistic complexity indices and human ratings of L2 writing quality.</p>
+                        <div class="quote">
+                            "Collectively, these studies have confirmed that linguistic complexity indices can be significantly predictive of L2 writing quality, but that the specific significant predictors may vary in different assessment contexts and across different writing tasks."
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Variation Analysis</h3>
+                        <p>Research has investigated how linguistic complexity varies with learner variables (proficiency, L1 background) and task variables (genre, topic, complexity).</p>
+                        <div class="quote">
+                            "These studies have reported significant differences in the linguistic complexity of L2 writing across proficiency levels and significant effects of various learner and task variables on the linguistic complexity of L2 writing."
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Developmental Trajectories</h3>
+                        <p>Longitudinal studies have tracked the development of linguistic complexity in L2 writing over time.</p>
+                        <div class="quote">
+                            "Larsen-Freeman (2006) reported evidence for the nonlinearity of and inter- and intra-learner variability in the trajectories of fluency, accuracy, lexical complexity, and syntactic complexity among five L2 English learners."
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="lang-content" id="zh-content-research">
+                <h2>语言复杂性分析在二语写作研究中的应用</h2>
+                <p>语言复杂性分析已应用于二语写作研究的几个方向：</p>
+                
+                <div class="grid-container">
+                    <div class="card">
+                        <h3>写作质量评估</h3>
+                        <p>研究考察了语言复杂性指标与二语写作质量人工评分之间的相关性。</p>
+                        <div class="quote">
+                            "总体而言，这些研究证实了语言复杂性指标可以显著预测二语写作质量，但具体的显著预测因子可能在不同的评估环境和不同的写作任务中有所不同。"
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>变异分析</h3>
+                        <p>研究调查了语言复杂性如何随学习者变量（熟练程度，母语背景）和任务变量（体裁，主题，复杂性）而变化。</p>
+                        <div class="quote">
+                            "这些研究报告了二语写作的语言复杂性在不同熟练程度之间的显著差异，以及各种学习者和任务变量对二语写作的语言复杂性的显著影响。"
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>发展轨迹</h3>
+                        <p>纵向研究追踪了二语写作中语言复杂性随时间的发展。</p>
+                        <div class="quote">
+                            "Larsen-Freeman（2006）报告了五名英语二语学习者在流利度、准确性、词汇复杂性和句法复杂性轨迹方面的非线性性以及学习者间和学习者内部的变异性证据。"
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="Future" class="tabcontent">
+            <div class="lang-content active" id="en-content-future">
+                <h2>Emerging Research on Meaning and Function Dimensions</h2>
+                
+                <div class="grid-container">
+                    <div class="card">
+                        <h3>Integrating Sense-Level Information</h3>
+                        <p>Recent research is exploring ways to account for word sense in linguistic complexity analysis using word sense disambiguation (WSD) techniques.</p>
+                        <div class="quote">
+                            "Lu and Hu (2022) made an early attempt to take advantage of recent progress in word sense disambiguation (WSD) to integrate sense-level information in measures of lexical sophistication... They reported that each of the three sense-aware indices was more strongly correlated with holistic writing scores than its word-form-based counterpart."
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Form-Function Connections</h3>
+                        <p>Studies are investigating how specific syntactic complexity features relate to rhetorical functions in academic writing.</p>
+                        <div class="quote">
+                            "Their manual analysis of the syntactically complex sentences for each step shed light on the affordances that complex structures offer academic writers. For example, 'Move 1 Step 1b: Indicating a gap' stood out as a step with a particularly large proportion of syntactically complex sentences for the left-embeddedness feature."
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Pedagogical Applications</h3>
+                        <p>Research findings on form-function connections can inform genre-based writing pedagogy.</p>
+                        <div class="quote">
+                            "Casal and Lu (2021), for example, explored learner perceptions and potential benefits of including syntactic complexity in pedagogical genre-analysis activities in a six-week graduate-level academic L2 English course... Results suggested that the genre analysis activities with a syntactic complexity focus helped increase the L2 writers' awareness of the functional affordances of syntactic complexity."
+                        </div>
+                    </div>
+                </div>
+                
+                <h2>Future Research Directions</h2>
+                <p>The paper outlines several promising directions for future research:</p>
+                <ul>
+                    <li>Development of reliable tools for automated analysis of rhetorical or pragmatic functions</li>
+                    <li>Automated mapping between linguistic expressions and their functions</li>
+                    <li>Materials and activities that highlight the rhetorical/pragmatic functions of complex linguistic forms</li>
+                    <li>Investigations into learner development of appropriate form-function mappings</li>
+                </ul>
+                <div class="quote">
+                    "With methodological rigor and innovation, future research can break new ground in producing more valid and precise measurements of the linguistic complexity of L2 writing and in generating more systematic findings on form-function mappings in different genres of writing to inform L2 and/or academic writing pedagogy."
+                </div>
+            </div>
+            
+            <div class="lang-content" id="zh-content-future">
+                <h2>关于意义和功能维度的新兴研究</h2>
+                
+                <div class="grid-container">
+                    <div class="card">
+                        <h3>整合词义层面信息</h3>
+                        <p>最新研究正在探索使用词义消歧（WSD）技术在语言复杂性分析中考虑词义的方法。</p>
+                        <div class="quote">
+                            "陆与胡（2022）尝试利用词义消歧（WSD）领域的最新进展，将词义层面的信息整合到词汇复杂性度量中……他们报告说，三个基于词义的指标每一个与整体写作得分的相关性都强于其基于词形的对应指标。"
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>形式-功能联系</h3>
+                        <p>研究正在调查特定句法复杂性特征如何与学术写作中的修辞功能相关。</p>
+                        <div class="quote">
+                            "他们对每个步骤中句法复杂句子的手动分析阐明了复杂结构为学术写作者提供的便利。例如，'步骤1b：指出研究缺口'在左嵌入特征方面具有特别大比例的句法复杂句子。"
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>教学应用</h3>
+                        <p>关于形式-功能联系的研究发现可以为基于体裁的写作教学法提供参考。</p>
+                        <div class="quote">
+                            "例如，Casal和陆（2021）在为期六周的研究生水平学术英语二语课程中探索了学习者对包含句法复杂性的教学体裁分析活动的看法和潜在益处……结果表明，具有句法复杂性焦点的体裁分析活动有助于提高二语写作者对句法复杂性功能性的认识。"
+                        </div>
+                    </div>
+                </div>
+                
+                <h2>未来研究方向</h2>
+                <p>该论文概述了几个有前途的未来研究方向：</p>
+                <ul>
+                    <li>开发可靠的工具，用于修辞或语用功能的自动分析</li>
+                    <li>语言表达和其功能之间的自动映射</li>
+                    <li>突出复杂语言形式的修辞/语用功能的材料和活动</li>
+                    <li>对学习者适当形式-功能映射发展的研究</li>
+                </ul>
+                <div class="quote">
+                    "通过方法论的严谨和创新，未来的研究可以在产生更有效和精确的二语写作语言复杂性测量方面开辟新天地，并在不同写作体裁中形式-功能映射方面产生更系统的发现，以为二语和/或学术写作教学提供参考。"
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="lang-content active" id="en-content-footer">
+                <p>Based on: Lu, X. (2025). Meaning and function dimensions of linguistic complexity in second language writing. Research Methods in Applied Linguistics, 4(2025), 100191.</p>
+            </div>
+            <div class="lang-content" id="zh-content-footer">
+                <p>基于：陆肖飞 (2025). 二语写作中语言复杂性的意义和功能维度. 应用语言学研究方法, 4(2025), 100191.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+        
+        function switchLanguage(lang) {
+            var langContents = document.getElementsByClassName("lang-content");
+            for (var i = 0; i < langContents.length; i++) {
+                langContents[i].classList.remove("active");
+            }
+            
+            var activeLangContents = document.querySelectorAll(`[id^="${lang}-content"]`);
+            for (var i = 0; i < activeLangContents.length; i++) {
+                activeLangContents[i].classList.add("active");
+            }
+            
+            // Update button states
+            document.getElementById("en-btn").style.backgroundColor = lang === "en" ? "#2980b9" : "#3498db";
+            document.getElementById("zh-btn").style.backgroundColor = lang === "zh" ? "#2980b9" : "#3498db";
+        }
+        
+        // Initialize the first tab
+        document.getElementById("Overview").style.display = "block";
+    </script>
+</body>
+</html>

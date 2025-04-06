@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+  <!-- Background -->
+  <rect width="1200" height="800" fill="#f9f9f9"/>
+  
+  <!-- Main Title -->
+  <text x="600" y="60" font-family="Arial" font-size="24" font-weight="bold" text-anchor="middle" fill="#2c3e50">Applications of Linguistic Complexity Analysis in Second Language Writing Research</text>
+  
+  <!-- Main Center Node -->
+  <ellipse cx="600" cy="140" rx="180" ry="40" fill="#3498db" stroke="#2980b9" stroke-width="2"/>
+  <text x="600" y="145" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="white">Linguistic Complexity Analysis Applications</text>
+  
+  <!-- Main Branches -->
+  
+  <!-- Writing Quality Assessment Branch -->
+  <path d="M450 160 L250 260" stroke="#e74c3c" stroke-width="3" fill="none"/>
+  <ellipse cx="200" cy="280" rx="140" ry="35" fill="#e74c3c" stroke="#c0392b" stroke-width="2"/>
+  <text x="200" y="285" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="white">Writing Quality Assessment</text>
+  
+  <!-- Sub-items for Writing Quality -->
+  <path d="M180 315 L140 380" stroke="#e74c3c" stroke-width="2" fill="none"/>
+  <rect x="40" y="385" width="200" height="70" rx="10" ry="10" fill="#f5b7b1" stroke="#e74c3c" stroke-width="1"/>
+  <text x="140" y="410" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle">Correlation with Human Ratings</text>
+  <text x="140" y="430" font-family="Arial" font-size="12" text-anchor="middle">Predictive power varies across</text>
+  <text x="140" y="445" font-family="Arial" font-size="12" text-anchor="middle">assessment contexts & tasks</text>
+  
+  <path d="M180 315 L250 380" stroke="#e74c3c" stroke-width="2" fill="none"/>
+  <rect x="180" y="385" width="200" height="80" rx="10" ry="10" fill="#f5b7b1" stroke="#e74c3c" stroke-width="1"/>
+  <text x="280" y="410" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle">Specific Findings</text>
+  <text x="280" y="430" font-family="Arial" font-size="12" text-anchor="middle">• Phrasal complexity predicts quality</text>
+  <text x="280" y="445" font-family="Arial" font-size="12" text-anchor="middle">• Global cohesion = positive correlation</text>
+  <text x="280" y="460" font-family="Arial" font-size="12" text-anchor="middle">• Local cohesion = negative correlation</text>
+  
+  <!-- Variation Analysis Branch -->
+  <path d="M750 160 L950 260" stroke="#2ecc71" stroke-width="3" fill="none"/>
+  <ellipse cx="1000" cy="280" rx="140" ry="35" fill="#2ecc71" stroke="#27ae60" stroke-width="2"/>
+  <text x="1000" y="285" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="white">Variation Analysis</text>
+  
+  <!-- Sub-items for Variation Analysis -->
+  <path d="M980 315 L920 380" stroke="#2ecc71" stroke-width="2" fill="none"/>
+  <rect x="800" y="385" width="200" height="80" rx="10" ry="10" fill="#abebc6" stroke="#2ecc71" stroke-width="1"/>
+  <text x="900" y="410" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle">Learner Variables</text>
+  <text x="900" y="430" font-family="Arial" font-size="12" text-anchor="middle">• Proficiency levels</text>
+  <text x="900" y="445" font-family="Arial" font-size="12" text-anchor="middle">• L1 background effects</text>
+  <text x="900" y="460" font-family="Arial" font-size="12" text-anchor="middle">• Individual differences</text>
+  
+  <path d="M980 315 L1050 380" stroke="#2ecc71" stroke-width="2" fill="none"/>
+  <rect x="960" y="385" width="200" height="95" rx="10" ry="10" fill="#abebc6" stroke="#2ecc71" stroke-width="1"/>
+  <text x="1060" y="410" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle">Task Variables</text>
+  <text x="1060" y="430" font-family="Arial" font-size="12" text-anchor="middle">• Genre effects</text>
+  <text x="1060" y="445" font-family="Arial" font-size="12" text-anchor="middle">• Topic influence</text>
+  <text x="1060" y="460" font-family="Arial" font-size="12" text-anchor="middle">• Task complexity</text>
+  <text x="1060" y="475" font-family="Arial" font-size="12" text-anchor="middle">• Prompt type effects</text>
+  
+  <!-- Development Branch -->
+  <path d="M600 180 L600 260" stroke="#9b59b6" stroke-width="3" fill="none"/>
+  <ellipse cx="600" cy="295" rx="140" ry="35" fill="#9b59b6" stroke="#8e44ad" stroke-width="2"/>
+  <text x="600" y="300" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="white">Developmental Trajectories</text>
+  
+  <!-- Sub-items for Development -->
+  <path d="M540 330 L450 380" stroke="#9b59b6" stroke-width="2" fill="none"/>
+  <rect x="340" y="385" width="200" height="70" rx="10" ry="10" fill="#d2b4de" stroke="#9b59b6" stroke-width="1"/>
+  <text x="440" y="410" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle">Longitudinal Patterns</text>
+  <text x="440" y="430" font-family="Arial" font-size="12" text-anchor="middle">Nonlinearity in development</text>
+  <text x="440" y="445" font-family="Arial" font-size="12" text-anchor="middle">of linguistic complexity</text>
+  
+  <path d="M600 330 L600 380" stroke="#9b59b6" stroke-width="2" fill="none"/>
+  <rect x="500" y="385" width="200" height="70" rx="10" ry="10" fill="#d2b4de" stroke="#9b59b6" stroke-width="1"/>
+  <text x="600" y="410" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle">Interaction Patterns</text>
+  <text x="600" y="430" font-family="Arial" font-size="12" text-anchor="middle">Between different dimensions</text>
+  <text x="600" y="445" font-family="Arial" font-size="12" text-anchor="middle">of linguistic complexity</text>
+  
+  <path d="M660 330 L740 380" stroke="#9b59b6" stroke-width="2" fill="none"/>
+  <rect x="660" y="385" width="200" height="70" rx="10" ry="10" fill="#d2b4de" stroke="#9b59b6" stroke-width="1"/>
+  <text x="760" y="410" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle">Inter/Intra-Learner Variability</text>
+  <text x="760" y="430" font-family="Arial" font-size="12" text-anchor="middle">Variation among learners</text>
+  <text x="760" y="445" font-family="Arial" font-size="12" text-anchor="middle">and within individual learners</text>
+  
+  <!-- References/Key Studies -->
+  <rect x="100" y="550" width="1000" height="180" rx="15" ry="15" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="2"/>
+  <text x="600" y="580" font-family="Arial" font-size="18" font-weight="bold" text-anchor="middle" fill="#2c3e50">Key Studies and Supporting Research</text>
+  
+  <text x="140" y="610" font-family="Arial" font-size="14" font-weight="bold" fill="#e74c3c">Writing Quality:</text>
+  <text x="140" y="630" font-family="Arial" font-size="12" fill="#2c3e50">• Kyle & Crossley (2016): Lexical sophistication indices predicted writing quality</text>
+  <text x="140" y="650" font-family="Arial" font-size="12" fill="#2c3e50">• Zhang & Lu (2022): Syntactic complexity predicts quality across different genres</text>
+  
+  <text x="580" y="610" font-family="Arial" font-size="14" font-weight="bold" fill="#9b59b6">Development:</text>
+  <text x="580" y="630" font-family="Arial" font-size="12" fill="#2c3e50">• Larsen-Freeman (2006): Nonlinearity and variability in complexity development</text>
+  <text x="580" y="650" font-family="Arial" font-size="12" fill="#2c3e50">• Verspoor et al. (2008): Evidence of nonlinearity and intra-learner variability</text>
+  <text x="580" y="670" font-family="Arial" font-size="12" fill="#2c3e50">• Vyatkina (2012, 2013): Inter-learner variability in syntactic complexity development</text>
+  
+  <text x="140" y="690" font-family="Arial" font-size="14" font-weight="bold" fill="#2ecc71">Variation:</text>
+  <text x="140" y="710" font-family="Arial" font-size="12" fill="#2c3e50">• Lu & Ai (2015): L1 background effects on syntactic complexity</text>
+  <text x="140" y="730" font-family="Arial" font-size="12" fill="#2c3e50">• Alexopoulou et al. (2017): Task effects on lexical/syntactic complexity</text>
+  <text x="580" y="710" font-family="Arial" font-size="12" fill="#2c3e50">• Yoon & Polio (2017): Genre effects on linguistic complexity</text>
+  <text x="580" y="730" font-family="Arial" font-size="12" fill="#2c3e50">• Atak & Saricaoglu (2021): Topic effects on syntactic complexity</text>
+
+</svg>

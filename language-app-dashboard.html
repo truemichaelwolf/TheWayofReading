@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Learning App Acceptance Dashboard</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: #4682b4;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        .language-toggle {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+        .language-btn {
+            padding: 8px 16px;
+            background-color: #4682b4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.3s;
+        }
+        .language-btn:hover {
+            background-color: #3a6d96;
+        }
+        .language-btn.active {
+            background-color: #2c5476;
+            font-weight: bold;
+        }
+        .dashboard-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            flex: 1;
+            min-width: 300px;
+        }
+        .card h2 {
+            color: #4682b4;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+        .card p {
+            margin-bottom: 15px;
+        }
+        .quote {
+            background-color: #f0f7ff;
+            border-left: 4px solid #4682b4;
+            padding: 15px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        .visualization {
+            width: 100%;
+            height: 400px;
+            margin: 20px 0;
+        }
+        .key-finding {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .key-finding-icon {
+            background-color: #4682b4;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .key-finding-text {
+            flex: 1;
+        }
+        .stats-box {
+            background-color: #f0f7ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #4682b4;
+            margin: 10px 0;
+        }
+        .stats-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .lang-en, .lang-zh {
+            display: none;
+        }
+        .show {
+            display: block;
+        }
+        .chart-container {
+            height: 300px;
+            width: 100%;
+            margin: 20px 0;
+            position: relative;
+        }
+        .bar {
+            position: absolute;
+            bottom: 0;
+            width: 50px;
+            background-color: #4682b4;
+            border-radius: 5px 5px 0 0;
+            transition: height 0.5s ease;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+        .bar-label {
+            color: white;
+            font-weight: bold;
+            padding: 5px;
+            transform: translateY(-25px);
+        }
+        .bar-name {
+            position: absolute;
+            bottom: -25px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+        .x-axis {
+            position: absolute;
+            bottom: -30px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #333;
+        }
+        .y-axis {
+            position: absolute;
+            bottom: 0;
+            left: -30px;
+            width: 2px;
+            height: 100%;
+            background-color: #333;
+        }
+        .model-diagram {
+            width: 100%;
+            height: 300px;
+            position: relative;
+            margin: 30px 0;
+        }
+        .node {
+            position: absolute;
+            width: 120px;
+            height: 50px;
+            background-color: #f0f7ff;
+            border: 2px solid #4682b4;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 0.75rem;
+            padding: 5px;
+        }
+        .arrow {
+            position: absolute;
+            height: 2px;
+            background-color: #4682b4;
+            transform-origin: left center;
+        }
+        .arrow::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid #4682b4;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+        .arrow-label {
+            position: absolute;
+            font-size: 0.75rem;
+            background-color: white;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+        .score-indicator {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .score-bar {
+            flex: 1;
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0 10px;
+        }
+        .score-fill {
+            height: 100%;
+            background-color: #4682b4;
+            border-radius: 10px;
+        }
+        .score-value {
+            font-weight: bold;
+            width: 40px;
+            text-align: right;
+        }
+        .section-switcher {
+            display: flex;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 20px;
+        }
+        .section-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            font-size: 1rem;
+        }
+        .section-btn.active {
+            font-weight: bold;
+            color: #4682b4;
+        }
+        .section-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #4682b4;
+        }
+        .section-content {
+            display: none;
+        }
+        .section-content.active {
+            display: block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th {
+            background-color: #f0f7ff;
+            color: #333;
+        }
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="lang-en show">App-Based Language Learning Acceptance Dashboard</h1>
+            <h1 class="lang-zh">基于应用程序的语言学习接受度仪表板</h1>
+            <p class="lang-en show">Based on research by Hyun-Bin Hwang (2025)</p>
+            <p class="lang-zh">基于黄炫彬 (2025) 的研究</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="language-toggle">
+            <button class="language-btn active" data-lang="en">English</button>
+            <button class="language-btn" data-lang="zh">中文</button>
+        </div>
+
+        <div class="dashboard-row">
+            <div class="card">
+                <h2 class="lang-en show">Study Overview</h2>
+                <h2 class="lang-zh">研究概述</h2>
+                
+                <div class="lang-en show">
+                    <p>This dashboard visualizes findings from a study examining the acceptance and use of language learning apps among 297 young adolescents (aged 12-13) in a self-directed context using the Unified Theory of Acceptance and Use of Technology (UTAUT).</p>
+                    
+                    <div class="quote">
+                        "App-based language learning has gained attention for its potential to promote L2 learning beyond the classroom. However, few learners use L2 learning apps long enough to fully benefit from this learning method." (Hwang, 2025, p.1)
+                    </div>
+                    
+                    <p>The study investigated what factors influence young adolescents' behavioral intention to use language learning apps outside of class and what influences their actual usage behavior.</p>
+                </div>
+                
+                <div class="lang-zh">
+                    <p>此仪表板可视化了一项研究的发现，该研究使用技术接受与使用统一理论(UTAUT)考察了297名青少年(12-13岁)在自主学习环境中接受和使用语言学习应用程序的情况。</p>
+                    
+                    <div class="quote">
+                        "基于应用程序的语言学习因其促进课堂外第二语言学习的潜力而受到关注。然而，很少有学习者使用第二语言学习应用程序的时间足够长，以充分受益于这种学习方法。" (黄炫彬，2025，第1页)
+                    </div>
+                    
+                    <p>该研究调查了哪些因素影响青少年在课外使用语言学习应用程序的行为意向，以及哪些因素影响其实际使用行为。</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="lang-en show">Participant Demographics</h2>
+                <h2 class="lang-zh">参与者人口统计</h2>
+                
+                <div class="lang-en show">
+                    <div class="stats-box">
+                        <div class="stats-number">297</div>
+                        <div class="stats-label">Young EFL Learners (Age 12-13)</div>
+                    </div>
+                    
+                    <p>The participants were first-grade middle school students in South Korea during a "free semester," which aims to foster well-rounded personal development by relieving academic stress and encouraging students to explore their interests.</p>
+                    
+                    <p>None of the participants had prior experience with the focal technology, Mango Languages, before the study.</p>
+                </div>
+                
+                <div class="lang-zh">
+                    <div class="stats-box">
+                        <div class="stats-number">297</div>
+                        <div class="stats-label">青少年英语作为外语的学习者（12-13岁）</div>
+                    </div>
+                    
+                    <p>参与者是韩国中学一年级学生，处于"自由学期"期间。自由学期旨在通过减轻学业压力和鼓励学生探索兴趣来促进全面的个人发展。</p>
+                    
+                    <p>研究前，所有参与者都没有使用过研究中的目标技术Mango Languages的经验。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-switcher">
+            <button class="section-btn active" data-section="perception">
+                <span class="lang-en show">Student Perceptions</span>
+                <span class="lang-zh">学生认知</span>
+            </button>
+            <button class="section-btn" data-section="model">
+                <span class="lang-en show">UTAUT Model</span>
+                <span class="lang-zh">UTAUT模型</span>
+            </button>
+            <button class="section-btn" data-section="results">
+                <span class="lang-en show">Key Findings</span>
+                <span class="lang-zh">主要发现</span>
+            </button>
+            <button class="section-btn" data-section="implications">
+                <span class="lang-en show">Implications</span>
+                <span class="lang-zh">教学启示</span>
+            </button>
+        </div>
+
+        <div class="section-content active" id="perception-section">
+            <div class="dashboard-row">
+                <div class="card">
+                    <h2 class="lang-en show">Student Perceptions of App Learning</h2>
+                    <h2 class="lang-zh">学生对应用程序学习的看法</h2>
+                    
+                    <div class="lang-en show">
+                        <p>The chart below shows students' average scores for each UTAUT variable on a 6-point scale. Mean scores above 4 indicate positive responses ('somewhat agree'), whereas mean scores below 3 represent negative responses ('somewhat disagree').</p>
+                    </div>
+                    
+                    <div class="lang-zh">
+                        <p>下图显示了学生在6分量表上对每个UTAUT变量的平均得分。高于4的平均分表示积极响应（"有些同意"），而低于3的平均分表示消极响应（"有些不同意"）。</p>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="y-axis"></div>
+                        <div class="x-axis"></div>
+                        <div class="bar" style="left: 10%; height: 61%; background-color: #5b9bd5;">
+                            <div class="bar-label">3.66</div>
+                            <div class="bar-name lang-en show">Performance Expectancy</div>
+                            <div class="bar-name lang-zh">性能期望</div>
+                        </div>
+                        <div class="bar" style="left: 30%; height: 67%; background-color: #ed7d31;">
+                            <div class="bar-label">4.03</div>
+                            <div class="bar-name lang-en show">Effort Expectancy</div>
+                            <div class="bar-name lang-zh">努力期望</div>
+                        </div>
+                        <div class="bar" style="left: 50%; height: 46%; background-color: #a5a5a5;">
+                            <div class="bar-label">2.77</div>
+                            <div class="bar-name lang-en show">Social Influence</div>
+                            <div class="bar-name lang-zh">社会影响</div>
+                        </div>
+                        <div class="bar" style="left: 70%; height: 72%; background-color: #ffc000;">
+                            <div class="bar-label">4.31</div>
+                            <div class="bar-name lang-en show">Facilitating Conditions</div>
+                            <div class="bar-name lang-zh">促进条件</div>
+                        </div>
+                        <div class="bar" style="left: 90%; height: 55%; background-color: #4472c4;">
+                            <div class="bar-label">3.30</div>
+                            <div class="bar-name lang-en show">Behavioral Intention</div>
+                            <div class="bar-name lang-zh">行为意向</div>
+                        </div>
+                    </div>
+                    
+                    <div class="quote lang-en show">
+                        "Overall, the students displayed a somewhat neutral level of acceptance toward app-based language learning, yet they generally showed positive dispositions toward app-based language learning out of class, particularly for its perceived usefulness, ease of use, and the surrounding environments that facilitate its use. However, it is important to note that support from socially important others (e.g., teachers, parents, friends) for app usage was limited." (Hwang, 2025, p.8)
+                    </div>
+                    
+                    <div class="quote lang-zh">
+                        "总体而言，学生对基于应用程序的语言学习表现出一定程度的中性接受度，但他们普遍对课外基于应用程序的语言学习持积极态度，特别是对其感知的有用性、易用性和促进其使用的周围环境。然而，值得注意的是，社会重要他人（如教师、父母、朋友）对应用使用的支持有限。"（黄炫彬，2025年，第8页）
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-row">
+                <div class="card">
+                    <h2 class="lang-en show">App Usage Patterns</h2>
+                    <h2 class="lang-zh">应用使用模式</h2>
+                    
+                    <div class="lang-en show">
+                        <p>The study measured actual usage behavior by tracking the number of lessons completed by students over a 3-month period (April 1st to June 30th).</p>
+                        
+                        <div class="stats-box">
+                            <div class="stats-number">11</div>
+                            <div class="stats-label">Average Number of Lessons Completed</div>
+                        </div>
+                        
+                        <div class="stats-box">
+                            <div class="stats-number">24%</div>
+                            <div class="stats-label">Students Who Did Not Complete Any Lessons</div>
+                        </div>
+                        
+                        <p>Usage patterns varied considerably among students (Standard Deviation = 15.85, Median = 5 lessons, Range = 0 to 92 lessons).</p>
+                        
+                        <div class="quote">
+                            "This challenges an overly optimistic perspective that app-based language learning can serve as a stand-alone substitute for in-class instruction or fully replace off-line language classes. This is because the mere availability of technology does not necessarily ensure that students will accept and actively use it for L2 learning." (Hwang, 2025, p.11)
+                        </div>
+                    </div>
+                    
+                    <div class="lang-zh">
+                        <p>该研究通过跟踪学生在3个月期间（4月1日至6月30日）完成的课程数量来衡量实际使用行为。</p>
+                        
+                        <div class="stats-box">
+                            <div class="stats-number">11</div>
+                            <div class="stats-label">平均完成课程数</div>
+                        </div>
+                        
+                        <div class="stats-box">
+                            <div class="stats-number">24%</div>
+                            <div class="stats-label">未完成任何课程的学生</div>
+                        </div>
+                        
+                        <p>学生之间的使用模式差异较大（标准差=15.85，中位数=5课，范围=0至92课）。</p>
+                        
+                        <div class="quote">
+                            "这挑战了一种过于乐观的观点，即基于应用程序的语言学习可以作为课堂教学的独立替代品或完全取代线下语言课程。这是因为技术的单纯可用性并不一定能确保学生接受并积极使用它来进行第二语言学习。"（黄炫彬，2025年，第11页）
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-content" id="model-section">
+            <div class="dashboard-row">
+                <div class="card">
+                    <h2 class="lang-en show">UTAUT Model Explained</h2>
+                    <h2 class="lang-zh">UTAUT模型解释</h2>
+                    
+                    <div class="lang-en show">
+                        <p>The Unified Theory of Acceptance and Use of Technology (UTAUT) provides a meta-theoretical framework for understanding how individuals accept and use educational technologies. The table below explains each component:</p>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>UTAUT Variable</th>
+                                    <th>Definition</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Performance Expectancy (PE)</td>
+                                    <td>The extent to which individuals find a technology useful for their performance (e.g., learning)</td>
+                                </tr>
+                                <tr>
+                                    <td>Effort Expectancy (EE)</td>
+                                    <td>The extent to which individuals find a technology easy to use</td>
+                                </tr>
+                                <tr>
+                                    <td>Social Influence (SI)</td>
+                                    <td>The extent to which individuals feel supported by socially important others (e.g., teachers, parents, peers) in their use of a technology</td>
+                                </tr>
+                                <tr>
+                                    <td>Facilitating Conditions (FC)</td>
+                                    <td>The extent to which individuals evaluate their surrounding environments (e.g., devices, learning spaces) as conducive to using a technology</td>
+                                </tr>
+                                <tr>
+                                    <td>Behavioral Intention (BI)</td>
+                                    <td>The extent to which individuals are inclined to accept a technology for use</td>
+                                </tr>
+                                <tr>
+                                    <td>Usage Behavior</td>
+                                    <td>The extent to which individuals persistently use a technology</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="quote">
+                            "The UTAUT predicts that individuals who perceive an educational technology as useful and convenient, when leveraged with social support and favorable conditions for its use, are more likely to develop a stronger intention to use it (i.e., acceptance). This heightened technology acceptance, in turn, leads to greater actual usage (i.e., persistence)." (Hwang, 2025, p.2)
+                        </div>
+                    </div>
+                    
+                    <div class="lang-zh">
+                        <p>技术接受与使用统一理论(UTAUT)提供了一个元理论框架，用于理解个人如何接受和使用教育技术。下表解释了每个组成部分：</p>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>UTAUT变量</th>
+                                    <th>定义</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>性能期望 (PE)</td>
+                                    <td>个人认为技术对其表现（例如学习）有用的程度</td>
+                                </tr>
+                                <tr>
+                                    <td>努力期望 (EE)</td>
+                                    <td>个人认为技术易于使用的程度</td>
+                                </tr>
+                                <tr>
+                                    <td>社会影响 (SI)</td>
+                                    <td>个人在使用技术时感受到社会重要他人（如教师、父母、同伴）支持的程度</td>
+                                </tr>
+                                <tr>
+                                    <td>促进条件 (FC)</td>
+                                    <td>个人评估其周围环境（如设备、学习空间）有利于使用技术的程度</td>
+                                </tr>
+                                <tr>
+                                    <td>行为意向 (BI)</td>
+                                    <td>个人倾向于接受使用技术的程度</td>
+                                </tr>
+                                <tr>
+                                    <td>使用行为</td>
+                                    <td>个人持续使用技术的程度</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="quote">
+                            "UTAUT预测，当个人认为教育技术有用且方便，并且得到社会支持和有利的使用条件时，他们更有可能形成更强的使用意向（即接受）。这种更高的技术接受度又会导致更多的实际使用（即坚持）。"（黄炫彬，2025年，第2页）
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-row">
+                <div class="card">
+                    <h2 class="lang-en show">UTAUT Model Results</h2>
+                    <h2 class="lang-zh">UTAUT模型结果</h2>
+                    
+                    <div class="lang-en show">
+                        <p>The study tested six hypotheses about the relationships between UTAUT variables. The diagram below shows the final model with standardized coefficients:</p>
+                    </div>
+                    
+                    <div class="lang-zh">
+                        <p>该研究测试了关于UTAUT变量之间关系的六个假设。下图显示了具有标准化系数的最终模型：</p>
+                    </div>
+
+                    <div class="model-diagram">
+                        <div class="node" style="top: 50px; left: 0px;">
+                            <span class="lang-en show">Performance Expectancy</span>
+                            <span class="lang-zh">性能期望</span>
+                        </div>
+                        <div class="node" style="top: 120px; left: 0px;">
+                            <span class="lang-en show">Effort Expectancy</span>
+                            <span class="lang-zh">努力期望</span>
+                        </div>
+                        <div class="node" style="top: 190px; left: 0px;">
+                            <span class="lang-en show">Social Influence</span>
+                            <span class="lang-zh">社会影响</span>
+                        </div>
+                        <div class="node" style="top: 260px; left: 0px;">
+                            <span class="lang-en show">Facilitating Conditions</span>
+                            <span class="lang-zh">促进条件</span>
+                        </div>
+                        <div class="node" style="top: 150px; left: 250px;">
+                            <span class="lang-en show">Behavioral Intention</span>
+                            <span class="lang-zh">行为意向</span>
+                        </div>
+                        <div class="node" style="top: 150px; left: 500px;">
+                            <span class="lang-en show">Usage Behavior</span>
+                            <span class="lang-zh">使用行为</span>
+                        </div>
+                        
+                        <!-- Arrows -->
+                        <div class="arrow" style="top: 75px; left: 120px; width: 130px;"></div>
+                        <div class="arrow-label" style="top: 55px; left: 160px;">0.60*</div>
+                        
+                        <div class="arrow" style="top: 145px; left: 120px; width: 130px; border-top: 2px dashed #4682b4; background: none;"></div>
+                        <div class="arrow-label" style="top: 125px; left: 160px;">0.09</div>
+                        
+                        <div class="arrow" style="top: 190px; left: 120px; width: 130px; transform: rotate(-15deg);"></div>
+                        <div class="arrow-label" style="top: 170px; left: 160px;">0.23*</div>
+                        
+                        <div class="arrow" style="top: 230px; left: 120px; width: 130px; transform: rotate(-30deg); border-top: 2px dashed #4682b4; background: none;"></div>
+                        <div class="arrow-label" style="top: 210px; left: 160px;">0.12</div>
+                        
+                        <div class="arrow" style="top: 150px; left: 370px; width: 130px;"></div>
+                        <div class="arrow-label" style="top: 130px; left: 410px;">0.24*</div>
+                        
+                        <div class="arrow" style="top: 230px; left: 120px; width: 380px; transform: rotate(-15deg);"></div>
+                        <div class="arrow-label" style="top: 240px; left: 320px;">0.32*</div>
+                    </div>
+                    
+                    <div class="lang-en show">
+                        <p>* indicates statistically significant paths (p < .05)</p>
+                        <p>Dashed arrows indicate non-significant relationships.</p>
+                        
+                        <div class="quote">
+                            "Performance expectancy was a significant predictor of behavioral intention, with the strongest effect, β* = 0.60, 95% CI [0.45, 0.75], p < .001. Social influence also significantly influenced behavioral intention, albeit to a lesser extent, β* = 0.23, 95% CI [0.13, 0.33], p < .001. However, effort expectancy (β* = 0.09, 95% CI [-0.06, 0.25], p = .23) and facilitating conditions (β* = 0.12, 95% CI [-0.04, 0.27], p = .13) had no significant impact on behavioral intention." (Hwang, 2025, p.10)
+                        </div>
+                    </div>
+                    
+                    <div class="lang-zh">
+                        <p>* 表示统计显著路径 (p < .05)</p>
+                        <p>虚线箭头表示非显著关系。</p>
+                        
+                        <div class="quote">
+                            "性能期望是行为意向的显著预测因素，具有最强效应，β* = 0.60，95% CI [0.45, 0.75]，p < .001。社会影响也显著影响行为意向，尽管程度较小，β* = 0.23，95% CI [0.13, 0.33]，p < .001。然而，努力期望 (β* = 0.09，95% CI [-0.06, 0.25]，p = .23) 和促进条件 (β* = 0.12，95% CI [-0.04, 0.27]，p = .13) 对行为意向没有显著影响。" (黄炫彬，2025年，第10页)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-content" id="results-section">
+            <div class="dashboard-row">
+                <div class="card">
+                    <h2 class="lang-en show">Key Findings</h2>
+                    <h2 class="lang-zh">主要发现</h2>
+                    
+                    <div class="lang-en show">
+                        <div class="key-finding">
+                            <div class="key-finding-icon">1</div>
+                            <div class="key-finding-text">
+                                <strong>Perceived usefulness is critical for app acceptance</strong>
+                                <p>Performance expectancy (the extent to which students found the app useful for learning) was the strongest predictor of their behavioral intention to use the app.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="key-finding">
+                            <div class="key-finding-icon">2</div>
+                            <div class="key-finding-text">
+                                <strong>Social support matters for young learners</strong>
+                                <p>Even though social influence scores were generally low (M = 2.77), social influence significantly predicted behavioral intention, suggesting that support from teachers, parents, and peers affects young adolescents' acceptance of language learning apps.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="key-finding">
+                            <div class="key-finding-icon">3</div>
+                            <div class="key-finding-text">
+                                <strong>Favorable environments directly impact app usage</strong>
+                                <p>Facilitating conditions (access to devices, internet, comfortable learning spaces) directly influenced actual app usage behavior, showing greater impact than behavioral intention.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="key-finding">
+                            <div class="key-finding-icon">4</div>
+                            <div class="key-finding-text">
+                                <strong>Ease of use was not significant</strong>
+                                <p>Effort expectancy did not significantly predict behavioral intention, possibly because the focal app was already highly user-friendly, so students didn't perceive it as presenting substantial challenges.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="key-finding">
+                            <div class="key-finding-icon">5</div>
+                            <div class="key-finding-text">
+                                <strong>Few students use apps long enough to benefit</strong>
+                                <p>Only a small group of learners use apps long enough to fully benefit from this learning method. About 24% did not complete even one lesson during the 3-month period.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="lang-zh">
+                        <div class="key-finding">
+                            <div class="key-finding-icon">1</div>
+                            <div class="key-finding-text">
+                                <strong>感知有用性对应用接受度至关重要</strong>
+                                <p>性能期望（学生认为应用对学习有用的程度）是其使用应用的行为意向的最强预测因素。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="key-finding">
+                            <div class="key-finding-icon">2</div>
+                            <div class="key-finding-text">
+                                <strong>社会支持对年轻学习者很重要</strong>
+                                <p>尽管社会影响得分普遍较低（M = 2.77），但社会影响显著预测行为意向，表明来自教师、父母和同伴的支持会影响青少年对语言学习应用的接受度。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="key-finding">
+                            <div class="key-finding-icon">3</div>
+                            <div class="key-finding-text">
+                                <strong>有利的环境直接影响应用使用</strong>
+                                <p>促进条件（获取设备、互联网、舒适的学习空间）直接影响实际应用使用行为，显示比行为意向更大的影响。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="key-finding">
+                            <div class="key-finding-icon">4</div>
+                            <div class="key-finding-text">
+                                <strong>易用性影响不显著</strong>
+                                <p>努力期望对行为意向没有显著预测作用，可能是因为目标应用已经非常用户友好，所以学生不认为它存在实质性挑战。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="key-finding">
+                            <div class="key-finding-icon">5</div>
+                            <div class="key-finding-text">
+                                <strong>很少有学生使用应用足够长时间以获益</strong>
+                                <p>只有少数学习者使用应用的时间足够长，能够充分受益于这种学习方法。约24%的学生在3个月期间甚至没有完成一节课。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-content" id="implications-section">
+            <div class="dashboard-row">
+                <div class="card">
+                    <h2 class="lang-en show">Pedagogical Implications</h2>
+                    <h2 class="lang-zh">教学启示</h2>
+                    
+                    <div class="lang-en show">
+                        <p>Based on the study's findings, here are key implications for enhancing young adolescents' app-based language learning in self-study settings:</p>
+                        
+                        <div class="key-finding">
+                            <div class="key-finding-icon">1</div>
+                            <div class="key-finding-text">
+                                <strong>Emphasize app usefulness</strong>
+                                <p>Teachers should raise students' awareness of how apps can benefit their L2 learning by explicitly demonstrating app features and providing hands-on tasks that involve app usage.</p>
+                                <div class="quote">
+                                    "One effective approach could be explicitly demonstrating app features and providing hands-on tasks that involve app usage. For example, with Mango Languages, teachers can have students practice using the built-in flashcard function to review key vocabulary and acoustic visualization which provides real-time feedback on their pronunciation performance." (Hwang, 2025, p.12)
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="key-finding">
+                            <div class="key-finding-icon">2</div>
+                            <div class="key-finding-text">
+                                <strong>Provide consistent social encouragement</strong>
+                                <p>Given the significant impact of social influence, teachers should integrate frequent reminders or casual discussions about apps into their everyday teaching practices.</p>
+                                <div class="quote">
+                                    "This support does not have to be formal or time-intensive interventions. For example, teachers simply can integrate frequent reminders or casual discussions about apps into their everyday teaching practices, reinforcing the idea that necessary support is always available to them, even when learning occurs beyond the classroom." (Hwang, 2025, p.12)
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="key-finding">
+                            <div class="key-finding-icon">3</div>
+                            <div class="key-finding-text">
+                                <strong>Use reflective journaling</strong>
+                                <p>Implement reflective journal writing to encourage students to evaluate their app usage and identify areas for improvement.</p>
+                                <div class="quote">
+                                    "Another effective method involves students keeping a diary of their app-based language learning experiences. This reflective journaling encourages students to evaluate their app usage and identify areas for improvement, while also enabling teachers to provide personalized feedback and targeted support." (Hwang, 2025, p.12)
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="key-finding">
+                            <div class="key-finding-icon">4</div>
+                            <div class="key-finding-text">
+                                <strong>Ensure access to necessary resources</strong>
+                                <p>Teachers should ensure that students have access to the necessary resources and technical support beyond the classroom, particularly for students from diverse socioeconomic backgrounds.</p>
+                                <div class="quote">
+                                    "The presence of conducive environments (e.g., access to smart devices, stable Internet connectivity, comfortable learning spaces) directly influenced out-of-class app usage, showing greater impacts than technology acceptance." (Hwang, 2025, p.12)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="lang-zh">
+                        <p>基于研究发现，以下是提高青少年在自主学习环境中基于应用程序语言学习的关键启示：</p>
+                        
+                        <div class="key-finding">
+                            <div class="key-finding-icon">1</div>
+                            <div class="key-finding-text">
+                                <strong>强调应用的有用性</strong>
+                                <p>教师应通过明确展示应用功能并提供涉及应用使用的实践任务，提高学生对应用如何促进第二语言学习的认识。</p>
+                                <div class="quote">
+                                    "一种有效的方法可以是明确展示应用功能并提供涉及应用使用的实践任务。例如，使用Mango Languages时，教师可以让学生练习使用内置的闪卡功能复习关键词汇和声音可视化，后者提供关于其发音表现的实时反馈。"（黄炫彬，2025年，第12页）
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="key-finding">
+                            <div class="key-finding-icon">2</div>
+                            <div class="key-finding-text">
+                                <strong>提供持续的社会鼓励</strong>
+                                <p>鉴于社会影响的显著作用，教师应将频繁的提醒或关于应用的日常讨论融入日常教学实践中。</p>
+                                <div class="quote">
+                                    "这种支持不必是正式或耗时的干预。例如，教师可以简单地将有关应用的频繁提醒或随意讨论融入日常教学实践中，强化即使在课堂外学习时，必要的支持也始终可用的理念。"（黄炫彬，2025年，第12页）
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="key-finding">
+                            <div class="key-finding-icon">3</div>
+                            <div class="key-finding-text">
+                                <strong>使用反思日记</strong>
+                                <p>实施反思性日记写作，鼓励学生评估自己的应用使用情况并确定需要改进的领域。</p>
+                                <div class="quote">
+                                    "另一种有效的方法涉及让学生记录基于应用程序的语言学习经验的日记。这种反思性日记写作鼓励学生评估自己的应用使用情况并确定需要改进的领域，同时也使教师能够提供个性化反馈和有针对性的支持。"（黄炫彬，2025年，第12页）
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="key-finding">
+                            <div class="key-finding-icon">4</div>
+                            <div class="key-finding-text">
+                                <strong>确保获取必要资源</strong>
+                                <p>教师应确保学生能够在课堂外获得必要的资源和技术支持，特别是来自不同社会经济背景的学生。</p>
+                                <div class="quote">
+                                    "有利环境（如获取智能设备、稳定的互联网连接、舒适的学习空间）的存在直接影响课外应用使用，表现出比技术接受度更大的影响。"（黄炫彬，2025年，第12页）
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="container">
+        <div class="lang-en show">
+            <p>Based on: Hwang, H.-B. (2025). Acceptance and Use of App-Based Language Learning Among Young Adolescents in a Self-Directed Context. TESOL Quarterly.</p>
+            <p>This visualization dashboard is for educational purposes only.</p>
+        </div>
+        <div class="lang-zh">
+            <p>基于：黄炫彬（2025）。青少年在自主学习环境中对基于应用程序的语言学习的接受与使用。TESOL季刊。</p>
+            <p>此可视化仪表板仅供教育目的使用。</p>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle between English and Chinese
+        const languageButtons = document.querySelectorAll('.language-btn');
+        languageButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const lang = this.getAttribute('data-lang');
+                
+                // Remove active class from all buttons
+                languageButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Hide all language content
+                document.querySelectorAll('.lang-en, .lang-zh').forEach(el => el.classList.remove('show'));
+                
+                // Show content for selected language
+                document.querySelectorAll(`.lang-${lang}`).forEach(el => el.classList.add('show'));
+            });
+        });
+
+        // Section switching functionality
+        const sectionButtons = document.querySelectorAll('.section-btn');
+        sectionButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const section = this.getAttribute('data-section');
+                
+                // Remove active class from all buttons and sections
+                sectionButtons.forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.section-content').forEach(sec => sec.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding section
+                this.classList.add('active');
+                document.getElementById(`${section}-section`).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

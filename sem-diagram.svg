@@ -1,0 +1,192 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
+  <!-- Background -->
+  <rect width="900" height="600" fill="#f8f9fa" />
+  
+  <!-- Title -->
+  <text x="450" y="40" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#333">
+    Structural Equation Model of App-Based Language Learning Acceptance
+  </text>
+  <text x="450" y="70" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#666">
+    Based on Hwang (2025) - UTAUT Framework Application
+  </text>
+  
+  <!-- Model Variables - Exogenous Variables -->
+  <g id="exogenous-variables">
+    <!-- Performance Expectancy -->
+    <ellipse cx="150" cy="180" rx="90" ry="50" fill="#5b9bd5" stroke="#2e75b6" stroke-width="2" opacity="0.8" />
+    <text x="150" y="175" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">
+      Performance
+    </text>
+    <text x="150" y="195" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">
+      Expectancy (PE)
+    </text>
+    
+    <!-- Effort Expectancy -->
+    <ellipse cx="150" cy="300" rx="90" ry="50" fill="#ed7d31" stroke="#c55a11" stroke-width="2" opacity="0.8" />
+    <text x="150" y="295" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">
+      Effort
+    </text>
+    <text x="150" y="315" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">
+      Expectancy (EE)
+    </text>
+    
+    <!-- Social Influence -->
+    <ellipse cx="150" cy="420" rx="90" ry="50" fill="#a5a5a5" stroke="#7f7f7f" stroke-width="2" opacity="0.8" />
+    <text x="150" y="415" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">
+      Social
+    </text>
+    <text x="150" y="435" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">
+      Influence (SI)
+    </text>
+    
+    <!-- Facilitating Conditions -->
+    <ellipse cx="150" cy="540" rx="90" ry="50" fill="#ffc000" stroke="#bf9000" stroke-width="2" opacity="0.8" />
+    <text x="150" y="535" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">
+      Facilitating
+    </text>
+    <text x="150" y="555" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">
+      Conditions (FC)
+    </text>
+  </g>
+  
+  <!-- Model Variables - Endogenous Variables -->
+  <g id="endogenous-variables">
+    <!-- Behavioral Intention -->
+    <ellipse cx="500" cy="300" rx="90" ry="50" fill="#4472c4" stroke="#2f5597" stroke-width="2" opacity="0.8" />
+    <text x="500" y="295" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">
+      Behavioral
+    </text>
+    <text x="500" y="315" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">
+      Intention (BI)
+    </text>
+    
+    <!-- Usage Behavior -->
+    <rect x="700" y="250" width="120" height="100" rx="10" ry="10" fill="#70ad47" stroke="#507e32" stroke-width="2" opacity="0.8" />
+    <text x="760" y="295" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">
+      Usage
+    </text>
+    <text x="760" y="315" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#fff">
+      Behavior
+    </text>
+  </g>
+  
+  <!-- Paths -->
+  <g id="paths">
+    <!-- PE to BI (H1) - significant -->
+    <path d="M 230 180 L 410 280" stroke="#5b9bd5" stroke-width="4" fill="none" />
+    <polygon points="410,280 395,270 405,260" fill="#5b9bd5" />
+    <text x="310" y="215" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#5b9bd5">
+      β* = 0.60***
+    </text>
+    <text x="310" y="235" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#444">
+      (H1 ✓)
+    </text>
+    
+    <!-- EE to BI (H2) - not significant -->
+    <path d="M 240 300 L 410 300" stroke="#ed7d31" stroke-width="2" fill="none" stroke-dasharray="5,5" />
+    <polygon points="410,300 395,295 395,305" fill="#ed7d31" />
+    <text x="325" y="285" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#ed7d31">
+      β* = 0.09
+    </text>
+    <text x="325" y="305" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#444">
+      (H2 ✗)
+    </text>
+    
+    <!-- SI to BI (H3) - significant -->
+    <path d="M 230 420 L 410 320" stroke="#a5a5a5" stroke-width="3" fill="none" />
+    <polygon points="410,320 395,325 390,310" fill="#a5a5a5" />
+    <text x="310" y="385" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#a5a5a5">
+      β* = 0.23***
+    </text>
+    <text x="310" y="405" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#444">
+      (H3 ✓)
+    </text>
+    
+    <!-- FC to BI (H4) - not significant -->
+    <path d="M 230 520 L 420 340" stroke="#ffc000" stroke-width="2" fill="none" stroke-dasharray="5,5" />
+    <polygon points="420,340 410,345 400,335" fill="#ffc000" />
+    <text x="310" y="460" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#ffc000">
+      β* = 0.12
+    </text>
+    <text x="310" y="480" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#444">
+      (H4 ✗)
+    </text>
+    
+    <!-- BI to UB (H5) - significant -->
+    <path d="M 590 300 L 700 300" stroke="#4472c4" stroke-width="3" fill="none" />
+    <polygon points="700,300 685,295 685,305" fill="#4472c4" />
+    <text x="645" y="285" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#4472c4">
+      β* = 0.24*
+    </text>
+    <text x="645" y="305" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#444">
+      (H5 ✓)
+    </text>
+    
+    <!-- FC to UB (H6) - significant -->
+    <path d="M 230 540 L 700 320" stroke="#ffc000" stroke-width="3" fill="none" />
+    <polygon points="700,320 685,320 685,310" fill="#ffc000" />
+    <text x="470" y="460" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#ffc000">
+      β* = 0.32***
+    </text>
+    <text x="470" y="480" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#444">
+      (H6 ✓)
+    </text>
+  </g>
+  
+  <!-- Legend -->
+  <g id="legend">
+    <rect x="610" y="480" width="240" height="90" fill="white" stroke="#ccc" stroke-width="1" rx="5" ry="5" />
+    <text x="730" y="500" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">
+      Legend
+    </text>
+    
+    <!-- Significance Levels -->
+    <line x1="620" y1="520" x2="650" y2="520" stroke="#333" stroke-width="3" />
+    <text x="730" y="525" font-family="Arial, sans-serif" font-size="12" text-anchor="start" fill="#333">
+      Significant path (* p<.05, *** p<.001)
+    </text>
+    
+    <line x1="620" y1="545" x2="650" y2="545" stroke="#333" stroke-width="2" stroke-dasharray="5,5" />
+    <text x="730" y="550" font-family="Arial, sans-serif" font-size="12" text-anchor="start" fill="#333">
+      Non-significant path
+    </text>
+  </g>
+  
+  <!-- Annotations -->
+  <g id="annotations">
+    <!-- Variance explained for BI -->
+    <rect x="440" y="200" width="120" height="60" fill="rgba(68, 114, 196, 0.2)" stroke="#4472c4" stroke-width="1" rx="5" ry="5" />
+    <text x="500" y="225" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">
+      R² = 88.8%
+    </text>
+    <text x="500" y="245" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#666">
+      Variance explained
+    </text>
+    
+    <!-- Variance explained for UB -->
+    <rect x="700" y="380" width="120" height="60" fill="rgba(112, 173, 71, 0.2)" stroke="#70ad47" stroke-width="1" rx="5" ry="5" />
+    <text x="760" y="405" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">
+      R² = 26.7%
+    </text>
+    <text x="760" y="425" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#666">
+      Variance explained
+    </text>
+  </g>
+  
+  <!-- UTAUT Framework Label -->
+  <rect x="50" y="100" width="200" height="40" fill="rgba(245, 245, 245, 0.8)" stroke="#ccc" stroke-width="1" rx="5" ry="5" />
+  <text x="150" y="125" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">
+    UTAUT Exogenous Variables
+  </text>
+  
+  <!-- Endogenous Variables Label -->
+  <rect x="500" y="150" width="200" height="40" fill="rgba(245, 245, 245, 0.8)" stroke="#ccc" stroke-width="1" rx="5" ry="5" />
+  <text x="600" y="175" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#333">
+    UTAUT Endogenous Variables
+  </text>
+  
+  <!-- Footer with source -->
+  <text x="450" y="580" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#666">
+    Source: Hwang, H.-B. (2025). Acceptance and Use of App-Based Language Learning Among Young Adolescents in a Self-Directed Context
+  </text>
+</svg>

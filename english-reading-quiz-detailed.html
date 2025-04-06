@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Reading Passage with Comprehensive Explanations</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        h2 {
+            color: #3498db;
+            margin-top: 30px;
+            font-size: 20px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #3498db;
+        }
+        .language-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .language-btn {
+            padding: 8px 15px;
+            margin: 0 10px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .language-btn:hover {
+            background-color: #2980b9;
+        }
+        .language-btn.active {
+            background-color: #2c3e50;
+        }
+        .passage {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+        }
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #ddd;
+        }
+        .question p {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .options {
+            padding-left: 20px;
+        }
+        .option {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: baseline;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        .option label {
+            flex: 1;
+        }
+        .check-btn {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .check-btn:hover {
+            background-color: #27ae60;
+        }
+        .reset-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-left: 10px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .reset-btn:hover {
+            background-color: #c0392b;
+        }
+        .explanation-btn {
+            background-color: #9b59b6;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-left: 10px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            display: none;
+        }
+        .explanation-btn:hover {
+            background-color: #8e44ad;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: none;
+        }
+        .correct {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+        .incorrect {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+        .hidden {
+            display: none;
+        }
+        .feedback {
+            font-style: italic;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+        }
+        .explanation-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f0f8ff;
+            border-radius: 5px;
+            border-left: 4px solid #9b59b6;
+            display: none;
+        }
+        .explanation-title {
+            font-weight: bold;
+            color: #8e44ad;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .explanation-item {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #ccc;
+        }
+        .explanation-item:last-child {
+            border-bottom: none;
+        }
+        .answer-option {
+            margin-bottom: 10px;
+        }
+        .correct-answer {
+            font-weight: bold;
+            color: #27ae60;
+        }
+        .incorrect-answer {
+            color: #7f8c8d;
+        }
+        .option-explanation {
+            margin-left: 20px;
+            font-style: italic;
+        }
+        .quote {
+            background-color: #f0f0f0;
+            padding: 8px;
+            border-radius: 4px;
+            font-style: italic;
+            margin: 10px 0;
+            border-left: 3px solid #3498db;
+        }
+        .option-feedback {
+            margin-top: 5px;
+            border-radius: 5px;
+            padding: 10px;
+            display: none;
+        }
+        .option-feedback.correct {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+            border-left: 3px solid #27ae60;
+        }
+        .option-feedback.incorrect {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+            border-left: 3px solid #c0392b;
+        }
+        .textual-evidence {
+            margin-top: 5px;
+            font-style: italic;
+            color: #555;
+            border-left: 2px solid #3498db;
+            padding-left: 10px;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="title-en">English Reading Passage with Comprehension Questions</h1>
+        <h1 id="title-zh" class="hidden">英语阅读文段及理解题</h1>
+        
+        <div class="language-toggle">
+            <button class="language-btn active" id="en-btn">English</button>
+            <button class="language-btn" id="zh-btn">中文</button>
+        </div>
+        
+        <div id="passage-section-en">
+            <h2>Reading Passage</h2>
+            <div class="passage">
+                <p>The invention of the smartphone has revolutionized how we interact with the world around us. Before smartphones became widespread, people relied on multiple devices to accomplish tasks that can now be done with a single device. Cameras, calculators, maps, and music players were all separate items that people carried with them. Now, smartphones have integrated all these functions into one compact device.</p>
+                <p>While smartphones have made life more convenient in many ways, they have also created new challenges. Studies show that excessive screen time can negatively impact sleep patterns, particularly when people use their phones right before bed. The blue light emitted from smartphone screens can suppress the production of melatonin, a hormone that helps regulate sleep cycles.</p>
+                <p>Additionally, the constant connectivity provided by smartphones has blurred the boundaries between work and personal life. Many people feel obligated to respond to work emails and messages outside of normal working hours, which can lead to increased stress and burnout. Despite these challenges, smartphones continue to evolve with new features and capabilities being added regularly.</p>
+                <p>Interestingly, smartphone usage varies significantly across different age groups. While younger generations have grown up with this technology and typically adapt to new features quickly, older generations often face a steeper learning curve. However, studies indicate that once older adults become comfortable with smartphone technology, they often find it just as valuable as younger users do.</p>
+            </div>
+        </div>
+        
+        <div id="passage-section-zh" class="hidden">
+            <h2>阅读文段</h2>
+            <div class="passage">
+                <p>智能手机的发明彻底改变了我们与周围世界互动的方式。在智能手机普及之前，人们依靠多种设备来完成现在用单一设备就能完成的任务。相机、计算器、地图和音乐播放器都是人们随身携带的独立物品。如今，智能手机已将所有这些功能整合到一个紧凑的设备中。</p>
+                <p>虽然智能手机在许多方面使生活变得更加便利，但它们也带来了新的挑战。研究表明，过度的屏幕时间会对睡眠模式产生负面影响，特别是当人们在睡前使用手机时。智能手机屏幕发出的蓝光会抑制褪黑激素的产生，而褪黑激素是帮助调节睡眠周期的荷尔蒙。</p>
+                <p>此外，智能手机提供的持续连接性模糊了工作和个人生活之间的界限。许多人觉得有义务在正常工作时间之外回复工作邮件和信息，这可能导致压力增加和精疲力竭。尽管面临这些挑战，智能手机仍在不断发展，定期添加新功能和新能力。</p>
+                <p>有趣的是，智能手机的使用在不同年龄组之间存在显著差异。虽然年轻一代是伴随着这项技术成长的，通常能够快速适应新功能，但老一代人往往面临更陡峭的学习曲线。然而，研究表明，一旦老年人熟悉了智能手机技术，他们通常会发现它与年轻用户一样有价值。</p>
+            </div>
+        </div>
+        
+        <div id="questions-section-en">
+            <h2>Comprehension Questions</h2>
+            <form id="quiz-form">
+                <div class="question" id="q1">
+                    <p>1. What did people use before smartphones became widespread?</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q1a" name="q1" value="A">
+                            <label for="q1a">A. Multiple devices for different tasks</label>
+                            <div class="option-feedback" id="q1a-feedback">
+                                <p><strong>Correct!</strong> The passage explicitly states: "Before smartphones became widespread, people relied on multiple devices to accomplish tasks that can now be done with a single device. Cameras, calculators, maps, and music players were all separate items that people carried with them."</p>
+                                <p class="textual-evidence">Evidence from the text: "Before smartphones became widespread, people relied on multiple devices to accomplish tasks that can now be done with a single device. Cameras, calculators, maps, and music players were all separate items that people carried with them."</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q1b" name="q1" value="B">
+                            <label for="q1b">B. Computers for all their needs</label>
+                            <div class="option-feedback" id="q1b-feedback">
+                                <p><strong>Incorrect.</strong> The passage does not mention computers as the primary tool people used before smartphones. Instead, it specifically lists separate physical devices like cameras, calculators, maps, and music players.</p>
+                                <p class="textual-evidence">Evidence from the text: "Before smartphones became widespread, people relied on multiple devices to accomplish tasks that can now be done with a single device. Cameras, calculators, maps, and music players were all separate items that people carried with them."</p>
+                                <p>The text clearly identifies specific separate devices rather than computers.</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q1c" name="q1" value="C">
+                            <label for="q1c">C. Only telephones for communication</label>
+                            <div class="option-feedback" id="q1c-feedback">
+                                <p><strong>Incorrect.</strong> The passage doesn't limit pre-smartphone technology to just telephones for communication. It explicitly mentions various separate devices used for different functions.</p>
+                                <p class="textual-evidence">Evidence from the text: "Before smartphones became widespread, people relied on multiple devices to accomplish tasks that can now be done with a single device. Cameras, calculators, maps, and music players were all separate items that people carried with them."</p>
+                                <p>The text lists multiple types of devices beyond just telephones.</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q1d" name="q1" value="D">
+                            <label for="q1d">D. Basic mobile phones with limited features</label>
+                            <div class="option-feedback" id="q1d-feedback">
+                                <p><strong>Incorrect.</strong> The passage doesn't specifically mention basic mobile phones as what people used before smartphones. It focuses on comparing smartphones to separate individual devices like cameras and calculators, not to earlier versions of mobile phones.</p>
+                                <p class="textual-evidence">Evidence from the text: "Before smartphones became widespread, people relied on multiple devices to accomplish tasks that can now be done with a single device. Cameras, calculators, maps, and music players were all separate items that people carried with them."</p>
+                                <p>The text emphasizes separate physical devices for different functions rather than earlier mobile phones.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question" id="q2">
+                    <p>2. According to the passage, how does blue light from smartphones affect sleep?</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q2a" name="q2" value="A">
+                            <label for="q2a">A. It has no effect on sleep patterns</label>
+                            <div class="option-feedback" id="q2a-feedback">
+                                <p><strong>Incorrect.</strong> The passage clearly states that blue light from smartphones has a negative impact on sleep patterns, not that it has no effect.</p>
+                                <p class="textual-evidence">Evidence from the text: "Studies show that excessive screen time can negatively impact sleep patterns, particularly when people use their phones right before bed. The blue light emitted from smartphone screens can suppress the production of melatonin, a hormone that helps regulate sleep cycles."</p>
+                                <p>The text specifically mentions negative effects, contradicting this answer option.</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q2b" name="q2" value="B">
+                            <label for="q2b">B. It improves sleep quality</label>
+                            <div class="option-feedback" id="q2b-feedback">
+                                <p><strong>Incorrect.</strong> This directly contradicts the passage, which states that blue light has a negative impact on sleep patterns by suppressing melatonin production.</p>
+                                <p class="textual-evidence">Evidence from the text: "Studies show that excessive screen time can negatively impact sleep patterns, particularly when people use their phones right before bed. The blue light emitted from smartphone screens can suppress the production of melatonin, a hormone that helps regulate sleep cycles."</p>
+                                <p>The text clearly states that blue light has negative effects on sleep, not positive ones.</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q2c" name="q2" value="C">
+                            <label for="q2c">C. It suppresses melatonin production</label>
+                            <div class="option-feedback" id="q2c-feedback">
+                                <p><strong>Correct!</strong> The passage explicitly states that blue light suppresses melatonin production, which is a hormone that helps regulate sleep cycles.</p>
+                                <p class="textual-evidence">Evidence from the text: "The blue light emitted from smartphone screens can suppress the production of melatonin, a hormone that helps regulate sleep cycles."</p>
+                                <p>This is the exact mechanism described in the passage regarding how blue light affects sleep.</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q2d" name="q2" value="D">
+                            <label for="q2d">D. It increases melatonin production</label>
+                            <div class="option-feedback" id="q2d-feedback">
+                                <p><strong>Incorrect.</strong> This is the opposite of what the passage states. The passage specifically mentions that blue light "suppresses" melatonin production, not increases it.</p>
+                                <p class="textual-evidence">Evidence from the text: "The blue light emitted from smartphone screens can suppress the production of melatonin, a hormone that helps regulate sleep cycles."</p>
+                                <p>The text clearly states "suppress" not "increase," making this answer incorrect.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question" id="q3">
+                    <p>3. What challenge related to work-life balance is mentioned in the passage?</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q3a" name="q3" value="A">
+                            <label for="q3a">A. People spending too much time playing games</label>
+                            <div class="option-feedback" id="q3a-feedback">
+                                <p><strong>Incorrect.</strong> The passage doesn't mention gaming or playing games at all as a work-life balance challenge. It focuses on work-related communication outside of working hours.</p>
+                                <p class="textual-evidence">Evidence from the text: "Additionally, the constant connectivity provided by smartphones has blurred the boundaries between work and personal life. Many people feel obligated to respond to work emails and messages outside of normal working hours, which can lead to increased stress and burnout."</p>
+                                <p>There is no mention of games or gaming in the passage's discussion of work-life balance issues.</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q3b" name="q3" value="B">
+                            <label for="q3b">B. People feeling obligated to respond to work messages outside working hours</label>
+                            <div class="option-feedback" id="q3b-feedback">
+                                <p><strong>Correct!</strong> The passage explicitly identifies this as a work-life balance challenge caused by smartphones.</p>
+                                <p class="textual-evidence">Evidence from the text: "Additionally, the constant connectivity provided by smartphones has blurred the boundaries between work and personal life. Many people feel obligated to respond to work emails and messages outside of normal working hours, which can lead to increased stress and burnout."</p>
+                                <p>This answer directly matches what is stated in the passage about work-life boundaries being blurred.</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q3c" name="q3" value="C">
+                            <label for="q3c">C. People being unable to use smartphones for work tasks</label>
+                            <div class="option-feedback" id="q3c-feedback">
+                                <p><strong>Incorrect.</strong> The passage doesn't suggest people have difficulty using smartphones for work. On the contrary, it suggests people are too connected to work through their phones, not that they're unable to use them for work tasks.</p>
+                                <p class="textual-evidence">Evidence from the text: "Many people feel obligated to respond to work emails and messages outside of normal working hours, which can lead to increased stress and burnout."</p>
+                                <p>This indicates people are actively using smartphones for work tasks (like responding to emails), not struggling to use them.</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q3d" name="q3" value="D">
+                            <label for="q3d">D. People becoming less productive at work</label>
+                            <div class="option-feedback" id="q3d-feedback">
+                                <p><strong>Incorrect.</strong> The passage doesn't discuss productivity at work as a challenge. It focuses on the issue of work extending into personal time through smartphones, not on how smartphones affect productivity during work hours.</p>
+                                <p class="textual-evidence">Evidence from the text: "Additionally, the constant connectivity provided by smartphones has blurred the boundaries between work and personal life. Many people feel obligated to respond to work emails and messages outside of normal working hours, which can lead to increased stress and burnout."</p>
+                                <p>The text emphasizes boundary issues between work and personal life rather than workplace productivity.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question" id="q4">
+                    <p>4. According to the passage, how do older generations typically respond to smartphone technology?</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q4a" name="q4" value="A">
+                            <label for="q4a">A. They refuse to use smartphones altogether</label>
+                            <div class="option-feedback" id="q4a-feedback">
+                                <p><strong>Incorrect.</strong> The passage doesn't state that older generations refuse to use smartphones. It mentions they have a steeper learning curve but eventually find value in the technology.</p>
+                                <p class="textual-evidence">Evidence from the text: "While younger generations have grown up with this technology and typically adapt to new features quickly, older generations often face a steeper learning curve. However, studies indicate that once older adults become comfortable with smartphone technology, they often find it just as valuable as younger users do."</p>
+                                <p>The text indicates older generations do use smartphones, just with a different adoption pattern than younger users.</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q4b" name="q4" value="B">
+                            <label for="q4b">B. They learn more quickly than younger generations</label>
+                            <div class="option-feedback" id="q4b-feedback">
+                                <p><strong>Incorrect.</strong> This contradicts the passage, which states that younger generations "typically adapt to new features quickly" while older generations "often face a steeper learning curve."</p>
+                                <p class="textual-evidence">Evidence from the text: "While younger generations have grown up with this technology and typically adapt to new features quickly, older generations often face a steeper learning curve."</p>
+                                <p>The text directly states the opposite of this answer option.</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q4c" name="q4" value="C">
+                            <label for="q4c">C. They face a steeper learning curve initially</label>
+                            <div class="option-feedback" id="q4c-feedback">
+                                <p><strong>Correct!</strong> The passage explicitly states that older generations face a steeper learning curve when adapting to smartphone technology.</p>
+                                <p class="textual-evidence">Evidence from the text: "While younger generations have grown up with this technology and typically adapt to new features quickly, older generations often face a steeper learning curve."</p>
+                                <p>This answer directly matches the wording in the passage about older generations' experience with smartphone technology.</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q4d" name="q4" value="D">
+                            <label for="q4d">D. They only use basic features and never adapt</label>
+                            <div class="option-feedback" id="q4d-feedback">
+                                <p><strong>Incorrect.</strong> This contradicts the passage, which states that "once older adults become comfortable with smartphone technology, they often find it just as valuable as younger users do." This suggests they do adapt and likely use more than just basic features.</p>
+                                <p class="textual-evidence">Evidence from the text: "However, studies indicate that once older adults become comfortable with smartphone technology, they often find it just as valuable as younger users do."</p>
+                                <p>The text indicates that older adults do adapt to the technology and find value in it, not that they never adapt or only use basic features.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question" id="q5">
+                    <p>5. What is the main theme of the passage?</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q5a" name="q5" value="A">
+                            <label for="q5a">A. The technical specifications of smartphones</label>
+                            <div class="option-feedback" id="q5a-feedback">
+                                <p><strong>Incorrect.</strong> The passage doesn't discuss technical specifications of smartphones such as processing power, screen resolution, or memory. It focuses on the social impact of smartphones and how they've changed various aspects of life.</p>
+                                <p class="textual-evidence">Evidence: Throughout the entire passage, there is no mention of technical specifications. Instead, the text discusses how smartphones have integrated multiple functions, affected sleep, changed work-life balance, and how different generations use them.</p>
+                                <p>The passage focuses on smartphones' impact rather than their technical details.</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q5b" name="q5" value="B">
+                            <label for="q5b">B. The history of mobile phone development</label>
+                            <div class="option-feedback" id="q5b-feedback">
+                                <p><strong>Incorrect.</strong> While the passage briefly mentions the transition from multiple devices to smartphones, it doesn't provide a detailed history of mobile phone development over time or discuss how mobile phones evolved into smartphones.</p>
+                                <p class="textual-evidence">Evidence: The passage only briefly references the time "before smartphones became widespread" but doesn't trace the historical development of mobile phones. Most of the passage focuses on current impacts of smartphones rather than their history.</p>
+                                <p>The passage is primarily about impacts rather than historical development.</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q5c" name="q5" value="C">
+                            <label for="q5c">C. The impact of smartphones on society and daily life</label>
+                            <div class="option-feedback" id="q5c-feedback">
+                                <p><strong>Correct!</strong> This best captures the overall theme of the passage, which discusses how smartphones have changed daily tasks, affected sleep patterns, blurred work-life boundaries, and are used differently across generations.</p>
+                                <p class="textual-evidence">Evidence: The entire passage focuses on various impacts of smartphones: integration of multiple devices, sleep effects, work-life balance challenges, and generational differences in adoption. Each paragraph addresses a different aspect of how smartphones have affected people's lives.</p>
+                                <p>This theme encompasses all the main points discussed in the passage.</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q5d" name="q5" value="D">
+                            <label for="q5d">D. The comparison between different smartphone brands</label>
+                            <div class="option-feedback" id="q5d-feedback">
+                                <p><strong>Incorrect.</strong> The passage doesn't mention any specific smartphone brands or compare different types of smartphones. It discusses smartphones as a general technology category and their overall impact.</p>
+                                <p class="textual-evidence">Evidence: Throughout the entire passage, there is no mention of any specific smartphone brands (like Apple, Samsung, etc.) or comparisons between different models or manufacturers.</p>
+                                <p>The passage discusses smartphones in general rather than comparing specific brands.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="buttons">
+                    <button type="button" class="check-btn" id="check-btn">Check Answers</button>
+                    <button type="button" class="reset-btn" id="reset-btn">Reset</button>
+                </div>
+                
+                <div class="result" id="result"></div>
+            </form>
+        </div>
+        
+        <div id="questions-section-zh" class="hidden">
+            <h2>理解题</h2>
+            <form id="quiz-form-zh">
+                <div class="question" id="q1-zh">
+                    <p>1. 智能手机普及前人们使用什么？</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q1a-zh" name="q1-zh" value="A">
+                            <label for="q1a-zh">A. 用于不同任务的多种设备</label>
+                            <div class="option-feedback" id="q1a-zh-feedback">
+                                <p><strong>正确！</strong> 文章明确指出："在智能手机普及之前，人们依靠多种设备来完成现在用单一设备就能完成的任务。相机、计算器、地图和音乐播放器都是人们随身携带的独立物品。"</p>
+                                <p class="textual-evidence">原文证据："在智能手机普及之前，人们依靠多种设备来完成现在用单一设备就能完成的任务。相机、计算器、地图和音乐播放器都是人们随身携带的独立物品。"</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q1b-zh" name="q1-zh" value="B">
+                            <label for="q1b-zh">B. 电脑满足所有需求</label>
+                            <div class="option-feedback" id="q1b-zh-feedback">
+                                <p><strong>错误。</strong> 文章没有提到电脑是人们在智能手机之前使用的主要工具。相反，它明确列出了特定的独立设备，如相机、计算器、地图和音乐播放器。</p>
+                                <p class="textual-evidence">原文证据："在智能手机普及之前，人们依靠多种设备来完成现在用单一设备就能完成的任务。相机、计算器、地图和音乐播放器都是人们随身携带的独立物品。"</p>
+                                <p>文章清楚地列出了具体的独立设备，而不是电脑。</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q1c-zh" name="q1-zh" value="C">
+                            <label for="q1c-zh">C. 仅用电话进行通讯</label>
+                            <div class="option-feedback" id="q1c-zh-feedback">
+                                <p><strong>错误。</strong> 文章并没有将智能手机前的工具仅限于用于通讯的电话。它明确提到了用于不同功能的多个独立设备。</p>
+                                <p class="textual-evidence">原文证据："在智能手机普及之前，人们依靠多种设备来完成现在用单一设备就能完成的任务。相机、计算器、地图和音乐播放器都是人们随身携带的独立物品。"</p>
+                                <p>文章列出了多种不同类型的设备，不仅仅是电话。</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q1d-zh" name="q1-zh" value="D">
+                            <label for="q1d-zh">D. 功能有限的基本手机</label>
+                            <div class="option-feedback" id="q1d-zh-feedback">
+                                <p><strong>错误。</strong> 文章没有特别提到功能有限的基本手机。它重点比较的是智能手机与独立的单一设备（如相机和计算器），而不是与早期版本的手机比较。</p>
+                                <p class="textual-evidence">原文证据："在智能手机普及之前，人们依靠多种设备来完成现在用单一设备就能完成的任务。相机、计算器、地图和音乐播放器都是人们随身携带的独立物品。"</p>
+                                <p>文章强调的是不同功能的单独设备，而不是早期的手机。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question" id="q2-zh">
+                    <p>2. 根据文章，智能手机的蓝光如何影响睡眠？</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q2a-zh" name="q2-zh" value="A">
+                            <label for="q2a-zh">A. 对睡眠模式没有影响</label>
+                            <div class="option-feedback" id="q2a-zh-feedback">
+                                <p><strong>错误。</strong> 文章明确指出智能手机的蓝光对睡眠模式有负面影响，而不是没有影响。</p>
+                                <p class="textual-evidence">原文证据："研究表明，过度的屏幕时间会对睡眠模式产生负面影响，特别是当人们在睡前使用手机时。智能手机屏幕发出的蓝光会抑制褪黑激素的产生，而褪黑激素是帮助调节睡眠周期的荷尔蒙。"</p>
+                                <p>文章特别提到了负面影响，与这个选项相矛盾。</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q2b-zh" name="q2-zh" value="B">
+                            <label for="q2b-zh">B. 提高睡眠质量</label>
+                            <div class="option-feedback" id="q2b-zh-feedback">
+                                <p><strong>错误。</strong> 这直接与文章相矛盾，文章指出蓝光通过抑制褪黑激素的产生对睡眠模式有负面影响。</p>
+                                <p class="textual-evidence">原文证据："研究表明，过度的屏幕时间会对睡眠模式产生负面影响，特别是当人们在睡前使用手机时。智能手机屏幕发出的蓝光会抑制褪黑激素的产生，而褪黑激素是帮助调节睡眠周期的荷尔蒙。"</p>
+                                <p>文章明确指出蓝光对睡眠有负面影响，而不是积极影响。</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q2c-zh" name="q2-zh" value="C">
+                            <label for="q2c-zh">C. 抑制褪黑激素的产生</label>
+                            <div class="option-feedback" id="q2c-zh-feedback">
+                                <p><strong>正确！</strong> 文章明确指出蓝光抑制褪黑激素的产生，而褪黑激素是帮助调节睡眠周期的荷尔蒙。</p>
+                                <p class="textual-evidence">原文证据："智能手机屏幕发出的蓝光会抑制褪黑激素的产生，而褪黑激素是帮助调节睡眠周期的荷尔蒙。"</p>
+                                <p>这正是文章中描述的蓝光影响睡眠的具体机制。</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q2d-zh" name="q2-zh" value="D">
+                            <label for="q2d-zh">D. 增加褪黑激素的产生</label>
+                            <div class="option-feedback" id="q2d-zh-feedback">
+                                <p><strong>错误。</strong> 这与文章所述相反。文章特别提到蓝光"抑制"褪黑激素的产生，而不是增加它。</p>
+                                <p class="textual-evidence">原文证据："智能手机屏幕发出的蓝光会抑制褪黑激素的产生，而褪黑激素是帮助调节睡眠周期的荷尔蒙。"</p>
+                                <p>文章明确使用"抑制"一词，而不是"增加"，因此这个答案不正确。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question" id="q3-zh">
+                    <p>3. 文章中提到了与工作生活平衡相关的什么挑战？</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q3a-zh" name="q3-zh" value="A">
+                            <label for="q3a-zh">A. 人们花太多时间玩游戏</label>
+                            <div class="option-feedback" id="q3a-zh-feedback">
+                                <p><strong>错误。</strong> 文章根本没有提到游戏或玩游戏作为工作生活平衡的挑战。它专注于工作时间之外的工作相关通信。</p>
+                                <p class="textual-evidence">原文证据："此外，智能手机提供的持续连接性模糊了工作和个人生活之间的界限。许多人觉得有义务在正常工作时间之外回复工作邮件和信息，这可能导致压力增加和精疲力竭。"</p>
+                                <p>文章在讨论工作生活平衡问题时没有提到游戏。</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q3b-zh" name="q3-zh" value="B">
+                            <label for="q3b-zh">B. 人们觉得有义务在工作时间之外回复工作信息</label>
+                            <div class="option-feedback" id="q3b-zh-feedback">
+                                <p><strong>正确！</strong> 文章明确将这一点确定为智能手机导致的工作生活平衡挑战。</p>
+                                <p class="textual-evidence">原文证据："此外，智能手机提供的持续连接性模糊了工作和个人生活之间的界限。许多人觉得有义务在正常工作时间之外回复工作邮件和信息，这可能导致压力增加和精疲力竭。"</p>
+                                <p>这个答案直接匹配文章中关于工作生活界限被模糊的描述。</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q3c-zh" name="q3-zh" value="C">
+                            <label for="q3c-zh">C. 人们无法使用智能手机完成工作任务</label>
+                            <div class="option-feedback" id="q3c-zh-feedback">
+                                <p><strong>错误。</strong> 文章并没有暗示人们在使用智能手机完成工作方面有困难。相反，它暗示人们过于通过手机连接到工作，而不是无法使用它们来完成工作任务。</p>
+                                <p class="textual-evidence">原文证据："许多人觉得有义务在正常工作时间之外回复工作邮件和信息，这可能导致压力增加和精疲力竭。"</p>
+                                <p>这表明人们积极使用智能手机进行工作任务（如回复邮件），而不是无法使用它们。</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q3d-zh" name="q3-zh" value="D">
+                            <label for="q3d-zh">D. 人们在工作中变得效率更低</label>
+                            <div class="option-feedback" id="q3d-zh-feedback">
+                                <p><strong>错误。</strong> 文章没有讨论工作效率作为一个挑战。它关注的是工作通过智能手机延伸到个人时间的问题，而不是智能手机如何影响工作时间的生产力。</p>
+                                <p class="textual-evidence">原文证据："此外，智能手机提供的持续连接性模糊了工作和个人生活之间的界限。许多人觉得有义务在正常工作时间之外回复工作邮件和信息，这可能导致压力增加和精疲力竭。"</p>
+                                <p>文章强调的是工作与个人生活之间的界限问题，而不是工作效率。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question" id="q4-zh">
+                    <p>4. 根据文章，老年人通常如何应对智能手机技术？</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q4a-zh" name="q4-zh" value="A">
+                            <label for="q4a-zh">A. 他们完全拒绝使用智能手机</label>
+                            <div class="option-feedback" id="q4a-zh-feedback">
+                                <p><strong>错误。</strong> 文章没有说老年人拒绝使用智能手机。它提到他们有一个更陡峭的学习曲线，但最终会在技术中找到价值。</p>
+                                <p class="textual-evidence">原文证据："虽然年轻一代是伴随着这项技术成长的，通常能够快速适应新功能，但老一代人往往面临更陡峭的学习曲线。然而，研究表明，一旦老年人熟悉了智能手机技术，他们通常会发现它与年轻用户一样有价值。"</p>
+                                <p>文章表明老年人确实使用智能手机，只是采用模式与年轻用户不同。</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q4b-zh" name="q4-zh" value="B">
+                            <label for="q4b-zh">B. 他们学习速度比年轻一代更快</label>
+                            <div class="option-feedback" id="q4b-zh-feedback">
+                                <p><strong>错误。</strong> 这与文章相矛盾，文章指出年轻一代"通常能够快速适应新功能"，而老年人"往往面临更陡峭的学习曲线"。</p>
+                                <p class="textual-evidence">原文证据："虽然年轻一代是伴随着这项技术成长的，通常能够快速适应新功能，但老一代人往往面临更陡峭的学习曲线。"</p>
+                                <p>文章直接表述了与这个选项相反的内容。</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q4c-zh" name="q4-zh" value="C">
+                            <label for="q4c-zh">C. 他们最初面临更陡峭的学习曲线</label>
+                            <div class="option-feedback" id="q4c-zh-feedback">
+                                <p><strong>正确！</strong> 文章明确指出老年人在适应智能手机技术时面临更陡峭的学习曲线。</p>
+                                <p class="textual-evidence">原文证据："虽然年轻一代是伴随着这项技术成长的，通常能够快速适应新功能，但老一代人往往面临更陡峭的学习曲线。"</p>
+                                <p>这个答案直接与文章中关于老年人使用智能手机技术的经验描述相符。</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q4d-zh" name="q4-zh" value="D">
+                            <label for="q4d-zh">D. 他们只使用基本功能，从不适应</label>
+                            <div class="option-feedback" id="q4d-zh-feedback">
+                                <p><strong>错误。</strong> 这与文章相矛盾，文章指出"一旦老年人熟悉了智能手机技术，他们通常会发现它与年轻用户一样有价值"。这表明他们确实会适应并可能使用不仅仅是基本功能。</p>
+                                <p class="textual-evidence">原文证据："然而，研究表明，一旦老年人熟悉了智能手机技术，他们通常会发现它与年轻用户一样有价值。"</p>
+                                <p>文章表明老年人确实会适应这项技术并从中找到价值，而不是永远只使用基本功能。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question" id="q5-zh">
+                    <p>5. 这篇文章的主题是什么？</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q5a-zh" name="q5-zh" value="A">
+                            <label for="q5a-zh">A. 智能手机的技术规格</label>
+                            <div class="option-feedback" id="q5a-zh-feedback">
+                                <p><strong>错误。</strong> 文章没有讨论智能手机的技术规格，如处理能力、屏幕分辨率或内存。它关注的是智能手机的社会影响和它们如何改变生活的各个方面。</p>
+                                <p class="textual-evidence">原文证据：整篇文章中，没有提到任何技术规格。相反，文章讨论了智能手机如何整合多种功能、影响睡眠、改变工作生活平衡以及不同世代如何使用它们。</p>
+                                <p>文章关注的是智能手机的影响，而不是技术细节。</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q5b-zh" name="q5-zh" value="B">
+                            <label for="q5b-zh">B. 手机发展的历史</label>
+                            <div class="option-feedback" id="q5b-zh-feedback">
+                                <p><strong>错误。</strong> 虽然文章简单提到了从多种设备到智能手机的转变，但它没有提供手机发展随时间变化的详细历史或讨论手机如何演变成智能手机。</p>
+                                <p class="textual-evidence">原文证据：文章只是简单提到"在智能手机普及之前"的时期，但没有追溯手机的历史发展。文章大部分内容关注的是智能手机当前的影响，而不是它们的历史。</p>
+                                <p>文章主要关注影响而非历史发展。</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q5c-zh" name="q5-zh" value="C">
+                            <label for="q5c-zh">C. 智能手机对社会和日常生活的影响</label>
+                            <div class="option-feedback" id="q5c-zh-feedback">
+                                <p><strong>正确！</strong> 这最能概括文章的整体主题，它讨论了智能手机如何改变日常任务、影响睡眠模式、模糊工作生活界限，以及不同世代之间的使用差异。</p>
+                                <p class="textual-evidence">原文证据：整篇文章都聚焦于智能手机的各种影响：整合多种设备的功能、对睡眠的影响、工作生活平衡的挑战以及不同世代在采用方面的差异。每个段落都讨论了智能手机如何影响人们生活的不同方面。</p>
+                                <p>这个主题涵盖了文章中讨论的所有主要观点。</p>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q5d-zh" name="q5-zh" value="D">
+                            <label for="q5d-zh">D. 不同智能手机品牌之间的比较</label>
+                            <div class="option-feedback" id="q5d-zh-feedback">
+                                <p><strong>错误。</strong> 文章没有提到任何特定的智能手机品牌或比较不同类型的智能手机。它讨论的是智能手机作为一种通用技术类别及其整体影响。</p>
+                                <p class="textual-evidence">原文证据：整篇文章中，没有提到任何特定的智能手机品牌（如苹果、三星等）或不同型号或制造商之间的比较。</p>
+                                <p>文章讨论的是智能手机的一般影响，而不是比较特定品牌。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="buttons">
+                    <button type="button" class="check-btn" id="check-btn-zh">检查答案</button>
+                    <button type="button" class="reset-btn" id="reset-btn-zh">重置</button>
+                </div>
+                
+                <div class="result" id="result-zh"></div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Define correct answers
+        const correctAnswers = {
+            q1: "A",
+            q2: "C",
+            q3: "B",
+            q4: "C",
+            q5: "C"
+        };
+        
+        // Language toggle functionality
+        document.getElementById('en-btn').addEventListener('click', function() {
+            document.getElementById('title-en').classList.remove('hidden');
+            document.getElementById('title-zh').classList.add('hidden');
+            document.getElementById('passage-section-en').classList.remove('hidden');
+            document.getElementById('passage-section-zh').classList.add('hidden');
+            document.getElementById('questions-section-en').classList.remove('hidden');
+            document.getElementById('questions-section-zh').classList.add('hidden');
+            
+            document.getElementById('en-btn').classList.add('active');
+            document.getElementById('zh-btn').classList.remove('active');
+        });
+        
+        document.getElementById('zh-btn').addEventListener('click', function() {
+            document.getElementById('title-en').classList.add('hidden');
+            document.getElementById('title-zh').classList.remove('hidden');
+            document.getElementById('passage-section-en').classList.add('hidden');
+            document.getElementById('passage-section-zh').classList.remove('hidden');
+            document.getElementById('questions-section-en').classList.add('hidden');
+            document.getElementById('questions-section-zh').classList.remove('hidden');
+            
+            document.getElementById('en-btn').classList.remove('active');
+            document.getElementById('zh-btn').classList.add('active');
+        });
+        
+        // Hide all option feedback initially
+        document.querySelectorAll('.option-feedback').forEach(el => {
+            el.style.display = 'none';
+        });
+        
+        // English quiz functionality
+        document.getElementById('check-btn').addEventListener('click', function() {
+            let score = 0;
+            let allAnswered = true;
+            
+            // Check each question
+            for (let i = 1; i <= 5; i++) {
+                const questionName = 'q' + i;
+                const selectedOption = document.querySelector(`input[name="${questionName}"]:checked`);
+                
+                // Hide all feedback for this question first
+                document.querySelectorAll(`#${questionName} .option-feedback`).forEach(el => {
+                    el.style.display = 'none';
+                });
+                
+                if (selectedOption) {
+                    // Show feedback for selected option
+                    document.getElementById(`${selectedOption.id}-feedback`).style.display = 'block';
+                    
+                    if (selectedOption.value === correctAnswers[questionName]) {
+                        score++;
+                        document.getElementById(`${selectedOption.id}-feedback`).classList.add('correct');
+                        document.getElementById(`${selectedOption.id}-feedback`).classList.remove('incorrect');
+                    } else {
+                        document.getElementById(`${selectedOption.id}-feedback`).classList.add('incorrect');
+                        document.getElementById(`${selectedOption.id}-feedback`).classList.remove('correct');
+                        
+                        // Also show feedback for the correct answer
+                        const correctOptionId = `${questionName}${correctAnswers[questionName].toLowerCase()}`;
+                        document.getElementById(`${correctOptionId}-feedback`).style.display = 'block';
+                        document.getElementById(`${correctOptionId}-feedback`).classList.add('correct');
+                    }
+                } else {
+                    allAnswered = false;
+                }
+            }
+            
+            // Display result
+            const resultElement = document.getElementById('result');
+            if (allAnswered) {
+                resultElement.textContent = `You scored ${score} out of 5!`;
+                resultElement.className = score > 2 ? "result correct" : "result incorrect";
+                resultElement.style.display = "block";
+            } else {
+                resultElement.textContent = "Please answer all questions.";
+                resultElement.className = "result";
+                resultElement.style.display = "block";
+            }
+        });
+        
+        document.getElementById('reset-btn').addEventListener('click', function() {
+            // Reset all selections
+            document.getElementById('quiz-form').reset();
+            
+            // Hide all feedback
+            document.querySelectorAll('.option-feedback').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Hide result
+            document.getElementById('result').style.display = "none";
+        });
+        
+        // Chinese quiz functionality
+        document.getElementById('check-btn-zh').addEventListener('click', function() {
+            let score = 0;
+            let allAnswered = true;
+            
+            // Check each question
+            for (let i = 1; i <= 5; i++) {
+                const questionName = 'q' + i + '-zh';
+                const selectedOption = document.querySelector(`input[name="${questionName}"]:checked`);
+                
+                // Hide all feedback for this question first
+                document.querySelectorAll(`#${questionName} .option-feedback`).forEach(el => {
+                    el.style.display = 'none';
+                });
+                
+                if (selectedOption) {
+                    // Show feedback for selected option
+                    document.getElementById(`${selectedOption.id}-feedback`).style.display = 'block';
+                    
+                    if (selectedOption.value === correctAnswers['q' + i]) {
+                        score++;
+                        document.getElementById(`${selectedOption.id}-feedback`).classList.add('correct');
+                        document.getElementById(`${selectedOption.id}-feedback`).classList.remove('incorrect');
+                    } else {
+                        document.getElementById(`${selectedOption.id}-feedback`).classList.add('incorrect');
+                        document.getElementById(`${selectedOption.id}-feedback`).classList.remove('correct');
+                        
+                        // Also show feedback for the correct answer
+                        const correctOptionId = `q${i}${correctAnswers['q' + i].toLowerCase()}-zh`;
+                        document.getElementById(`${correctOptionId}-feedback`).style.display = 'block';
+                        document.getElementById(`${correctOptionId}-feedback`).classList.add('correct');
+                    }
+                } else {
+                    allAnswered = false;
+                }
+            }
+            
+            // Display result
+            const resultElement = document.getElementById('result-zh');
+            if (allAnswered) {
+                resultElement.textContent = `你的得分是 ${score}/5！`;
+                resultElement.className = score > 2 ? "result correct" : "result incorrect";
+                resultElement.style.display = "block";
+            } else {
+                resultElement.textContent = "请回答所有问题。";
+                resultElement.className = "result";
+                resultElement.style.display = "block";
+            }
+        });
+        
+        document.getElementById('reset-btn-zh').addEventListener('click', function() {
+            // Reset all selections
+            document.getElementById('quiz-form-zh').reset();
+            
+            // Hide all feedback
+            document.querySelectorAll('#quiz-form-zh .option-feedback').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Hide result
+            document.getElementById('result-zh').style.display = "none";
+        });
+    </script>
+</body>
+</html>
+            

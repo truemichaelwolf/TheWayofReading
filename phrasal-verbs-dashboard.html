@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .card { 
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: white;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .quote {
+            font-style: italic;
+            color: #666;
+            border-left: 3px solid #0066cc;
+            padding-left: 10px;
+            margin: 10px 0;
+        }
+        .lang-toggle {
+            cursor: pointer;
+            padding: 5px 10px;
+            background: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        .en { display: block; }
+        .zh { display: none; }
+        .chart {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <span class="en">Contextual Learning of Phrasal Verbs Research Dashboard</span>
+                <span class="zh">短语动词语境学习研究数据面板</span>
+            </h1>
+            <button class="lang-toggle" onclick="toggleLanguage()">Toggle Language 切换语言</button>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2>
+                    <span class="en">Key Findings</span>
+                    <span class="zh">主要发现</span>
+                </h2>
+                <div class="en">
+                    <ul>
+                        <li>Definitions after reading resulted in better learning outcomes</li>
+                        <li>Typographic enhancement improved learning</li>
+                        <li>Immediate recall: 60.5% accuracy</li>
+                        <li>Delayed recall: 27.5% accuracy</li>
+                    </ul>
+                </div>
+                <div class="zh">
+                    <ul>
+                        <li>阅读后提供定义带来更好的学习效果</li>
+                        <li>排版强调改善了学习效果</li>
+                        <li>即时回忆：60.5%的准确率</li>
+                        <li>延迟回忆：27.5%的准确率</li>
+                    </ul>
+                </div>
+                <div class="quote">
+                    "The results showed a clear advantage of learning with definitions and presenting definitions after reading." - p.20
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>
+                    <span class="en">Methodology</span>
+                    <span class="zh">研究方法</span>
+                </h2>
+                <div class="en">
+                    <h3>Participants & Materials</h3>
+                    <ul>
+                        <li>85 high school students (16-18 years)</li>
+                        <li>42 figurative phrasal verbs</li>
+                        <li>3 repetitions per text</li>
+                        <li>Both immediate and delayed tests</li>
+                    </ul>
+                    
+                    <h3>Treatment Groups</h3>
+                    <table style="width:100%; border-collapse: collapse; margin: 10px 0;">
+                        <tr style="background: #f0f0f0;">
+                            <th style="border: 1px solid #ddd; padding: 8px;">Condition</th>
+                            <th style="border: 1px solid #ddd; padding: 8px;">Definition Placement</th>
+                            <th style="border: 1px solid #ddd; padding: 8px;">Enhancement</th>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;">1</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">Before text</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">Yes</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;">2</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">Before text</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">No</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;">3</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">After text</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">Yes</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;">4</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">After text</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">No</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;">5</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">None</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">Yes</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;">6</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">None</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">No</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="zh">
+                    <h3>参与者与材料</h3>
+                    <ul>
+                        <li>85名高中生 (16-18岁)</li>
+                        <li>42个比喻性短语动词</li>
+                        <li>每个文本重复3次</li>
+                        <li>即时和延迟测试</li>
+                    </ul>
+                    
+                    <h3>实验组别</h3>
+                    <table style="width:100%; border-collapse: collapse; margin: 10px 0;">
+                        <tr style="background: #f0f0f0;">
+                            <th style="border: 1px solid #ddd; padding: 8px;">条件</th>
+                            <th style="border: 1px solid #ddd; padding: 8px;">定义位置</th>
+                            <th style="border: 1px solid #ddd; padding: 8px;">排版强调</th>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;">1</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">文本之前</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">是</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;">2</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">文本之前</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">否</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;">3</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">文本之后</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">是</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;">4</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">文本之后</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">否</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;">5</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">无</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">是</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;">6</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">无</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">否</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="quote">
+                    "The current study involved a 2 × 3 within-participant design. The independent variables were typographic enhancement with two levels (enhanced, unenhanced), and definition placement with three levels (before text, after text, no definition)." - p.9
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>
+                <span class="en">Research Implications</span>
+                <span class="zh">研究启示</span>
+            </h2>
+            <div class="en">
+                <ol>
+                    <li>Definitions should be provided after contextual exposure</li>
+                    <li>Use typographic enhancement for better retention</li>
+                    <li>Allow learners to make contextual inferences first</li>
+                    <li>Support contextual learning with explicit instruction</li>
+                </ol>
+            </div>
+            <div class="zh">
+                <ol>
+                    <li>应在语境接触后提供定义</li>
+                    <li>使用排版强调以提高记忆效果</li>
+                    <li>先让学习者进行语境推断</li>
+                    <li>用明确的指导支持语境学习</li>
+                </ol>
+            </div>
+            <div class="quote">
+                "Our advice to teachers, publishers, and material developers is not to take inference opportunities away from L2 learners for fear of possible erroneous contextual inferences." - p.20
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleLanguage() {
+            const enElements = document.getElementsByClassName('en');
+            const zhElements = document.getElementsByClassName('zh');
+            
+            for(let el of enElements) {
+                el.style.display = el.style.display === 'none' ? 'block' : 'none';
+            }
+            for(let el of zhElements) {
+                el.style.display = el.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+    </script>
+</body>
+</html>

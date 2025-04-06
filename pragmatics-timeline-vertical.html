@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pragmatics Vertical Timeline</title>
+    <style>
+        :root {
+            --production-color: #E63946; /* Red */
+            --comprehension-color: #457B9D; /* Blue */
+            --co-construction-color: #27AE60; /* Green */
+            --production-light: rgba(230, 57, 70, 0.15);
+            --comprehension-light: rgba(69, 123, 157, 0.15);
+            --co-construction-light: rgba(39, 174, 96, 0.15);
+            --timeline-width: 4px;
+            --node-size: 20px;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .header {
+            text-align: center;
+            background-color: #1D3557;
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .language-toggle {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .language-btn {
+            background-color: #f1faee;
+            border: 1px solid #ddd;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .language-btn.active {
+            background-color: #1D3557;
+            color: white;
+            border-color: #1D3557;
+        }
+        
+        .language-btn:first-child {
+            border-radius: 4px 0 0 4px;
+        }
+        
+        .language-btn:last-child {
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 10px 0 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        .timeline-container {
+            position: relative;
+            padding: 40px 0;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: var(--timeline-width);
+            background-color: #ddd;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: calc(var(--timeline-width) / -2);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin: 60px 0;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            display: table;
+            clear: both;
+        }
+        
+        .timeline-content {
+            position: relative;
+            width: 45%;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .timeline-node {
+            position: absolute;
+            width: var(--node-size);
+            height: var(--node-size);
+            border-radius: 50%;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+        
+        .timeline-date {
+            position: absolute;
+            top: 20px;
+            width: 100px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        
+        .left {
+            float: left;
+        }
+        
+        .right {
+            float: right;
+        }
+        
+        .left .timeline-date {
+            right: -120px;
+        }
+        
+        .right .timeline-date {
+            left: -120px;
+        }
+        
+        .left .timeline-content::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: -15px;
+            width: 0;
+            height: 0;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            border-left: 15px solid white;
+        }
+        
+        .right .timeline-content::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: -15px;
+            width: 0;
+            height: 0;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            border-right: 15px solid white;
+        }
+        
+        .production .timeline-node {
+            background-color: var(--production-color);
+        }
+        
+        .comprehension .timeline-node {
+            background-color: var(--comprehension-color);
+        }
+        
+        .co-construction .timeline-node {
+            background-color: var(--co-construction-color);
+        }
+        
+        .production .timeline-content {
+            background-color: var(--production-light);
+            border-left: 5px solid var(--production-color);
+        }
+        
+        .comprehension .timeline-content {
+            background-color: var(--comprehension-light);
+            border-left: 5px solid var(--comprehension-color);
+        }
+        
+        .co-construction .timeline-content {
+            background-color: var(--co-construction-light);
+            border-left: 5px solid var(--co-construction-color);
+        }
+        
+        .right .timeline-content {
+            border-left: none;
+            border-right: 5px solid;
+        }
+        
+        .production.right .timeline-content {
+            border-right-color: var(--production-color);
+        }
+        
+        .comprehension.right .timeline-content {
+            border-right-color: var(--comprehension-color);
+        }
+        
+        .co-construction.right .timeline-content {
+            border-right-color: var(--co-construction-color);
+        }
+        
+        .event-title {
+            margin: 0 0 10px 0;
+            font-size: 1.2rem;
+            color: #333;
+        }
+        
+        .event-authors {
+            margin: 0 0 5px 0;
+            font-style: italic;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        
+        .event-content {
+            font-size: 0.95rem;
+            margin: 10px 0 0 0;
+        }
+        
+        .theory-indicator {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border-radius: 12px;
+            margin-bottom: 5px;
+        }
+        
+        .production .theory-indicator {
+            background-color: var(--production-color);
+            color: white;
+        }
+        
+        .comprehension .theory-indicator {
+            background-color: var(--comprehension-color);
+            color: white;
+        }
+        
+        .co-construction .theory-indicator {
+            background-color: var(--co-construction-color);
+            color: white;
+        }
+        
+        .event-quote {
+            margin-top: 10px;
+            font-style: italic;
+            font-size: 0.85rem;
+            padding: 8px;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-left: 3px solid #999;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        .lang-en, .lang-zh {
+            display: none;
+        }
+        
+        .active-lang {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                margin: 40px 0;
+            }
+            
+            .timeline-content {
+                width: calc(100% - 80px);
+                float: right;
+                padding: 15px;
+            }
+            
+            .timeline-node {
+                left: 30px;
+                transform: none;
+            }
+            
+            .timeline-date {
+                position: relative;
+                top: -5px;
+                width: 100%;
+                text-align: left;
+                padding-left: 65px;
+                margin-bottom: 10px;
+            }
+            
+            .left .timeline-date, .right .timeline-date {
+                left: 0;
+                right: auto;
+            }
+            
+            .left .timeline-content::after, .right .timeline-content::after {
+                display: none;
+            }
+            
+            .right .timeline-content, .left .timeline-content {
+                border-right: none;
+                border-left: 5px solid;
+            }
+            
+            .production .timeline-content {
+                border-left-color: var(--production-color);
+            }
+            
+            .comprehension .timeline-content {
+                border-left-color: var(--comprehension-color);
+            }
+            
+            .co-construction .timeline-content {
+                border-left-color: var(--co-construction-color);
+            }
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            window.toggleLanguage = function(lang) {
+                const enElements = document.querySelectorAll('.lang-en');
+                const zhElements = document.querySelectorAll('.lang-zh');
+                const buttons = document.querySelectorAll('.language-btn');
+                
+                if (lang === 'en') {
+                    enElements.forEach(el => el.classList.add('active-lang'));
+                    zhElements.forEach(el => el.classList.remove('active-lang'));
+                    buttons[0].classList.add('active');
+                    buttons[1].classList.remove('active');
+                } else {
+                    enElements.forEach(el => el.classList.remove('active-lang'));
+                    zhElements.forEach(el => el.classList.add('active-lang'));
+                    buttons[0].classList.remove('active');
+                    buttons[1].classList.add('active');
+                }
+            };
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="lang-en active-lang">Pragmatics: Timeline of Theories and Studies</h1>
+            <h1 class="lang-zh">语用学：理论与研究时间线</h1>
+            <p class="lang-en active-lang">Based on the work of Naoko Taguchi & Dániel Z. Kádár</p>
+            <p class="lang-zh">基于田中直子和卡达尔·丹尼尔的研究</p>
+        </div>
+
+        <div class="language-toggle">
+            <button class="language-btn active" onclick="toggleLanguage('en')">English</button>
+            <button class="language-btn" onclick="toggleLanguage('zh')">中文</button>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: var(--production-color);"></div>
+                <span class="lang-en active-lang">Production of Meaning</span>
+                <span class="lang-zh">意义的产生</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: var(--comprehension-color);"></div>
+                <span class="lang-en active-lang">Comprehension of Meaning</span>
+                <span class="lang-zh">意义的理解</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: var(--co-construction-color);"></div>
+                <span class="lang-en active-lang">Co-construction of Meaning</span>
+                <span class="lang-zh">意义的共同构建</span>
+            </div>
+        </div>
+
+        <div class="timeline-container">
+            <div class="timeline">
+                <!-- Speech Act Theory (1962) -->
+                <div class="timeline-item production">
+                    <div class="timeline-node"></div>
+                    <div class="timeline-content left">
+                        <div class="timeline-date">1962</div>
+                        <div class="theory-indicator lang-en active-lang">Theory</div>
+                        <div class="theory-indicator lang-zh">理论</div>
+                        <h3 class="event-title lang-en active-lang">Speech Act Theory</h3>
+                        <h3 class="event-title lang-zh">言语行为理论</h3>
+                        <p class="event-authors lang-en active-lang">Austin (1962)</p>
+                        <p class="event-authors lang-zh">奥斯汀 (1962)</p>
+                        <div class="event-content lang-en active-lang">
+                            <p>Austin introduced the concept that language can perform actions beyond simply communicating information. His work "How to do things with words" laid the foundation for speech act theory.</p>
+                            <div class="event-quote">
+                                "The concept of speech act involves the following: an utterance outside of a particular context always represents a locution and it has a related locutionary meaning."
+                            </div>
+                        </div>
+                        <div class="event-content lang-zh">
+                            <p>奥斯汀提出语言除了传递信息外还可以执行行动的概念。他的著作《如何用言语做事》为言语行为理论奠定了基础。</p>
+                            <div class="event-quote">
+                                "言语行为的概念包括以下内容：在特定环境之外的话语总是代表一个言内行为，并且具有相关的言内意义。"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Grice's Studies (1967) -->
+                <div class="timeline-item comprehension">
+                    <div class="timeline-node"></div>
+                    <div class="timeline-content right">
+                        <div class="timeline-date">1967</div>
+                        <div class="theory-indicator lang-en active-lang">Theory</div>
+                        <div class="theory-indicator lang-zh">理论</div>
+                        <h3 class="event-title lang-en active-lang">Cooperative Principle & Maxims</h3>
+                        <h3 class="event-title lang-zh">合作原则与准则</h3>
+                        <p class="event-authors lang-en active-lang">Grice (1967)</p>
+                        <p class="event-authors lang-zh">格莱斯 (1967)</p>
+                        <div class="event-content lang-en active-lang">
+                            <p>Grice proposed the Cooperative Principle and four maxims (quantity, quality, relevance, manner) that govern effective communication.</p>
+                            <div class="event-quote">
+                                "Grice set up four maxims through which co-operation comes into existence, including quantity, quality, relevance and manner."
+                            </div>
+                        </div>
+                        <div class="event-content lang-zh">
+                            <p>格莱斯提出了合作原则和四个准则（数量、质量、关联性和方式），这些准则规定了有效沟通应该如何运作。</p>
+                            <div class="event-quote">
+                                "格莱斯设立了四个准则，通过这些准则产生合作，包括数量、质量、关联性和方式。"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Searle's Speech Acts (1969) -->
+                <div class="timeline-item production">
+                    <div class="timeline-node"></div>
+                    <div class="timeline-content left">
+                        <div class="timeline-date">1969</div>
+                        <div class="theory-indicator lang-en active-lang">Theory</div>
+                        <div class="theory-indicator lang-zh">理论</div>
+                        <h3 class="event-title lang-en active-lang">Speech Acts</h3>
+                        <h3 class="event-title lang-zh">言语行为</h3>
+                        <p class="event-authors lang-en active-lang">Searle (1969)</p>
+                        <p class="event-authors lang-zh">塞尔尔 (1969)</p>
+                        <div class="event-content lang-en active-lang">
+                            <p>Searle expanded Austin's work, developing a systematic framework for analyzing speech acts and classifying them into different types (assertions, directives, commissives, expressives, declarations).</p>
+                        </div>
+                        <div class="event-content lang-zh">
+                            <p>塞尔尔扩展了奥斯汀的工作，开发了一个系统的框架来分析言语行为，并将其分类为不同类型（断言、指令、承诺、表达、宣告）。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Edmondson and House (1981) -->
+                <div class="timeline-item production">
+                    <div class="timeline-node"></div>
+                    <div class="timeline-content right">
+                        <div class="timeline-date">1981</div>
+                        <div class="theory-indicator lang-en active-lang">Theory</div>
+                        <div class="theory-indicator lang-zh">理论</div>
+                        <h3 class="event-title lang-en active-lang">Interactional Grammar of English</h3>
+                        <h3 class="event-title lang-zh">英语互动语法</h3>
+                        <p class="event-authors lang-en active-lang">Edmondson & House (1981)</p>
+                        <p class="event-authors lang-zh">埃德蒙森 & 豪斯 (1981)</p>
+                        <div class="event-content lang-en active-lang">
+                            <p>Proposed a minimal, interactionally defined and finite typology of speech acts, distinguishing between illocution and interaction.</p>
+                            <div class="event-quote">
+                                "A key contribution to speech act theory was made by Edmondson and House (1981) who proposed a radically minimal, interactionally defined and finite typology of speech acts."
+                            </div>
+                        </div>
+                        <div class="event-content lang-zh">
+                            <p>提出了一种极简的、互动定义的、有限的言语行为类型学，区分了言外行为和互动。</p>
+                            <div class="event-quote">
+                                "埃德蒙森和豪斯（1981）对言语行为理论做出了重要贡献，他们提出了一种极简的、互动定义的、有限的言语行为类型学。"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sperber & Wilson (1986) -->
+                <div class="timeline-item comprehension">
+                    <div class="timeline-node"></div>
+                    <div class="timeline-content left">
+                        <div class="timeline-date">1986</div>
+                        <div class="theory-indicator lang-en active-lang">Theory</div>
+                        <div class="theory-indicator lang-zh">理论</div>
+                        <h3 class="event-title lang-en active-lang">Relevance Theory</h3>
+                        <h3 class="event-title lang-zh">关联理论</h3>
+                        <p class="event-authors lang-en active-lang">Sperber & Wilson (1986)</p>
+                        <p class="event-authors lang-zh">斯佩伯 & 威尔逊 (1986)</p>
+                        <div class="event-content lang-en active-lang">
+                            <p>Developed cognitive pragmatic theory proposing that comprehension involves finding the most relevant interpretation with the least processing effort.</p>
+                            <div class="event-quote">
+                                "According to relevance theory, if the speaker utters something to the addressee, the addressee can rightly assume that the conveyed information is worth their effort to listen to and comprehend."
+                            </div>
+                        </div>
+                        <div class="event-content lang-zh">
+                            <p>开发了认知语用理论，提出理解涉及在最小处理努力的情况下找到最相关的解释。</p>
+                            <div class="event-quote">
+                                "根据关联理论，如果说话者向听话者说某事，听话者可以合理地假设所传达的信息值得他们花时间倾听和理解。"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Brown and Levinson (1987) -->
+                <div class="timeline-item production">
+                    <div class="timeline-node"></div>
+                    <div class="timeline-content right">
+                        <div class="timeline-date">1987</div>
+                        <div class="theory-indicator lang-en active-lang">Theory</div>
+                        <div class="theory-indicator lang-zh">理论</div>
+                        <h3 class="event-title lang-en active-lang">Politeness Theory</h3>
+                        <h3 class="event-title lang-zh">礼貌理论</h3>
+                        <p class="event-authors lang-en active-lang">Brown & Levinson (1987)</p>
+                        <p class="event-authors lang-zh">布朗 & 莱文森 (1987)</p>
+                        <div class="event-content lang-en active-lang">
+                            <p>Developed a theory of politeness based on the concept of face, explaining how speakers use strategies to mitigate face-threatening acts.</p>
+                            <div class="event-quote">
+                                "In Brown and Levinson's above-outlined classic, politeness is interpreted as a phenomenon through which offense can be mitigated."
+                            </div>
+                        </div>
+                        <div class="event-content lang-zh">
+                            <p>基于面子概念开发了礼貌理论，解释了说话者如何使用策略来减轻面子威胁行为。</p>
+                            <div class="event-quote">
+                                "在布朗和莱文森概述的经典著作中，礼貌被解释为一种可以减轻冒犯的现象。"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Blum-Kulka et al. (1989) -->
+                <div class="timeline-item production">
+                    <div class="timeline-node"></div>
+                    <div class="timeline-content left">
+                        <div class="timeline-date">1989</div>
+                        <div class="theory-indicator lang-en active-lang">Study</div>
+                        <div class="theory-indicator lang-zh">研究</div>
+                        <h3 class="event-title lang-en active-lang">Cross-cultural Pragmatics: Requests and Apologies</h3>
+                        <h3 class="event-title lang-zh">跨文化语用学：请求与道歉</h3>
+                        <p class="event-authors lang-en active-lang">Blum-Kulka, House, & Kasper (1989)</p>
+                        <p class="event-authors lang-zh">布卢姆-库尔卡, 豪斯, & 卡斯帕 (1989)</p>
+                        <div class="event-content lang-en active-lang">
+                            <p>Major study on cross-cultural speech act realization, using discourse completion tests (DCTs) to compare request and apology strategies across languages.</p>
+                            <div class="event-quote">
+                                "Blum-Kulka et al.'s (1989) DCT data showed that, when making a request, L2 English learners used more direct strategies and fewer mitigation devices than native English speakers."
+                            </div>
+                        </div>
+                        <div class="event-content lang-zh">
+                            <p>关于跨文化言语行为实现的重要研究，使用言语完成测试（DCTs）比较不同语言中的请求和道歉策略。</p>
+                            <div class="event-quote">
+                                "布卢姆-库尔卡等人（1989）的DCT数据显示，在提出请求时，英语二语学习者使用的直接策略更多，缓和装置更少，与英语母语使用者相比。"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Maeshiba et al. (1996) -->
+                <div class="timeline-item production">
+                    <div class="timeline-node"></div>
+                    <div class="timeline-content right">
+                        <div class="timeline-date">1996</div>
+                        <div class="theory-indicator lang-en active-lang">Study</div>
+                        <div class="theory-indicator lang-zh">研究</div>
+                        <h3 class="event-title lang-en active-lang">Transfer and Proficiency in Interlanguage Apologizing</h3>
+                        <h3 class="event-title lang-zh">跨语言道歉中的迁移和熟练度</h3>
+                        <p class="event-authors lang-en active-lang">Maeshiba, Yoshinaga, Kasper, & Ross (1996)</p>
+                        <p class="event-authors lang-zh">前柴, 吉永, 卡斯帕, & 罗斯 (1996)</p>
+                        <div class="event-content lang-en active-lang">
+                            <p>Study on pragmatic transfer in Japanese learners of English, showing how L1 apology strategies influence L2 production.</p>
+                            <div class="event-quote">
+                                "Maeshiba et al. (1996) showed that Japanese-specific strategies such as apologizing when making a request often appeared in their L2 English requests, indicating negative pragmatic transfer from a first to second language."
+                            </div>
+                        </div>
+                        <div class="event-content lang-zh">
+                            <p>关于日本英语学习者语用迁移的研究，显示一语道歉策略如何影响二语产出。</p>
+                            <div class="event-quote">
+                                "前柴等人（1996）表明，日语特有的策略，如在提出请求时道歉，经常出现在他们的英语二语请求中，表明从第一语言到第二语言的负面语用迁移。"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Eelen (2001) -->
+                <div class="timeline-item co-construction">
+                    <div class="timeline-node"></div>
+                    <div class="timeline-content left">
+                        <div class="timeline-date">2001</div>
+                        <div class="theory-indicator lang-en active-lang">Theory</div>
+                        <div class="theory-indicator lang-zh">理论</div>
+                        <h3 class="event-title lang-en active-lang">A Critique of Politeness Theories</h3>
+                        <h3 class="event-title lang-zh">礼貌理论批判</h3>
+                        <p class="event-authors lang-en active-lang">Eelen (2001)</p>
+                        <p class="event-authors lang-zh">伊伦 (2001)</p>
+                        <div class="event-content lang-en active-lang">
+                            <p>Critiqued traditional politeness theories, arguing for a more discursive approach that considers how meaning emerges in interaction rather than in standalone utterances.</p>
+                            <div class="event-quote">
+                                "This attention has gained particular momentum after the 2000s when more and more scholars argue that pragmatic phenomena come into existence in longer stretches of interaction, instead of stand-alone utterances (see e.g., Eelen 2001)."
+                            </div>
+                        </div>
+                        <div class="event-content lang-zh">
+                            <p>批评传统礼貌理论，主张采用更具话语性的方法，考虑意义如何在互动中而不是在独立话语中产生。</p>
+                            <div class="event-quote">
+                                "这种关注在2000年代后尤为显著，当时越来越多的学者认为，语用现象是在较长的互动过程中产生的，而不是在独立的话语中（参见伊伦2001）。"
+                

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research Paradigm Impact Dashboard</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f5f5f5;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .title {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    
+    .language-selector button {
+      padding: 8px 16px;
+      margin-left: 8px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    .active {
+      background-color: #4361ee;
+      color: white;
+    }
+    
+    .inactive {
+      background-color: #e0e0e0;
+      color: #333;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .card-header {
+      margin-bottom: 16px;
+    }
+    
+    .card-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    
+    .card-description {
+      color: #666;
+    }
+    
+    .tabs {
+      display: flex;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    
+    .tab {
+      flex: 1;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s ease;
+    }
+    
+    .tab.active {
+      border-bottom: 3px solid #4361ee;
+      background-color: #f0f4ff;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    @media (min-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    .visualization {
+      height: 350px;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .chart-placeholder {
+      width: 100%;
+      height: 300px;
+      background-color: #eee;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: #666;
+    }
+    
+    ul {
+      padding-left: 20px;
+      margin-top: 10px;
+    }
+    
+    li {
+      margin-bottom: 10px;
+    }
+    
+    blockquote {
+      border-left: 4px solid #4361ee;
+      padding-left: 16px;
+      margin: 16px 0;
+      font-style: italic;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1 class="title" id="main-title">The Impact of Research Paradigms on Encoding and Decoding Difficulties</h1>
+      <div class="language-selector">
+        <button id="en-btn" class="active" onclick="changeLanguage('english')">English</button>
+        <button id="zh-btn" class="inactive" onclick="changeLanguage('chinese')">中文</button>
+      </div>
+    </div>
+    
+    <!-- Overview Card -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title" id="subtitle">Analyzing changes in Applied Linguistics articles (1981-1985 vs. 2011-2015)</h2>
+        <p class="card-description" id="overview">This dashboard visualizes how research paradigms (quantitative vs. qualitative) impact the cognitive encoding and decoding difficulties in Applied Linguistics research articles over time.</p>
+      </div>
+    </div>
+    
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab active" id="viz-tab" onclick="changeTab('visualizations')">Data Visualizations</div>
+      <div class="tab" id="findings-tab" onclick="changeTab('findings')">Key Findings</div>
+      <div class="tab" id="paradigms-tab" onclick="changeTab('paradigms')">Research Paradigms</div>
+    </div>
+    
+    <!-- Visualizations Tab -->
+    <div class="tab-content active" id="visualizations">
+      <div class="grid">
+        <!-- IE Chart -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title" id="ie-title">Information Entropy (IE)</h3>
+            <p class="card-description" id="ie-description">Measures cognitive encoding difficulty - the challenges writers face when creating text</p>
+          </div>
+          <div class="visualization">
+            <div class="chart-placeholder">
+              <h4>Information Entropy (IE) Chart</h4>
+              <table border="1" cellpadding="10" style="margin-top: 20px; border-collapse: collapse;">
+                <tr>
+                  <th>Time Period</th>
+                  <th>Qualitative</th>
+                  <th>Quantitative</th>
+                </tr>
+                <tr>
+                  <td>1981-1985</td>
+                  <td>8.664</td>
+                  <td>8.487</td>
+                </tr>
+                <tr>
+                  <td>2011-2015</td>
+                  <td>8.976</td>
+                  <td>8.835</td>
+                </tr>
+              </table>
+              <p style="margin-top: 10px;">*Higher values = Greater encoding difficulty</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- MDD Chart -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title" id="mdd-title">Mean Dependency Distance (MDD)</h3>
+            <p class="card-description" id="mdd-description">Measures cognitive decoding difficulty - the challenges readers face when interpreting text</p>
+          </div>
+          <div class="visualization">
+            <div class="chart-placeholder">
+              <h4>Mean Dependency Distance (MDD) Chart</h4>
+              <table border="1" cellpadding="10" style="margin-top: 20px; border-collapse: collapse;">
+                <tr>
+                  <th>Time Period</th>
+                  <th>Qualitative</th>
+                  <th>Quantitative</th>
+                </tr>
+                <tr>
+                  <td>1981-1985</td>
+                  <td>2.787</td>
+                  <td>2.639</td>
+                </tr>
+                <tr>
+                  <td>2011-2015</td>
+                  <td>2.827</td>
+                  <td>2.964</td>
+                </tr>
+              </table>
+              <p style="margin-top: 10px;">*Higher values = Greater decoding difficulty</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Findings Tab -->
+    <div class="tab-content" id="findings">
+      <div class="grid">
+        <!-- Key Findings -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title" id="findings-title">Key Findings</h3>
+          </div>
+          <div class="card-content">
+            <ul id="findings-list">
+              <li>Qualitative articles consistently exhibit higher cognitive encoding complexity than quantitative ones</li>
+              <li>Both research paradigms showed significant increases in encoding difficulty over time</li>
+              <li>Only quantitative articles experienced a significant increase in decoding difficulty</li>
+              <li>In recent years, quantitative articles became more difficult to decode than qualitative ones</li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Supporting Evidence -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title" id="quotes-title">Supporting Evidence</h3>
+          </div>
+          <div class="card-content">
+            <blockquote id="quote1">
+              "Qualitative research articles consistently exhibit higher cognitive encoding complexity than their quantitative counterparts in both periods while they both experienced significant increases in this metric."
+            </blockquote>
+            <blockquote id="quote2">
+              "However, regarding the cognitive decoding difficulty, only quantitative research articles have experienced a significant rise. As a result, quantitative research articles have become higher in cognitive decoding difficulty than qualitative ones in the second historical period whereas no paradigmatic difference is found in the first period."
+            </blockquote>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Paradigms Tab -->
+    <div class="tab-content" id="paradigms">
+      <div class="grid">
+        <!-- Qualitative -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title" id="qual-title">Qualitative Research</h3>
+          </div>
+          <div class="card-content">
+            <ul id="qual-features">
+              <li>Grounded in constructivist epistemology</li>
+              <li>Focuses on context-specific understanding</li>
+              <li>Conducted in natural settings with flexible procedures</li>
+              <li>Includes richer descriptions of research contexts</li>
+              <li>Requires nuanced interpretation of findings</li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Quantitative -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title" id="quant-title">Quantitative Research</h3>
+          </div>
+          <div class="card-content">
+            <ul id="quant-features">
+              <li>Rooted in positivist epistemology</li>
+              <li>Seeks to establish general laws of causality</li>
+              <li>Conducted in controlled conditions with standard procedures</li>
+              <li>More predictable in structure and content</li>
+              <li>Follows standard formats for reporting findings</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Language Data
+    const texts = {
+      english: {
+        title: "The Impact of Research Paradigms on Encoding and Decoding Difficulties",
+        subtitle: "Analyzing changes in Applied Linguistics articles (1981-1985 vs. 2011-2015)",
+        overview: "This dashboard visualizes how research paradigms (quantitative vs. qualitative) impact the cognitive encoding and decoding difficulties in Applied Linguistics research articles over time.",
+        vizTab: "Data Visualizations",
+        findingsTab: "Key Findings",
+        paradigmsTab: "Research Paradigms",
+        ieTitle: "Information Entropy (IE)",
+        ieDescription: "Measures cognitive encoding difficulty - the challenges writers face when creating text",
+        mddTitle: "Mean Dependency Distance (MDD)",
+        mddDescription: "Measures cognitive decoding difficulty - the challenges readers face when interpreting text",
+        findingsTitle: "Key Findings",
+        findingsList: [
+          "Qualitative articles consistently exhibit higher cognitive encoding complexity than quantitative ones",
+          "Both research paradigms showed significant increases in encoding difficulty over time",
+          "Only quantitative articles experienced a significant increase in decoding difficulty",
+          "In recent years, quantitative articles became more difficult to decode than qualitative ones"
+        ],
+        quotesTitle: "Supporting Evidence",
+        quote1: "Qualitative research articles consistently exhibit higher cognitive encoding complexity than their quantitative counterparts in both periods while they both experienced significant increases in this metric.",
+        quote2: "However, regarding the cognitive decoding difficulty, only quantitative research articles have experienced a significant rise. As a result, quantitative research articles have become higher in cognitive decoding difficulty than qualitative ones in the second historical period whereas no paradigmatic difference is found in the first period.",
+        qualTitle: "Qualitative Research",
+        qualFeatures: [
+          "Grounded in constructivist epistemology",
+          "Focuses on context-specific understanding",
+          "Conducted in natural settings with flexible procedures",
+          "Includes richer descriptions of research contexts",
+          "Requires nuanced interpretation of findings"
+        ],
+        quantTitle: "Quantitative Research",
+        quantFeatures: [
+          "Rooted in positivist epistemology",
+          "Seeks to establish general laws of causality",
+          "Conducted in controlled conditions with standard procedures",
+          "More predictable in structure and content",
+          "Follows standard formats for reporting findings"
+        ]
+      },
+      chinese: {
+        title: "研究范式对编码和解码难度的影响",
+        subtitle: "分析应用语言学文章的变化（1981-1985年 vs. 2011-2015年）",
+        overview: "本仪表板可视化了研究范式（定量与定性）如何随时间影响应用语言学研究文章中的认知编码和解码难度。",
+        vizTab: "数据可视化",
+        findingsTab: "主要发现",
+        paradigmsTab: "研究范式",
+        ieTitle: "信息熵 (IE)",
+        ieDescription: "衡量认知编码难度 - 作者在创建文本时面临的挑战",
+        mddTitle: "平均依存距离 (MDD)",
+        mddDescription: "衡量认知解码难度 - 读者在解释文本时面临的挑战",
+        findingsTitle: "主要发现",
+        findingsList: [
+          "定性文章在认知编码复杂性方面始终高于定量文章",
+          "两种研究范式的编码难度均随时间显著增加",
+          "只有定量文章的解码难度显著增加",
+          "近年来，定量文章比定性文章更难解码"
+        ],
+        quotesTitle: "支持证据",
+        quote1: "定性研究文章在两个时期都表现出比定量文章更高的认知编码复杂性，而它们都经历了这一指标的显著增加。",
+        quote2: "然而，关于认知解码难度，只有定量研究文章经历了显著增长。结果，定量研究文章在第二个历史时期的认知解码难度高于定性文章，而在第一个时期没有发现范式差异。",
+        qualTitle: "定性研究",
+        qualFeatures: [
+          "基于建构主义认识论",
+          "关注特定环境的理解",
+          "在自然环境中进行，程序灵活",
+          "包含对研究环境更丰富的描述",
+          "需要对发现进行细致解释"
+        ],
+        quantTitle: "定量研究",
+        quantFeatures: [
+          "基于实证主义认识论",
+          "寻求建立普遍的因果关系法则",
+          "在受控条件下进行，程序标准化",
+          "结构和内容更具可预测性",
+          "遵循标准格式报告研究发现"
+        ]
+      }
+    };
+
+    // Functions
+    function changeLanguage(lang) {
+      // Update button states
+      document.getElementById('en-btn').className = lang === 'english' ? 'active' : 'inactive';
+      document.getElementById('zh-btn').className = lang === 'chinese' ? 'active' : 'inactive';
+      
+      // Update text content
+      const text = texts[lang];
+      
+      // Header
+      document.getElementById('main-title').textContent = text.title;
+      document.getElementById('subtitle').textContent = text.subtitle;
+      document.getElementById('overview').textContent = text.overview;
+      
+      // Tabs
+      document.getElementById('viz-tab').textContent = text.vizTab;
+      document.getElementById('findings-tab').textContent = text.findingsTab;
+      document.getElementById('paradigms-tab').textContent = text.paradigmsTab;
+      
+      // Visualizations tab
+      document.getElementById('ie-title').textContent = text.ieTitle;
+      document.getElementById('ie-description').textContent = text.ieDescription;
+      document.getElementById('mdd-title').textContent = text.mddTitle;
+      document.getElementById('mdd-description').textContent = text.mddDescription;
+      
+      // Findings tab
+      document.getElementById('findings-title').textContent = text.findingsTitle;
+      const findingsList = document.getElementById('findings-list');
+      findingsList.innerHTML = '';
+      text.findingsList.forEach(finding => {
+        const li = document.createElement('li');
+        li.textContent = finding;
+        findingsList.appendChild(li);
+      });
+      
+      document.getElementById('quotes-title').textContent = text.quotesTitle;
+      document.getElementById('quote1').textContent = text.quote1;
+      document.getElementById('quote2').textContent = text.quote2;
+      
+      // Paradigms tab
+      document.getElementById('qual-title').textContent = text.qualTitle;
+      const qualFeatures = document.getElementById('qual-features');
+      qualFeatures.innerHTML = '';
+      text.qualFeatures.forEach(feature => {
+        const li = document.createElement('li');
+        li.textContent = feature;
+        qualFeatures.appendChild(li);
+      });
+      
+      document.getElementById('quant-title').textContent = text.quantTitle;
+      const quantFeatures = document.getElementById('quant-features');
+      quantFeatures.innerHTML = '';
+      text.quantFeatures.forEach(feature => {
+        const li = document.createElement('li');
+        li.textContent = feature;
+        quantFeatures.appendChild(li);
+      });
+    }
+    
+    function changeTab(tabId) {
+      // Update tab states
+      document.getElementById('viz-tab').className = tabId === 'visualizations' ? 'tab active' : 'tab';
+      document.getElementById('findings-tab').className = tabId === 'findings' ? 'tab active' : 'tab';
+      document.getElementById('paradigms-tab').className = tabId === 'paradigms' ? 'tab active' : 'tab';
+      
+      // Update content visibility
+      document.getElementById('visualizations').className = tabId === 'visualizations' ? 'tab-content active' : 'tab-content';
+      document.getElementById('findings').className = tabId === 'findings' ? 'tab-content active' : 'tab-content';
+      document.getElementById('paradigms').className = tabId === 'paradigms' ? 'tab-content active' : 'tab-content';
+    }
+  </script>
+</body>
+</html>

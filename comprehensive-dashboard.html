@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Comprehensive Equivalence Testing Research Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+        }
+        .methodology-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .method-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .chart-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .quote {
+            font-style: italic;
+            margin: 15px 0;
+            padding: 15px;
+            border-left: 4px solid #28a745;
+            background: #f8f9fa;
+        }
+        .findings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .finding-card {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .tab-container {
+            margin: 20px 0;
+        }
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .tab-button {
+            padding: 10px 20px;
+            border: none;
+            background: #f8f9fa;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .tab-button.active {
+            background: #007bff;
+            color: white;
+        }
+        .tab-content {
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Equivalence Testing Techniques for Corpus Linguistics<br>
+                <span style="font-size: 0.9em">语料库语言学的等效性测试技术</span>
+            </h1>
+            <p>Larsson & Hancock (2026) | Research Analysis Dashboard | 研究分析仪表板</p>
+        </div>
+
+        <!-- Research Background Section -->
+        <div class="section">
+            <h2>Research Background | 研究背景</h2>
+            <div class="quote">
+                <p>"Tests in the null hypothesis significance testing (NHST) framework are designed to identify differences between groups. Thus, researchers wishing to assess similarities are out of luck if they use widespread techniques in the field such as t-tests, chi-square tests, and linear regression."</p>
+                <p>"在零假设显著性检验（NHST）框架中的测试旨在识别组间差异。因此，如果研究者使用领域内广泛使用的技术（如t检验、卡方检验和线性回归），则无法评估相似性。"</p>
+            </div>
+            <div class="methodology-grid">
+                <div class="method-card">
+                    <h3>Research Objective | 研究目标</h3>
+                    <p>To assess similarities between L1 and L2 English students in their use of attributive adjectives</p>
+                    <p>评估英语母语者和二语者在使用归因形容词方面的相似性</p>
+                </div>
+                <div class="method-card">
+                    <h3>Key Challenge | 主要挑战</h3>
+                    <p>Traditional NHST methods cannot effectively test for similarities between groups</p>
+                    <p>传统的NHST方法无法有效测试组间相似性</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Methodology Section -->
+        <div class="section">
+            <h2>Methodology | 研究方法</h2>
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-button active" onclick="showTab('equivalence')">Equivalence Testing | 等效性测试</button>
+                    <button class="tab-button" onclick="showTab('model')">Model-based Techniques | 基于模型的技术</button>
+                </div>
+                <div id="equivalence" class="tab-content">
+                    <h3>Equivalence Testing Approach | 等效性测试方法</h3>
+                    <ul>
+                        <li>Equivalence bounds: ±3.03 attributive adjectives per 1000 words</li>
+                        <li>90% confidence interval analysis</li>
+                        <li>TOSTER package implementation</li>
+                    </ul>
+                    <div class="quote">
+                        <p>"We stipulate that the L2 students' mean frequency of attributive adjectives can be no more than 5% higher or lower than the L1 students' mean and still be considered practically equivalent."</p>
+                        <p>"我们规定，二语者的归因形容词平均频率与母语者的平均频率相差不超过5%，才能被认为在实践中是等效的。"</p>
+                    </div>
+                </div>
+                <div id="model" class="tab-content" style="display: none;">
+                    <h3>Model-based Analysis | 基于模型的分析</h3>
+                    <ul>
+                        <li>Structural equation modeling (SEM) framework</li>
+                        <li>Mean structure models comparison</li>
+                        <li>RMSEA and AIC analysis</li>
+                    </ul>
+                    <div class="quote">
+                        <p>"Results showed our RMSEA to be .095 (with a 90% CI of .039–.165), which is above the recommended cut-offs."</p>
+                        <p>"结果显示我们的RMSEA为0.095（90%置信区间为0.039-0.165），高于推荐的临界值。"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="section">
+            <h2>Results Analysis | 结果分析</h2>
+            <div class="stats-container">
+                <div class="stat-card">
+                    <h3>L1 Students | 母语者</h3>
+                    <p>Sample Size (样本量): 653</p>
+                    <p>Mean (平均值): 60.6</p>
+                    <p>SD (标准差): 17.0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>L2 Students | 二语者</h3>
+                    <p>Sample Size (样本量): 711</p>
+                    <p>Mean (平均值): 63.2</p>
+                    <p>SD (标准差): 18.5</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Model Fit Indices | 模型拟合指数</h3>
+                    <p>RMSEA: 0.095</p>
+                    <p>AIC Model 1: 11725.374</p>
+                    <p>AIC Model 2: 11730.493</p>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="resultsChart"></canvas>
+            </div>
+
+            <div class="findings-grid">
+                <div class="finding-card">
+                    <h3>Equivalence Testing Results | 等效性测试结果</h3>
+                    <p>Mean difference: -2.6</p>
+                    <p>90% CI: [-4.1821, -1.0179]</p>
+                    <p>Cannot reject H0 of nonequivalence</p>
+                </div>
+                <div class="finding-card">
+                    <h3>Model Comparison Results | 模型比较结果</h3>
+                    <p>AIC difference: 5.119</p>
+                    <p>Favors unconstrained model</p>
+                    <p>Groups not sufficiently similar</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conclusions Section -->
+        <div class="section">
+            <h2>Conclusions | 结论</h2>
+            <div class="quote">
+                <p>"Both sets of techniques suggested that we do not have sufficient evidence to conclude that the groups are sufficiently similar that they can be considered one group."</p>
+                <p>"两种技术方法都表明，我们没有足够的证据得出这些组足够相似可以被视为一个组的结论。"</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('resultsChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['L1 Students | 母语者', 'L2 Students | 二语者'],
+                datasets: [{
+                    label: 'Attributive Adjectives per 1000 words | 每千字归因形容词数',
+                    data: [60.6, 63.2],
+                    backgroundColor: ['rgba(54, 162, 235, 0.5)', 'rgba(255, 99, 132, 0.5)'],
+                    borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)'],
+                    borderWidth: 1,
+                    error: [17.0, 18.5]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Mean Frequency Comparison | 平均频率比较'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Frequency per 1000 words | 每千字频率'
+                        }
+                    }
+                }
+            }
+        });
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+            document.getElementById(tabName).style.display = 'block';
+            
+            document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

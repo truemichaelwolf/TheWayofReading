@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distributional Cues in Construction Acquisition: Terminology Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        
+        .header h2 {
+            margin: 5px 0 0;
+            font-size: 16px;
+            font-weight: normal;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .tab:hover {
+            background-color: #e1e1e1;
+        }
+        
+        .tab.active {
+            background-color: #4a6fa5;
+            color: white;
+            border-color: #4a6fa5;
+        }
+        
+        .content {
+            display: none;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .content.active {
+            display: block;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        .terminology-card {
+            border: 1px solid #e1e1e1;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #fff;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .terminology-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .term {
+            font-weight: bold;
+            color: #2a4365;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .chinese-term {
+            font-weight: bold;
+            color: #9c4221;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .definition {
+            margin-bottom: 10px;
+        }
+        
+        .quote {
+            font-style: italic;
+            border-left: 3px solid #4a6fa5;
+            padding-left: 15px;
+            margin: 10px 0;
+            color: #555;
+        }
+        
+        .category-tag {
+            display: inline-block;
+            background-color: #e2e8f0;
+            color: #4a5568;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+        
+        .category-tags {
+            margin-top: 10px;
+        }
+        
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .filter-button {
+            background-color: #e2e8f0;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-button:hover {
+            background-color: #cbd5e0;
+        }
+        
+        .filter-button.active {
+            background-color: #4a6fa5;
+            color: white;
+        }
+        
+        .language-toggle {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+        }
+        
+        .language-button {
+            background-color: #e2e8f0;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+        
+        .language-button.active {
+            background-color: #4a6fa5;
+            color: white;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 1px solid #eee;
+            color: #777;
+            font-size: 14px;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                flex-grow: 1;
+                text-align: center;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Distributional Cues in Construction Acquisition</h1>
+            <h2>A Comprehensive Terminology Dashboard</h2>
+        </div>
+        
+        <div class="language-toggle">
+            <button class="language-button active" data-lang="en">English</button>
+            <button class="language-button" data-lang="zh">中文</button>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="all">All Terms</div>
+            <div class="tab" data-tab="statistical">Statistical Concepts</div>
+            <div class="tab" data-tab="linguistic">Linguistic Terms</div>
+            <div class="tab" data-tab="methodology">Research Methodology</div>
+        </div>
+        
+        <div class="search-container">
+            <input type="text" class="search-box" placeholder="Search for terminology...">
+        </div>
+        
+        <div class="filter-container">
+            <button class="filter-button active" data-filter="all">All</button>
+            <button class="filter-button" data-filter="constructional">Constructional</button>
+            <button class="filter-button" data-filter="statistical">Statistical</button>
+            <button class="filter-button" data-filter="experimental">Experimental</button>
+            <button class="filter-button" data-filter="bayesian">Bayesian</button>
+        </div>
+        
+        <div class="content active" id="all-content">
+            <!-- All terms will be dynamically added here -->
+        </div>
+        
+        <div class="content" id="statistical-content">
+            <!-- Statistical terms will be dynamically added here -->
+        </div>
+        
+        <div class="content" id="linguistic-content">
+            <!-- Linguistic terms will be dynamically added here -->
+        </div>
+        
+        <div class="content" id="methodology-content">
+            <!-- Methodology terms will be dynamically added here -->
+        </div>
+        
+        <footer>
+            Source: Domazetoska, I., & Zhao, H. (2025). Distributional Cues in Construction Acquisition: A Comparative Study of Native and Nonnative English Speakers Using the As-Predicative Construction. Language Learning.
+        </footer>
+    </div>
+    
+    <script>
+        // Define terminology data
+        const terminology = [
+            {
+                term: "As-predicative Construction",
+                chineseTerm: "作为-谓词性结构",
+                definition: "A grammatical construction used to ascribe an attribute to the direct object, as a reflection of the subject's perception, classification, or judgment (e.g., 'They saw the situation as a failure').",
+                quote: "The as-predicative construction is used to ascribe an attribute to the direct object, as a reflection of the subject's perception, classification, or judgment.",
+                categories: ["linguistic", "constructional"],
+                tabs: ["all", "linguistic"]
+            },
+            {
+                term: "Verb Cue Validity",
+                chineseTerm: "动词线索有效性",
+                definition: "The contingency metric ΔP (construction|verb) that represents the predictive power of a verb to cue a constructional outcome.",
+                quote: "A differentiation is made between the reliability of verbs in predicting constructional outcomes, denoted as the contingency metric ΔP (construction|verb)—termed verb cue validity.",
+                categories: ["linguistic", "statistical", "constructional"],
+                tabs: ["all", "statistical", "linguistic"]
+            },
+            {
+                term: "Construction Cue Validity",
+                chineseTerm: "结构线索有效性",
+                definition: "The contingency metric ΔP (verb|construction) that represents the predictive strength of the construction to cue a verbal outcome.",
+                quote: "The reliability of constructions in predicting verbal outcomes, specified as the contingency metric ΔP (verb|construction)—referred to as construction cue validity.",
+                categories: ["linguistic", "statistical", "constructional"],
+                tabs: ["all", "statistical", "linguistic"]
+            },
+            {
+                term: "Delta P (ΔP)",
+                chineseTerm: "德尔塔P (ΔP)",
+                definition: "A contingency metric representing an index of associative strength between a given cue and an outcome, calculated as the difference between P(Outcome|Cue) and P(Outcome|¬Cue).",
+                quote: "To operationalize associative strength, we use a contingency metric known as Delta P (ΔP; Allan, 1980) to represent an index of associative strength between a given cue and an outcome.",
+                categories: ["statistical", "bayesian"],
+                tabs: ["all", "statistical"]
+            },
+            {
+                term: "Verb Category Membership",
+                chineseTerm: "动词类别成员",
+                definition: "The degree to which a certain verb is representative of a specific constructional category, with the idea that more representative category members (verbs) will be more readily elicited in the context of that category.",
+                quote: "Another way in which we refer to construction cue validity in this study is verb category membership, because this information underscores the degree to which a certain verb is representative of a specific constructional category.",
+                categories: ["linguistic", "constructional"],
+                tabs: ["all", "linguistic"]
+            },
+            {
+                term: "Collostructions",
+                chineseTerm: "搭配结构",
+                definition: "The product of the associative relationship forged between verbs and constructions, underpinned by statistical co-occurrence information.",
+                quote: "Collostructions are a product of the associative relationship forged between verbs and constructions, underpinned by statistical co-occurrence information.",
+                categories: ["linguistic", "constructional"],
+                tabs: ["all", "linguistic"]
+            },
+            {
+                term: "Native Speakers (NSs)",
+                chineseTerm: "母语使用者",
+                definition: "Individuals who acquired a language from birth and speak it as their first language.",
+                quote: "The extent to which native speakers (NSs) and nonnative speakers (NNSs) incorporate these cues in different conditions of linguistic information retrieval remains largely unexplored to date.",
+                categories: ["linguistic", "experimental"],
+                tabs: ["all", "linguistic"]
+            },
+            {
+                term: "Nonnative Speakers (NNSs)",
+                chineseTerm: "非母语使用者",
+                definition: "Individuals who learned a language after their first language, also referred to as second language (L2) speakers.",
+                quote: "In Experiment 1, the NNSs displayed a slightly greater sensitivity to verb cue validity compared to the NSs, but not to construction cue validity.",
+                categories: ["linguistic", "experimental"],
+                tabs: ["all", "linguistic"]
+            },
+            {
+                term: "Bayesian Mixed-Effects Modeling",
+                chineseTerm: "贝叶斯混合效应建模",
+                definition: "A statistical approach that combines Bayesian probability with mixed-effects models, allowing for the incorporation of prior knowledge and handling of hierarchical data structures.",
+                quote: "We offer an alternative statistical perspective by adopting a Bayesian approach to logistic and negative binomial mixed-effects modeling.",
+                categories: ["statistical", "bayesian", "methodology"],
+                tabs: ["all", "statistical", "methodology"]
+            },
+            {
+                term: "Region of Practical Equivalence (ROPE)",
+                chineseTerm: "实际等效区域",
+                definition: "A range of values in the posterior distribution around the null value that contains parameter values corresponding to 'practically no effect'.",
+                quote: "We therefore define a region of practical equivalence (ROPE) around the uncertainty of the true parameter value known as the highest density interval (HDI).",
+                categories: ["statistical", "bayesian"],
+                tabs: ["all", "statistical"]
+            },
+            {
+                term: "Cue Integration",
+                chineseTerm: "线索整合",
+                definition: "The process by which speakers simultaneously incorporate multiple distributional cues in their linguistic processing.",
+                quote: "In Experiment 1, we observed that both speaker groups incorporated verb cue validity and construction cue validity in their construction retrieval, when cued by a verb.",
+                categories: ["linguistic", "experimental"],
+                tabs: ["all", "linguistic", "methodology"]
+            },
+            {
+                term: "Associative Learning Theory",
+                chineseTerm: "联想学习理论",
+                definition: "A framework that explains learning as the process of tracking relationships between events, where one event serves as a cue to predict the occurrence of another event as an outcome.",
+                quote: "This process entails tracking relationships between the events, where one event serves as a cue to predict the occurrence of another event as an outcome, which forms the basis of associative learning theory.",
+                categories: ["linguistic", "statistical"],
+                tabs: ["all", "linguistic", "statistical"]
+            },
+            {
+                term: "Constructionist Approaches",
+                chineseTerm: "构式理论方法",
+                definition: "Linguistic theories that view constructions as the building blocks of language, embodying conventionalized form-meaning pairings.",
+                quote: "In constructionist approaches to language acquisition, constructions serve as the building blocks of language, embodying conventionalized form-meaning pairings.",
+                categories: ["linguistic", "constructional"],
+                tabs: ["all", "linguistic"]
+            },
+            {
+                term: "Intuitive Statisticians",
+                chineseTerm: "直觉统计学家",
+                definition: "The characterization of humans as having the ability to tally the distributional properties of linguistic elements from the input and make intuitive statistical judgments.",
+                quote: "Although the two types of learning are closely related and offer key insights into how speakers acquire language, they also differ. Probabilistic learning delineates the process of the use of probabilities to infer linguistic patterns.",
+                categories: ["linguistic", "statistical"],
+                tabs: ["all", "linguistic", "statistical"]
+            },
+            {
+                term: "Statistical Learning",
+                chineseTerm: "统计学习",
+                definition: "Speakers' ability to detect and keep track of patterns based on the statistical regularities encountered in the input, such as co-occurrence statistics.",
+                quote: "Statistical learning, on the other hand, encapsulates speakers' ability to detect and keep track of patterns based on the statistical regularities encountered in the input, such as co-occurrence statistics.",
+                categories: ["linguistic", "statistical"],
+                tabs: ["all", "linguistic", "statistical"]
+            },
+            {
+                term: "Probabilistic Learning",
+                chineseTerm: "概率学习",
+                definition: "The process of using probabilities to infer linguistic patterns, involving the consideration of uncertainty and belief updating.",
+                quote: "Probabilistic learning delineates the process of the use of probabilities to infer linguistic patterns, involving the consideration of uncertainty and belief updating.",
+                categories: ["linguistic", "statistical"],
+                tabs: ["all", "linguistic", "statistical"]
+            },
+            {
+                term: "Markov Chain Monte Carlo (MCMC)",
+                chineseTerm: "马尔可夫链蒙特卡洛",
+                definition: "A computational algorithm used in Bayesian statistics to sample from a probability distribution and approximate posterior distributions.",
+                quote: "The model was then fitted with the brm() function with a specified logit link for the Bernoulli distribution of the response, using a Markov chain Monte Carlo (MCMC) algorithm.",
+                categories: ["statistical", "bayesian", "methodology"],
+                tabs: ["all", "statistical", "methodology"]
+            },
+            {
+                term: "Highest Density Interval (HDI)",
+                chineseTerm: "最高密度区间",
+                definition: "A range of values in the posterior distribution that contains a specified percentage of the most credible values, often used in Bayesian analysis.",
+                quote: "The ROPE is ascertained as the range of values in the posterior distribution around the null value that contains a span of parameter values corresponding to 'practically no effect'.",
+                categories: ["statistical", "bayesian"],
+                tabs: ["all", "statistical"]
+            },
+            {
+                term: "Logistic Rescorla-Wagner (RW) Model",
+                chineseTerm: "逻辑斯蒂Rescorla-Wagner模型",
+                definition: "An updated perspective on error-driven learning and competition effects, which holds that prediction errors in learning diminish with growing experience but continue to persist to some degree.",
+                quote: "Kapatsinski (2023) recently introduced the logistic Rescorla–Wagner (RW) model, which provides an updated perspective on error-driven learning and competition effects.",
+                categories: ["linguistic", "statistical"],
+                tabs: ["all", "linguistic", "statistical"]
+            },
+            {
+                term: "Forward-Retrieval Process",
+                chineseTerm: "前向检索过程",
+                definition: "A process that follows natural adjacency patterns in linguistic environments, such as 'verb + as' sequences, involved in construction retrieval when cued by a verb.",
+                quote: "Integrating multiple distributional cues may be easier in a forward-retrieval process, which follows natural adjacency patterns found in the linguistic environment such as 'verb + as'.",
+                categories: ["linguistic", "experimental"],
+                tabs: ["all", "linguistic", "methodology"]
+            },
+            {
+                term: "Backward-Retrieval Process",
+                chineseTerm: "后向检索过程",
+                definition: "A process where a verb needs to be recalled within a given constructional context, involving memory search rather than prediction generation.",
+                quote: "As opposed to a backward-retrieval process where a verb needs to be recalled within a given constructional context, for example, The woman ___ the bag as ___.",
+                categories: ["linguistic", "experimental"],
+                tabs: ["all", "linguistic", "methodology"]
+            },
+            {
+                term: "Prediction Generation",
+                chineseTerm: "预测生成",
+                definition: "The anticipation of an outcome based on current and past information, relying on learned patterns and associations, involved in constructional outcomes.",
+                quote: "Providing a constructional outcome in the context of, for instance, The woman regarded ____, requires prediction generation, which is essentially the anticipation of an outcome based on current and past information.",
+                categories: ["linguistic", "experimental"],
+                tabs: ["all", "linguistic", "methodology"]
+            },
+            {
+                term: "Memory Search",
+                chineseTerm: "记忆搜索",
+                definition: "A conscious and effortful process of mapping out a match between retrieval cues and memory content, involved in verb retrieval.",
+                quote: "Providing a verbal outcome in a given constructional context, on the other hand, entails a memory search and engages processes such as encoding specificity.",
+                categories: ["linguistic", "experimental"],
+                tabs: ["all", "linguistic", "methodology"]
+            },
+            {
+                term: "Noisy Channel Model",
+                chineseTerm: "噪声通道模型",
+                definition: "A model positing that probabilistic structural knowledge is attenuated as a result of higher noise rates in L2 speakers' memory traces, affecting the accuracy of structure retrieval in L2 processing.",
+                quote: "The model posits that probabilistic structural knowledge is attenuated as a result of higher noise rates in L2 speakers' memory traces, thus affecting the accuracy of structure retrieval in L2 processing.",
+                categories: ["linguistic", "statistical"],
+                tabs: ["all", "linguistic", "statistical"]
+            },
+            {
+                term: "Distinctive Collexeme Analysis",
+                chineseTerm: "特征搭配分析",
+                definition: "A statistical method used to identify the degree of association between lexical items and grammatical constructions in corpus linguistics.",
+                quote: "Although several statistical measures have been proposed to operationalize this associative relationship, such as mutual information, distinctive collexeme analysis, faith, and log likelihood.",
+                categories: ["linguistic", "statistical", "methodology"],
+                tabs: ["all", "linguistic", "statistical", "methodology"]
+            }
+        ];
+        
+        // Function to render terminology cards
+        function renderTerminologyCards(terms, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = "";
+            
+            if (terms.length === 0) {
+                container.innerHTML = "<div class='no-results'>No matching terms found</div>";
+                return;
+            }
+            
+            terms.forEach(term => {
+                const langClass = document.querySelector('.language-button.active').dataset.lang;
+                
+                const card = document.createElement('div');
+                card.className = 'terminology-card';
+                
+                let cardContent = `
+                    <div class="term">${term.term}</div>
+                `;
+                
+                if (langClass === 'zh') {
+                    cardContent += `<div class="chinese-term">${term.chineseTerm}</div>`;
+                }
+                
+                cardContent += `
+                    <div class="definition">${term.definition}</div>
+                    <div class="quote">${term.quote}</div>
+                    <div class="category-tags">
+                `;
+                
+                term.categories.forEach(category => {
+                    cardContent += `<span class="category-tag">${category}</span>`;
+                });
+                
+                cardContent += `</div>`;
+                card.innerHTML = cardContent;
+                container.appendChild(card);
+            });
+        }
+        
+        // Initialize the dashboard
+        function initDashboard() {
+            // Initial rendering
+            renderTerminologyCards(terminology, 'all-content');
+            
+            const statisticalTerms = terminology.filter(term => term.tabs.includes('statistical'));
+            renderTerminologyCards(statisticalTerms, 'statistical-content');
+            
+            const linguisticTerms = terminology.filter(term => term.tabs.includes('linguistic'));
+            renderTerminologyCards(linguisticTerms, 'linguistic-content');
+            
+            const methodologyTerms = terminology.filter(term => term.tabs.includes('methodology'));
+            renderTerminologyCards(methodologyTerms, 'methodology-content');
+            
+            // Tab navigation
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    const contentId = `${tab.dataset.tab}-content`;
+                    document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+                    document.getElementById(contentId).classList.add('active');
+                });
+            });
+            
+            // Search functionality
+            const searchBox = document.querySelector('.search-box');
+            searchBox.addEventListener('input', () => {
+                const searchTerm = searchBox.value.toLowerCase();
+                const filterButton = document.querySelector('.filter-button.active');
+                const filterCategory = filterButton.dataset.filter;
+                
+                let filteredTerms = terminology;
+                
+                // Apply category filter if not 'all'
+                if (filterCategory !== 'all') {
+                    filteredTerms = filteredTerms.filter(term => term.categories.includes(filterCategory));
+                }
+                
+                // Apply search filter
+                filteredTerms = filteredTerms.filter(term => 
+                    term.term.toLowerCase().includes(searchTerm) || 
+                    term.definition.toLowerCase().includes(searchTerm) ||
+                    term.quote.toLowerCase().includes(searchTerm) ||
+                    term.chineseTerm.includes(searchTerm)
+                );
+                
+                // Render the filtered terms to all tab contents
+                renderTerminologyCards(filteredTerms, 'all-content');
+                
+                const statisticalTerms = filteredTerms.filter(term => term.tabs.includes('statistical'));
+                renderTerminologyCards(statisticalTerms, 'statistical-content');
+                
+                const linguisticTerms = filteredTerms.filter(term => term.tabs.includes('linguistic'));
+                renderTerminologyCards(linguisticTerms, 'linguistic-content');
+                
+                const methodologyTerms = filteredTerms.filter(term => term.tabs.includes('methodology'));
+                renderTerminologyCards(methodologyTerms, 'methodology-content');
+            });
+            
+            // Category filter functionality
+            const filterButtons = document.querySelectorAll('.filter-button');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    const filterCategory = button.dataset.filter;
+                    const searchTerm = searchBox.value.toLowerCase();
+                    
+                    let filteredTerms = terminology;
+                    
+                    // Apply search filter
+                    if (searchTerm) {
+                        filteredTerms = filteredTerms.filter(term => 
+                            term.term.toLowerCase().includes(searchTerm) || 
+                            term.definition.toLowerCase().includes(searchTerm) ||
+                            term.quote.toLowerCase().includes(searchTerm) ||
+                            term.chineseTerm.includes(searchTerm)
+                        );
+                    }
+                    
+                    // Apply category filter if not 'all'
+                    if (filterCategory !== 'all') {
+                        filteredTerms = filteredTerms.filter(term => term.categories.includes(filterCategory));
+                    }
+                    
+                    // Render the filtered terms to all tab contents
+                    renderTerminologyCards(filteredTerms, 'all-content');
+                    
+                    const statisticalTerms = filteredTerms.filter(term => term.tabs.includes('statistical'));
+                    renderTerminologyCards(statisticalTerms, 'statistical-content');
+                    
+                    const linguisticTerms = filteredTerms.filter(term => term.tabs.includes('linguistic'));
+                    renderTerminologyCards(linguisticTerms, 'linguistic-content');
+                    
+                    const methodologyTerms = filteredTerms.filter(term => term.tabs.includes('methodology'));
+                    renderTerminologyCards(methodologyTerms, 'methodology-content');
+                });
+            });
+            
+            // Language toggle functionality
+            const languageButtons = document.querySelectorAll('.language-button');
+            languageButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    languageButtons.forEach(b => b.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    // Re-render all content with the new language setting
+                    const activeTab = document.querySelector('.tab.active').dataset.tab;
+                    const activeContentId = `${activeTab}-content`;
+                    const filteredTerms = terminology.filter(term => term.tabs.includes(activeTab));
+                    
+                    renderTerminologyCards(filteredTerms, activeContentId);
+                });
+            });
+        }
+        
+        // Initialize the dashboard when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+</body>
+</html>

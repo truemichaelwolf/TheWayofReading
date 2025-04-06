@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluenceme Research Methodology Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .language-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .language-btn {
+            padding: 8px 16px;
+            margin: 0 5px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .language-btn.active {
+            background-color: #4a6fa5;
+            color: white;
+        }
+        .methodology-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 20px;
+        }
+        .methodology-section {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .full-width {
+            grid-column: span 2;
+        }
+        .methodology-title {
+            color: #4a6fa5;
+            border-bottom: 2px solid #4a6fa5;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .quote {
+            background-color: #f0f4f8;
+            border-left: 4px solid #4a6fa5;
+            padding: 15px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #4a6fa5;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .diagram {
+            width: 100%;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .diagram img {
+            max-width: 100%;
+            height: auto;
+        }
+        .workflow-steps {
+            list-style-type: none;
+            counter-reset: methodology-counter;
+            padding-left: 0;
+        }
+        .workflow-steps li {
+            counter-increment: methodology-counter;
+            position: relative;
+            padding: 15px 20px 15px 70px;
+            margin-bottom: 15px;
+            background-color: #f0f4f8;
+            border-radius: 5px;
+        }
+        .workflow-steps li::before {
+            content: counter(methodology-counter);
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #4a6fa5;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .hidden {
+            display: none;
+        }
+        .fluenceme-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-gap: 15px;
+            margin-top: 15px;
+        }
+        .fluenceme-category {
+            background-color: #f0f4f8;
+            border-radius: 5px;
+            padding: 15px;
+        }
+        .fluenceme-category h4 {
+            margin-top: 0;
+            color: #4a6fa5;
+            border-bottom: 1px solid #4a6fa5;
+            padding-bottom: 5px;
+        }
+        .fluenceme-examples {
+            font-style: italic;
+            margin-top: 10px;
+        }
+        .research-questions {
+            background-color: #f0f4f8;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .research-questions ol {
+            margin-bottom: 0;
+        }
+        .statistical-details {
+            background-color: #f0f4f8;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        .code-snippet {
+            font-family: monospace;
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #4a6fa5;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        @media (max-width: 768px) {
+            .methodology-grid {
+                grid-template-columns: 1fr;
+            }
+            .full-width {
+                grid-column: span 1;
+            }
+            .fluenceme-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 id="main-title">Fluenceme Research Methodology Dashboard</h1>
+            <p id="subtitle">A comprehensive analysis of the methodology used in the study of fluencemes across Australian, British, Canadian, and New Zealand English</p>
+            <div class="language-toggle">
+                <button class="language-btn active" onclick="toggleLanguage('en')">English</button>
+                <button class="language-btn" onclick="toggleLanguage('zh')">中文</button>
+            </div>
+        </div>
+
+        <div class="methodology-grid" id="en-content">
+            <!-- Research Questions -->
+            <div class="methodology-section full-width">
+                <h2 class="methodology-title">Research Questions</h2>
+                <div class="research-questions">
+                    <ol>
+                        <li>Are there differences in fluenceme use between different L1-varieties of English?</li>
+                        <li>Do sociolinguistic variables play a role in predicting the choice of particular fluencemes across varieties?</li>
+                    </ol>
+                </div>
+                <div class="quote">
+                    "This paper aims to advance the cumulative understanding of fluency by addressing these research gaps. In doing so, we examine how L1-English speakers from four L1-varieties of English use fluencemes to navigate planning phases, considering a range of social variables." (p.96)
+                </div>
+            </div>
+
+            <!-- Database and Corpus Selection -->
+            <div class="methodology-section">
+                <h2 class="methodology-title">Database Selection</h2>
+                <p>The researchers selected four components of the International Corpus of English (ICE) for their analysis:</p>
+                <ul>
+                    <li>British English (ICE-GB)</li>
+                    <li>Australian English (ICE-AUS)</li>
+                    <li>New Zealand English (ICE-NZ)</li>
+                    <li>Canadian English (ICE-CAN)</li>
+                </ul>
+                
+                <div class="quote">
+                    "The ICE corpora are highly suitable for our purposes, as all ICE components were compiled using the same design and applying common schemes for annotation, which ensures comparability across different sub-corpora (Greenbaum and Nelson 1996)." (p.102)
+                </div>
+                
+                <p>Corpus selection considerations:</p>
+                <ul>
+                    <li>Each component contains 300 spoken text files (approx. 2,000 words per file)</li>
+                    <li>From the 300 texts, 100 unscripted private dialogues were selected</li>
+                    <li>Data includes face-to-face and telephone conversations</li>
+                    <li>This selection was deemed "the most natural data type in the spoken section of the corpus"</li>
+                    <li>Total database size: ~200,000 words per variety (approx. 800,000 words total)</li>
+                </ul>
+            </div>
+
+            <!-- Fluenceme Categories and Types -->
+            <div class="methodology-section">
+                <h2 class="methodology-title">Fluenceme Categories</h2>
+                <p>The researchers investigated three primary types of fluencemes, characterized as "core fluencemes" due to their frequency in speech:</p>
+                
+                <div class="fluenceme-list">
+                    <div class="fluenceme-category">
+                        <h4>Discourse Markers</h4>
+                        <p>Words or phrases that help manage the flow of discourse</p>
+                        <div class="fluenceme-examples">
+                            <strong>Examples:</strong> actually, alright, basically, I mean, kind of, like, so, well, you know
+                        </div>
+                    </div>
+                    
+                    <div class="fluenceme-category">
+                        <h4>Filled Pauses</h4>
+                        <p>Vocalized sounds used during planning phases</p>
+                        <div class="fluenceme-examples">
+                            <strong>Examples:</strong> ah, ahm, eh, ehm, er, hmm, mm, uh, uhm
+                        </div>
+                    </div>
+                    
+                    <div class="fluenceme-category">
+                        <h4>Unfilled Pauses</h4>
+                        <p>Silent breaks in speech production</p>
+                        <div class="fluenceme-examples">
+                            <strong>Examples:</strong> &lt;,&gt;, &lt;,,&gt; (transcription markers)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="quote">
+                    "In this paper, we will adopt the terms 'filled pauses', 'unfilled pauses' and 'discourse markers' to refer to the three fluencemes we investigate, which are the three most frequently occurring strategies in speech, and thus we consider them to be 'core fluencemes'." (p.97)
+                </div>
+                
+                <p>Additional consideration: The researchers identified and included variety-specific fluencemes, such as "yeah no" and "yeah nah" in New Zealand English.</p>
+            </div>
+
+            <!-- Coding Procedure -->
+            <div class="methodology-section full-width">
+                <h2 class="methodology-title">Coding Procedure and Data Processing</h2>
+                
+                <div class="workflow-steps">
+                    <li>
+                        <strong>Identification of Relevant Fluencemes:</strong>
+                        The researchers identified fluencemes by reviewing relevant literature and manually adding additional items to the categories.
+                    </li>
+                    <li>
+                        <strong>Development of Coding Application:</strong>
+                        A custom coding application was developed in R using the web application framework "shiny" to facilitate the analysis of large amounts of data.
+                    </li>
+                    <li>
+                        <strong>String Search in Corpus:</strong>
+                        The application identified the uploaded items via string search in the text files of the corpora.
+                    </li>
+                    <li>
+                        <strong>Manual Disambiguation:</strong>
+                        As the tool identified strings and not syntactic categories, manual disambiguation was necessary (e.g., differentiating between "like" as a verb vs. a discourse marker).
+                    </li>
+                    <li>
+                        <strong>Multi-Stage Coding Process:</strong>
+                        Each file was coded through a four-step process:
+                        <ul>
+                            <li>Initial coding by a student assistant</li>
+                            <li>Review by a second student assistant</li>
+                            <li>Escalation to senior researcher for unresolved items</li>
+                            <li>Team discussion for challenging cases (with majority vote)</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Data Cleaning and Preparation:</strong>
+                        <ul>
+                            <li>Non-English L1 speakers were removed from the dataset</li>
+                            <li>Fluenceme categories were consolidated into three main types</li>
+                            <li>Individual fluenceme counts were computed per speaker</li>
+                            <li>Frequencies were normalized by dividing by the number of words per speaker</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Metadata Annotation:</strong>
+                        Speaker-specific information was coded, including:
+                        <ul>
+                            <li>Corpus and text category</li>
+                            <li>Gender</li>
+                            <li>Age (individual ages or transformed medians for ranges)</li>
+                            <li>Education level (ISCED-97 scale, 0-6)</li>
+                            <li>Occupation (ISCO-08 scale, 16-85)</li>
+                        </ul>
+                    </li>
+                </div>
+                
+                <div class="quote">
+                    "Given the extreme variability of spoken language, the sometimes-erroneous transcriptions, and missing information on intonation, the process of manual disambiguation is extremely challenging, so we took several measures to ensure reliable annotation." (p.103)
+                </div>
+            </div>
+
+            <!-- Disambiguation Guidelines -->
+            <div class="methodology-section">
+                <h2 class="methodology-title">Disambiguation Guidelines</h2>
+                
+                <h3>Discourse Markers</h3>
+                <p>The researchers considered discourse markers as fluencemes if they met the following criteria:</p>
+                <ol>
+                    <li>They can be omitted without changing the truth value of an utterance</li>
+                    <li>They can be omitted without rendering the utterance ungrammatical</li>
+                    <li>They can be replaced by another fluenceme or discourse marker</li>
+                </ol>
+                
+                <p>Problematic cases:</p>
+                <ul>
+                    <li>Discourse markers at utterance-final position (e.g., incomplete utterances)</li>
+                    <li>Ambiguous cases were excluded from the dataset</li>
+                </ul>
+                
+                <h3>Filled Pauses</h3>
+                <p>Although filled pauses mostly function as fluencemes, they were disambiguated to exclude:</p>
+                <ul>
+                    <li>Usage as question tags (e.g., "You saw that, eh?")</li>
+                    <li>Backchanneling responses</li>
+                    <li>Emphasisers</li>
+                    <li>Other non-planning functions</li>
+                </ul>
+                
+                <h3>Unfilled Pauses</h3>
+                <p>Unfilled pauses were automatically accepted as fluencemes by the corpus tool and were not manually disambiguated.</p>
+                
+                <div class="quote">
+                    "We chose to not include such pre-interruption items, as well as all other cases that were truly ambiguous." (p.104)
+                </div>
+            </div>
+
+            <!-- Statistical Analysis -->
+            <div class="methodology-section">
+                <h2 class="methodology-title">Statistical Analysis</h2>
+                
+                <p>The researchers employed Random Forests for their statistical analysis, a tree-based method that:</p>
+                
+                <ul>
+                    <li>Can be applied to frequencies without link functions</li>
+                    <li>Makes no assumptions about the data</li>
+                    <li>Handles potentially collinear predictors better than regressions</li>
+                    <li>Excels at detecting interactions between variables</li>
+                </ul>
+                
+                <div class="statistical-details">
+                    <h3>Technical Specifications:</h3>
+                    <ul>
+                        <li>Implementation: R package {ranger}</li>
+                        <li>Number of trees: 3,000</li>
+                        <li>Hyperparameters: mtry=2, target node size of 5</li>
+                        <li>Variable importance scores: permutation-based</li>
+                        <li>Partial dependence scores: computed with R package {pdp}</li>
+                    </ul>
+                </div>
+                
+                <p>Data Preparation:</p>
+                <ul>
+                    <li>Box-Cox transformation applied to normalize frequency distribution</li>
+                    <li>Formula included: FLUTYPE, CORPUS, TEXTCAT, SPEAKER, AGE, GENDER, EDUCATION_COARSE, OCCUPATION_ISCO88</li>
+                </ul>
+                
+                <div class="code-snippet">
+NORMFREQ_bnc ~
+  FLUTYPE +           # discourse marker vs. filled pause vs. unfilled pause
+  CORPUS +            # Austr vs. Canadian vs. British vs. New Zealand English
+  TEXTCAT +           # direct vs. distance conversations
+  SPEAKER +           # the unique ID of each speaker (≅ a random effect)
+  # and several speaker-related variables:
+  AGE + GENDER + EDUCATION_COARSE + OCCUPATION_ISCO88
+                </div>
+                
+                <div class="quote">
+                    "The random forests approach is based on fitting many different classification or regression trees on a data set (e.g. 500), but adding two layers of randomness." (p.107)
+                </div>
+            </div>
+
+            <!-- Final Dataset -->
+            <div class="methodology-section full-width">
+                <h2 class="methodology-title">Final Dataset and Distribution</h2>
+                
+                <p>The final dataset comprised 51,950 data points distributed across 719 speakers:</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>AustrE</th>
+                            <th>CanE</th>
+                            <th>BrE</th>
+                            <th>NZE</th>
+                            <th>Sum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Discourse markers</td>
+                            <td>4,854</td>
+                            <td>6,368</td>
+                            <td>3,745</td>
+                            <td>101</td>
+                            <td>15,068</td>
+                        </tr>
+                        <tr>
+                            <td>Filled pauses</td>
+                            <td>1,966</td>
+                            <td>3,444</td>
+                            <td>2,713</td>
+                            <td>48</td>
+                            <td>8,171</td>
+                        </tr>
+                        <tr>
+                            <td>Unfilled pauses</td>
+                            <td>11,012</td>
+                            <td>10,771</td>
+                            <td>6,884</td>
+                            <td>44</td>
+                            <td>28,711</td>
+                        </tr>
+                        <tr>
+                            <td>Sum (# of speakers)</td>
+                            <td>17,832 (197)</td>
+                            <td>20,583 (248)</td>
+                            <td>13,342 (265)</td>
+                            <td>193 (9)</td>
+                            <td>51,950 (719)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>Note:</strong> The researchers acknowledge that New Zealand English had limited representation with only 9 speakers, all from the same education level. This limitation was addressed in their discussion of findings.</p>
+                
+                <div class="quote">
+                    "We are not providing a more detailed descriptive statistics breakdown per fluenceme and/or variety because these cannot do justice to the multifactorial nature of the data: mean frequencies, etc. grouped by only one predictor per definitionem come with a huge loss of information because they are aggregated over all other predictors." (p.106, footnote 6)
+                </div>
+            </div>
+
+            <!-- Methodological Limitations -->
+            <div class="methodology-section full-width">
+                <h2 class="methodology-title">Methodological Limitations and Considerations</h2>
+                
+                <ul>
+                    <li><strong>Corpus Annotation Precision:</strong> The researchers acknowledge that corpus annotation may be less precise than acoustic measurements but highlight the benefit of including more speakers.</li>
+                    
+                    <li><strong>Frequency-Based Approach:</strong> The purely frequency-based approach has limitations, particularly for discourse markers and filled pauses, where different types might serve different functions.</li>
+                    
+                    <li><strong>Exclusion of Level-1 Predictors:</strong> The analysis did not include linguistic context variables such as the frequency or complexity of lexemes following fluencemes.</li>
+                    
+                    <li><strong>New Zealand English Representation:</strong> Limited number of NZE speakers (9) all from the same education level, potentially affecting generalizability.</li>
+                    
+                    <li><strong>Variety Selection:</strong> American English was not included despite its prominence, due to data comparability constraints.</li>
+                    
+                    <li><strong>Fluenceme Clustering:</strong> The study did not account for fluenceme clustering (the tendency of fluencemes to co-occur).</li>
+                </ul>
+                
+                <div class="quote">
+                    "While our purely frequency-based approach to predicting fluencemes has revealed some interesting insights, the drawbacks have also become apparent. Especially for discourse markers and filled pauses, where we extracted a variety of different types, a purely frequency-based approach is extremely limited when it comes to interpreting the findings." (p.118)
+                </div>
+            </div>
+        </div>
+
+        <!-- Chinese version -->
+        <div class="methodology-grid hidden" id="zh-content">
+            <!-- Research Questions -->
+            <div class="methodology-section full-width">
+                <h2 class="methodology-title">研究问题</h2>
+                <div class="research-questions">
+                    <ol>
+                        <li>不同英语第一语言变体之间的流利标记使用是否存在差异？</li>
+                        <li>社会语言学变量在预测不同英语变体中特定流利标记的选择方面是否起作用？</li>
+                    </ol>
+                </div>
+                <div class="quote">
+                    "本文旨在通过解决这些研究空白来推进对流利性的累积理解。为此，我们研究了来自四种英语第一语言变体的讲话者如何使用流利标记来应对规划阶段，并考虑了一系列社会变量。" (第96页)
+                </div>
+            </div>
+
+            <!-- Database and Corpus Selection -->
+            <div class="methodology-section">
+                <h2 class="methodology-title">数据库选择</h2>
+                <p>研究人员选择了国际英语语料库(ICE)的四个组成部分进行分析：</p>
+                <ul>
+                    <li>英国英语(ICE-GB)</li>
+                    <li>澳大利亚英语(ICE-AUS)</li>
+                    <li>新西兰英语(ICE-NZ)</li>
+                    <li>加拿大英语(ICE-CAN)</li>
+                </ul>
+                
+                <div class="quote">
+                    "ICE语料库非常适合我们的研究目的，因为所有ICE组件都使用相同的设计进行编译，并应用通用的注释方案，这确保了不同子语料库之间的可比性(Greenbaum and Nelson 1996)。" (第102页)
+                </div>
+                
+                <p>语料库选择考虑因素：</p>
+                <ul>
+                    <li>每个组件包含300个口语文本文件(每个文件约2,000个单词)</li>
+                    <li>从300个文本中，选择了100个非脚本私人对话</li>
+                    <li>数据包括面对面和电话对话</li>
+                    <li>这种选择被认为是"语料库口语部分中最自然的数据类型"</li>
+                    <li>总数据库大小：每种变体约200,000个单词(总计约800,000个单词)</li>
+                </ul>
+            </div>
+
+            <!-- Fluenceme Categories and Types -->
+            <div class="methodology-section">
+                <h2 class="methodology-title">流利标记类别</h2>
+                <p>研究人员调查了三种主要类型的流利标记，由于它们在语音中的频率而被称为"核心流利标记"：</p>
+                
+                <div class="fluenceme-list">
+                    <div class="fluenceme-category">
+                        <h4>话语标记</h4>
+                        <p>帮助管理话语流程的词语或短语</p>
+                        <div class="fluenceme-examples">
+                            <strong>例如：</strong> actually, alright, basically, I mean, kind of, like, so, well, you know
+                        </div>
+                    </div>
+                    
+                    <div class="fluenceme-category">
+                        <h4>有声停顿</h4>
+                        <p>在规划阶段使用的发声</p>
+                        <div class="fluenceme-examples">
+                            <strong>例如：</strong> ah, ahm, eh, ehm, er, hmm, mm, uh, uhm
+                        </div>
+                    </div>
+                    
+                    <div class="fluenceme-category">
+                        <h4>无声停顿</h4>
+                        <p>言语产生中的无声中断</p>
+                        <div class="fluenceme-examples">
+                            <strong>例如：</strong> &lt;,&gt;, &lt;,,&gt; (转录标记)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="quote">
+                    "在本文中，我们将采用'有声停顿'、'无声停顿'和'话语标记'这些术语来指代我们所研究的三种流利标记，这些是言语中最常出现的三种策略，因此我们认为它们是'核心流利标记'。" (第97页)
+                </div>
+                
+                <p>额外考虑：研究人员识别并包括了特定变体的流利标记，如新西兰英语中的"yeah no"和"yeah nah"。</p>
+            </div>
+
+            <!-- Coding Procedure -->
+            <div class="methodology-section full-width">
+                <h2 class="methodology-title">编码程序和数据处理</h2>
+                
+                <div class="workflow-steps">
+                    <li>
+                        <strong>相关流利标记的识别：</strong>
+                        研究人员通过回顾相关文献并手动向类别中添加额外项目来识别流利标记。
+                    </li>
+                    <li>
+                        <strong>编码应用程序的开发：</strong>
+                        使用R中的网络应用框架"shiny"开发了自定义编码应用程序，以便于分析大量数据。
+                    </li>
+                    <li>
+                        <strong>语料库中的字符串搜索：</strong>
+                        应用程序通过在语料库的文本文件中进行字符串搜索来识别上传的项目。
+                    </li>
+                    <li>
+                        <strong>手动消除歧义：</strong>
+                        由于该工具识别的是字符串而非句法类别，因此需要手动消除歧义(例如，区分作为动词与作为话语标记的"like")。
+                    </li>
+                    <li>
+                        <strong>多阶段编码过程：</strong>
+                        每个文件通过四步过程进行编码：
+                        <ul>
+                            <li>由学生助理进行初步编码</li>
+                            <li>由第二位学生助理进行审查</li>
+                            <li>将未解决的项目提交给高级研究员</li>
+                            <li>对于有挑战性的案例进行团队讨论(多数投票)</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>数据清理和准备：</strong>
+                        <ul>
+                            <li>从数据集中移除非英语第一语言的说话者</li>
+                            <li>将流利标记类别整合为三种主要类型</li>
+                            <li>计算每位说话者的单独流利标记计数</li>
+                            <li>通过除以每位说话者的单词数来标准化频率</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>元数据注释：</strong>
+                        编码了说话者特定信息，包括：
+                        <ul>
+                            <li>语料库和文本类别</li>
+                            <li>性别</li>
+                            <li>年龄(个人年龄或范围转换中位数)</li>
+                            <li>教育水平(ISCED-97量表，0-6)</li>
+                            <li>职业(ISCO-08量表，16-85)</li>
+                        </ul>
+                    </li>
+                </div>
+                
+                <div class="quote">
+                    "鉴于口语的极端可变性、有时错误的转录以及缺少关于语调的信息，手动消除歧义的过程极具挑战性，因此我们采取了多种措施来确保可靠的注释。" (第103页)
+                </div>
+            </div>
+
+            <!-- Disambiguation Guidelines -->
+            <div class="methodology-section">
+                <h2 class="methodology-title">消除歧义指南</h2>
+                
+                <h3>话语标记</h3>
+                <p>研究人员将话语标记视为流利标记，如果它们符合以下标准：</p>
+                <ol>
+                    <li>它们可以被省略而不改变话语的真值</li>
+                    <li>它们可以被省略而不使话语变得不合语法</li>
+                    <li>它们可以被另一个流利标记或话语标记替代</li>
+                </ol>
+                
+                <p>问题性案例：</p>
+                <ul>
+                    <li>话语末尾位置的话语标记（例如，不完整的话语）</li>
+                    <li>有歧义的案例被排除在数据集之外</li>
+                </ul>
+                
+                <h3>有声停顿</h3>
+                <p>尽管有声停顿主要作为流利标记，但它们被消除歧义以排除：</p>
+                <ul>
+                    <li>作为问句标记的用法（例如，"You saw that, eh?"）</li>
+                    <li>反馈回应</li>
+                    <li>强调语</li>
+                    <li>其他非规划功能</li>
+                </ul>
+                
+                <h3>无声停顿</h3>
+                <p>无声停顿被语料库工具自动接受为流利标记，未进行手动消除歧义。</p>
+                
+                <div class="quote">
+                    "我们选择不包括这类被打断前的项目，以及所有其他真正有歧义的案例。" (第104页)
+                </div>
+            </div>
+
+            <!-- Statistical Analysis -->
+            <div class="methodology-section">
+                <h2 class="methodology-title">统计分析</h2>
+                
+                <p>研究人员采用随机森林进行统计分析，这是一种基于树的方法，它：</p>
+                
+                <ul>
+                    <li>可以应用于频率而无需链接函数</li>
+                    <li>对数据不做假设</li>
+                    <li>比回归更好地处理潜在的共线预测变量</li>
+                    <li>擅长检测变量之间的交互作用</li>
+                </ul>
+                
+                <div class="statistical-details">
+                    <h3>技术规格：</h3>
+                    <ul>
+                        <li>实现：R包 {ranger}</li>
+                        <li>树的数量：3,000</li>
+                        <li>超参数：mtry=2，目标节点大小为5</li>
+                        <li>变量重要性分数：基于排列</li>
+                        <li>部分依赖分数：使用R包 {pdp}计算</li>
+                    </ul>
+                </div>
+                
+                <p>数据准备：</p>
+                <ul>
+                    <li>应用Box-Cox转换以标准化频率分布</li>
+                    <li>包含的公式：FLUTYPE, CORPUS, TEXTCAT, SPEAKER, AGE, GENDER, EDUCATION_COARSE, OCCUPATION_ISCO88</li>
+                </ul>
+                
+                <div class="code-snippet">
+NORMFREQ_bnc ~
+  FLUTYPE +           # 话语标记 vs. 有声停顿 vs. 无声停顿
+  CORPUS +            # 澳大利亚 vs. 加拿大 vs. 英国 vs. 新西兰英语
+  TEXTCAT +           # 直接 vs. 远距离对话
+  SPEAKER +           # 每个说话者的唯一ID (≅ 随机效应)
+  # 以及几个与说话者相关的变量：
+  AGE + GENDER + EDUCATION_COARSE + OCCUPATION_ISCO88
+                </div>
+                
+                <div class="quote">
+                    "随机森林方法基于在数据集上拟合许多不同的分类或回归树（例如500棵），但添加了两层随机性。" (第107页)
+                </div>
+            </div>
+
+            <!-- Final Dataset -->
+            <div class="methodology-section full-width">
+                <h2 class="methodology-title">最终数据集和分布</h2>
+                
+                <p>最终数据集包含51,950个数据点，分布在719位说话者中：</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>澳大利亚英语</th>
+                            <th>加拿大英语</th>
+                            <th>英国英语</th>
+                            <th>新西兰英语</th>
+                            <th>总计</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>话语标记</td>
+                            <td>4,854</td>
+                            <td>6,368</td>
+                            <td>3,745</td>
+                            <td>101</td>
+                            <td>15,068</td>
+                        </tr>
+                        <tr>
+                            <td>有声停顿</td>
+                            <td>1,966</td>
+                            <td>3,444</td>
+                            <td>2,713</td>
+                            <td>48</td>
+                            <td>8,171</td>
+                        </tr>
+                        <tr>
+                            <td>无声停顿</td>
+                            <td>11,012</td>
+                            <td>10,771</td>
+                            <td>6,884</td>
+                            <td>44</td>
+                            <td>28,711</td>
+                        </tr>
+                        <tr>
+                            <td>总计（说话者数）</td>
+                            <td>17,832 (197)</td>
+                            <td>20,583 (248)</td>
+                            <td>13,342 (265)</td>
+                            <td>193 (9)</td>
+                            <td>51,950 (719)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>注意：</strong> 研究人员承认新西兰英语的代表性有限，只有9位说话者，且都来自相同的教育水平。这一限制在他们对研究结果的讨论中有所提及。</p>
+                
+                <div class="quote">
+                    "我们没有提供更详细的每种流利标记和/或变体的描述性统计数据，因为这些无法真正反映数据的多因素性质：按单一预测变量分组的平均频率等，由于它们是在所有其他预测变量上聚合的，因此会带来巨大的信息损失。" (第106页，脚注6)
+                </div>
+            </div>
+
+            <!-- Methodological Limitations -->
+            <div class="methodology-section full-width">
+                <h2 class="methodology-title">方法论局限性和考虑因素</h2>
+                
+                <ul>
+                    <li><strong>语料库注释精度：</strong> 研究人员承认语料库注释可能不如声学测量精确，但强调了包含更多说话者的好处。</li>
+                    
+                    <li><strong>基于频率的方法：</strong> 纯粹基于频率的方法有局限性，特别是对于话语标记和有声停顿，不同类型可能具有不同功能。</li>
+                    
+                    <li><strong>排除一级预测变量：</strong> 分析没有包括语言环境变量，如流利标记后跟词语的频率或复杂性。</li>
+                    
+                    <li><strong>新西兰英语代表性：</strong> 新西兰英语说话者数量有限（9人），且都来自相同教育水平，可能影响结果的普遍性。</li>
+                    
+                    <li><strong>变体选择：</strong> 尽管美国英语很重要，但由于数据可比性限制而未包括在内。</li>
+                    
+                    <li><strong>流利标记聚类：</strong> 研究没有考虑流利标记聚类（流利标记共同出现的趋势）。</li>
+                </ul>
+                
+                <div class="quote">
+                    "虽然我们纯粹基于频率的预测流利标记方法揭示了一些有趣的见解，但其缺点也已经变得明显。特别是对于话语标记和有声停顿，我们提取了各种不同类型，纯粹基于频率的方法在解释发现时极为有限。" (第118页)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleLanguage(lang) {
+            // Toggle active class for buttons
+            document.querySelectorAll('.language-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.language-btn[onclick="toggleLanguage('${lang}')"]`).classList.add('active');
+            
+            // Toggle content visibility
+            if (lang === 'en') {
+                document.getElementById('en-content').classList.remove('hidden');
+                document.getElementById('zh-content').classList.add('hidden');
+                
+                // Update titles
+                document.getElementById('main-title').textContent = 'Fluenceme Research Methodology Dashboard';
+                document.getElementById('subtitle').textContent = 'A comprehensive analysis of the methodology used in the study of fluencemes across Australian, British, Canadian, and New Zealand English';
+            } else {
+                document.getElementById('en-content').classList.add('hidden');
+                document.getElementById('zh-content').classList.remove('hidden');
+                
+                // Update titles
+                document.getElementById('main-title').textContent = '流利标记研究方法论仪表板';
+                document.getElementById('subtitle').textContent = '对澳大利亚、英国、加拿大和新西兰英语中流利标记研究所使用方法的综合分析';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Reading Passage with Comprehension Questions</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        h2 {
+            color: #3498db;
+            margin-top: 30px;
+            font-size: 20px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #3498db;
+        }
+        .language-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .language-btn {
+            padding: 8px 15px;
+            margin: 0 10px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .language-btn:hover {
+            background-color: #2980b9;
+        }
+        .language-btn.active {
+            background-color: #2c3e50;
+        }
+        .passage {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+        }
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #ddd;
+        }
+        .question p {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .options {
+            padding-left: 20px;
+        }
+        .option {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: baseline;
+        }
+        .option input {
+            margin-right: 10px;
+        }
+        .option label {
+            flex: 1;
+        }
+        .check-btn {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .check-btn:hover {
+            background-color: #27ae60;
+        }
+        .reset-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-left: 10px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .reset-btn:hover {
+            background-color: #c0392b;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: none;
+        }
+        .correct {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+        }
+        .incorrect {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+        }
+        .hidden {
+            display: none;
+        }
+        .feedback {
+            font-style: italic;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="title-en">English Reading Passage with Comprehension Questions</h1>
+        <h1 id="title-zh" class="hidden">英语阅读文段及理解题</h1>
+        
+        <div class="language-toggle">
+            <button class="language-btn active" id="en-btn">English</button>
+            <button class="language-btn" id="zh-btn">中文</button>
+        </div>
+        
+        <div id="passage-section-en">
+            <h2>Reading Passage</h2>
+            <div class="passage">
+                <p>The invention of the smartphone has revolutionized how we interact with the world around us. Before smartphones became widespread, people relied on multiple devices to accomplish tasks that can now be done with a single device. Cameras, calculators, maps, and music players were all separate items that people carried with them. Now, smartphones have integrated all these functions into one compact device.</p>
+                <p>While smartphones have made life more convenient in many ways, they have also created new challenges. Studies show that excessive screen time can negatively impact sleep patterns, particularly when people use their phones right before bed. The blue light emitted from smartphone screens can suppress the production of melatonin, a hormone that helps regulate sleep cycles.</p>
+                <p>Additionally, the constant connectivity provided by smartphones has blurred the boundaries between work and personal life. Many people feel obligated to respond to work emails and messages outside of normal working hours, which can lead to increased stress and burnout. Despite these challenges, smartphones continue to evolve with new features and capabilities being added regularly.</p>
+                <p>Interestingly, smartphone usage varies significantly across different age groups. While younger generations have grown up with this technology and typically adapt to new features quickly, older generations often face a steeper learning curve. However, studies indicate that once older adults become comfortable with smartphone technology, they often find it just as valuable as younger users do.</p>
+            </div>
+        </div>
+        
+        <div id="passage-section-zh" class="hidden">
+            <h2>阅读文段</h2>
+            <div class="passage">
+                <p>智能手机的发明彻底改变了我们与周围世界互动的方式。在智能手机普及之前，人们依靠多种设备来完成现在用单一设备就能完成的任务。相机、计算器、地图和音乐播放器都是人们随身携带的独立物品。如今，智能手机已将所有这些功能整合到一个紧凑的设备中。</p>
+                <p>虽然智能手机在许多方面使生活变得更加便利，但它们也带来了新的挑战。研究表明，过度的屏幕时间会对睡眠模式产生负面影响，特别是当人们在睡前使用手机时。智能手机屏幕发出的蓝光会抑制褪黑激素的产生，而褪黑激素是帮助调节睡眠周期的荷尔蒙。</p>
+                <p>此外，智能手机提供的持续连接性模糊了工作和个人生活之间的界限。许多人觉得有义务在正常工作时间之外回复工作邮件和信息，这可能导致压力增加和精疲力竭。尽管面临这些挑战，智能手机仍在不断发展，定期添加新功能和新能力。</p>
+                <p>有趣的是，智能手机的使用在不同年龄组之间存在显著差异。虽然年轻一代是伴随着这项技术成长的，通常能够快速适应新功能，但老一代人往往面临更陡峭的学习曲线。然而，研究表明，一旦老年人熟悉了智能手机技术，他们通常会发现它与年轻用户一样有价值。</p>
+            </div>
+        </div>
+        
+        <div id="questions-section-en">
+            <h2>Comprehension Questions</h2>
+            <form id="quiz-form">
+                <div class="question" id="q1">
+                    <p>1. What did people use before smartphones became widespread?</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q1a" name="q1" value="A">
+                            <label for="q1a">A. Multiple devices for different tasks</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q1b" name="q1" value="B">
+                            <label for="q1b">B. Computers for all their needs</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q1c" name="q1" value="C">
+                            <label for="q1c">C. Only telephones for communication</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q1d" name="q1" value="D">
+                            <label for="q1d">D. Basic mobile phones with limited features</label>
+                        </div>
+                    </div>
+                    <div class="feedback hidden"></div>
+                </div>
+                
+                <div class="question" id="q2">
+                    <p>2. According to the passage, how does blue light from smartphones affect sleep?</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q2a" name="q2" value="A">
+                            <label for="q2a">A. It has no effect on sleep patterns</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q2b" name="q2" value="B">
+                            <label for="q2b">B. It improves sleep quality</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q2c" name="q2" value="C">
+                            <label for="q2c">C. It suppresses melatonin production</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q2d" name="q2" value="D">
+                            <label for="q2d">D. It increases melatonin production</label>
+                        </div>
+                    </div>
+                    <div class="feedback hidden"></div>
+                </div>
+                
+                <div class="question" id="q3">
+                    <p>3. What challenge related to work-life balance is mentioned in the passage?</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q3a" name="q3" value="A">
+                            <label for="q3a">A. People spending too much time playing games</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q3b" name="q3" value="B">
+                            <label for="q3b">B. People feeling obligated to respond to work messages outside working hours</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q3c" name="q3" value="C">
+                            <label for="q3c">C. People being unable to use smartphones for work tasks</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q3d" name="q3" value="D">
+                            <label for="q3d">D. People becoming less productive at work</label>
+                        </div>
+                    </div>
+                    <div class="feedback hidden"></div>
+                </div>
+                
+                <div class="question" id="q4">
+                    <p>4. According to the passage, how do older generations typically respond to smartphone technology?</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q4a" name="q4" value="A">
+                            <label for="q4a">A. They refuse to use smartphones altogether</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q4b" name="q4" value="B">
+                            <label for="q4b">B. They learn more quickly than younger generations</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q4c" name="q4" value="C">
+                            <label for="q4c">C. They face a steeper learning curve initially</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q4d" name="q4" value="D">
+                            <label for="q4d">D. They only use basic features and never adapt</label>
+                        </div>
+                    </div>
+                    <div class="feedback hidden"></div>
+                </div>
+                
+                <div class="question" id="q5">
+                    <p>5. What is the main theme of the passage?</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q5a" name="q5" value="A">
+                            <label for="q5a">A. The technical specifications of smartphones</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q5b" name="q5" value="B">
+                            <label for="q5b">B. The history of mobile phone development</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q5c" name="q5" value="C">
+                            <label for="q5c">C. The impact of smartphones on society and daily life</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q5d" name="q5" value="D">
+                            <label for="q5d">D. The comparison between different smartphone brands</label>
+                        </div>
+                    </div>
+                    <div class="feedback hidden"></div>
+                </div>
+                
+                <div class="buttons">
+                    <button type="button" class="check-btn" id="check-btn">Check Answers</button>
+                    <button type="button" class="reset-btn" id="reset-btn">Reset</button>
+                </div>
+                
+                <div class="result" id="result"></div>
+            </form>
+        </div>
+        
+        <div id="questions-section-zh" class="hidden">
+            <h2>理解题</h2>
+            <form id="quiz-form-zh">
+                <div class="question" id="q1-zh">
+                    <p>1. 智能手机普及前人们使用什么？</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q1a-zh" name="q1-zh" value="A">
+                            <label for="q1a-zh">A. 用于不同任务的多种设备</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q1b-zh" name="q1-zh" value="B">
+                            <label for="q1b-zh">B. 电脑满足所有需求</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q1c-zh" name="q1-zh" value="C">
+                            <label for="q1c-zh">C. 仅用电话进行通讯</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q1d-zh" name="q1-zh" value="D">
+                            <label for="q1d-zh">D. 功能有限的基本手机</label>
+                        </div>
+                    </div>
+                    <div class="feedback hidden"></div>
+                </div>
+                
+                <div class="question" id="q2-zh">
+                    <p>2. 根据文章，智能手机的蓝光如何影响睡眠？</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q2a-zh" name="q2-zh" value="A">
+                            <label for="q2a-zh">A. 对睡眠模式没有影响</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q2b-zh" name="q2-zh" value="B">
+                            <label for="q2b-zh">B. 提高睡眠质量</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q2c-zh" name="q2-zh" value="C">
+                            <label for="q2c-zh">C. 抑制褪黑激素的产生</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q2d-zh" name="q2-zh" value="D">
+                            <label for="q2d-zh">D. 增加褪黑激素的产生</label>
+                        </div>
+                    </div>
+                    <div class="feedback hidden"></div>
+                </div>
+                
+                <div class="question" id="q3-zh">
+                    <p>3. 文章中提到了与工作生活平衡相关的什么挑战？</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q3a-zh" name="q3-zh" value="A">
+                            <label for="q3a-zh">A. 人们花太多时间玩游戏</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q3b-zh" name="q3-zh" value="B">
+                            <label for="q3b-zh">B. 人们觉得有义务在工作时间之外回复工作信息</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q3c-zh" name="q3-zh" value="C">
+                            <label for="q3c-zh">C. 人们无法使用智能手机完成工作任务</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q3d-zh" name="q3-zh" value="D">
+                            <label for="q3d-zh">D. 人们在工作中变得效率更低</label>
+                        </div>
+                    </div>
+                    <div class="feedback hidden"></div>
+                </div>
+                
+                <div class="question" id="q4-zh">
+                    <p>4. 根据文章，老年人通常如何应对智能手机技术？</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q4a-zh" name="q4-zh" value="A">
+                            <label for="q4a-zh">A. 他们完全拒绝使用智能手机</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q4b-zh" name="q4-zh" value="B">
+                            <label for="q4b-zh">B. 他们学习速度比年轻一代更快</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q4c-zh" name="q4-zh" value="C">
+                            <label for="q4c-zh">C. 他们最初面临更陡峭的学习曲线</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q4d-zh" name="q4-zh" value="D">
+                            <label for="q4d-zh">D. 他们只使用基本功能，从不适应</label>
+                        </div>
+                    </div>
+                    <div class="feedback hidden"></div>
+                </div>
+                
+                <div class="question" id="q5-zh">
+                    <p>5. 这篇文章的主题是什么？</p>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="q5a-zh" name="q5-zh" value="A">
+                            <label for="q5a-zh">A. 智能手机的技术规格</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q5b-zh" name="q5-zh" value="B">
+                            <label for="q5b-zh">B. 手机发展的历史</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q5c-zh" name="q5-zh" value="C">
+                            <label for="q5c-zh">C. 智能手机对社会和日常生活的影响</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="q5d-zh" name="q5-zh" value="D">
+                            <label for="q5d-zh">D. 不同智能手机品牌之间的比较</label>
+                        </div>
+                    </div>
+                    <div class="feedback hidden"></div>
+                </div>
+                
+                <div class="buttons">
+                    <button type="button" class="check-btn" id="check-btn-zh">检查答案</button>
+                    <button type="button" class="reset-btn" id="reset-btn-zh">重置</button>
+                </div>
+                
+                <div class="result" id="result-zh"></div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Define correct answers
+        const correctAnswers = {
+            q1: "A",
+            q2: "C",
+            q3: "B",
+            q4: "C",
+            q5: "C"
+        };
+        
+        // Feedback messages
+        const feedback = {
+            q1: {
+                A: "Correct! The passage states that people relied on multiple devices like cameras, calculators, maps, and music players.",
+                B: "Incorrect. The passage mentions specific devices, not computers for all needs.",
+                C: "Incorrect. The passage mentions multiple devices beyond just telephones.",
+                D: "Incorrect. The passage compares smartphones to separate devices, not basic mobile phones."
+            },
+            q2: {
+                A: "Incorrect. The passage states that blue light affects sleep patterns.",
+                B: "Incorrect. According to the passage, blue light has a negative effect on sleep.",
+                C: "Correct! The passage states that blue light suppresses melatonin production, which helps regulate sleep cycles.",
+                D: "Incorrect. The opposite is true according to the passage."
+            },
+            q3: {
+                A: "Incorrect. Gaming isn't mentioned as a work-life balance issue.",
+                B: "Correct! The passage mentions that people feel obligated to respond to work emails and messages outside normal working hours.",
+                C: "Incorrect. The passage doesn't suggest people can't use smartphones for work.",
+                D: "

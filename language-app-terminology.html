@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Key Terminology in App-Based Language Learning Research</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: #4682b4;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        .language-toggle {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+        .language-btn {
+            padding: 8px 16px;
+            background-color: #4682b4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.3s;
+        }
+        .language-btn:hover {
+            background-color: #3a6d96;
+        }
+        .language-btn.active {
+            background-color: #2c5476;
+            font-weight: bold;
+        }
+        .dashboard-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            flex: 1;
+            min-width: 300px;
+        }
+        .card h2 {
+            color: #4682b4;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+        .card h3 {
+            color: #4682b4;
+            font-size: 1.2rem;
+            margin: 20px 0 10px;
+        }
+        .card p {
+            margin-bottom: 15px;
+        }
+        .quote {
+            background-color: #f0f7ff;
+            border-left: 4px solid #4682b4;
+            padding: 15px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        .term-category {
+            margin-bottom: 30px;
+        }
+        .term {
+            border-bottom: 1px solid #e0e0e0;
+            padding: 15px 0;
+        }
+        .term:last-child {
+            border-bottom: none;
+        }
+        .term-title {
+            font-weight: bold;
+            color: #4682b4;
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .term-tag {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            background-color: #e6f0f9;
+            color: #4682b4;
+            border-radius: 12px;
+        }
+        .term-definition {
+            margin-top: 8px;
+        }
+        .term-example {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-top: 8px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        .model-diagram {
+            width: 100%;
+            height: 300px;
+            position: relative;
+            margin: 30px 0;
+        }
+        .node {
+            position: absolute;
+            width: 120px;
+            height: 50px;
+            background-color: #f0f7ff;
+            border: 2px solid #4682b4;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 0.75rem;
+            padding: 5px;
+        }
+        .arrow {
+            position: absolute;
+            height: 2px;
+            background-color: #4682b4;
+            transform-origin: left center;
+        }
+        .arrow::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid #4682b4;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+        .search-box:focus {
+            outline: none;
+            border-color: #4682b4;
+        }
+        .category-toggle {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .category-btn {
+            padding: 8px 16px;
+            background-color: #e6f0f9;
+            color: #4682b4;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .category-btn:hover {
+            background-color: #d0e4f5;
+        }
+        .category-btn.active {
+            background-color: #4682b4;
+            color: white;
+        }
+        .term-category {
+            display: block;
+        }
+        .term-category.hidden {
+            display: none;
+        }
+        .term.hidden {
+            display: none;
+        }
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+        .lang-en, .lang-zh {
+            display: none;
+        }
+        .show {
+            display: block;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="lang-en show">Key Terminology in App-Based Language Learning Research</h1>
+            <h1 class="lang-zh">基于应用程序的语言学习研究中的关键术语</h1>
+            <p class="lang-en show">From the study by Hyun-Bin Hwang (2025)</p>
+            <p class="lang-zh">来自黄炫彬 (2025) 的研究</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="language-toggle">
+            <button class="language-btn active" data-lang="en">English</button>
+            <button class="language-btn" data-lang="zh">中文</button>
+        </div>
+
+        <div class="lang-en show">
+            <input type="text" class="search-box" id="searchBox" placeholder="Search for terminology...">
+        </div>
+        <div class="lang-zh">
+            <input type="text" class="search-box" id="searchBoxZh" placeholder="搜索术语...">
+        </div>
+
+        <div class="category-toggle">
+            <button class="category-btn active" data-category="all">All Terms</button>
+            <button class="category-btn" data-category="utaut">UTAUT Model</button>
+            <button class="category-btn" data-category="research">Research Methods</button>
+            <button class="category-btn" data-category="learning">Language Learning</button>
+            <button class="category-btn" data-category="technology">Technology</button>
+        </div>
+
+        <div id="noResults" class="no-results">
+            <p class="lang-en show">No matching terms found. Please try another search.</p>
+            <p class="lang-zh">未找到匹配的术语。请尝试其他搜索。</p>
+        </div>
+
+        <div class="term-category" data-category="utaut">
+            <div class="card">
+                <h2 class="lang-en show">UTAUT Model Terms</h2>
+                <h2 class="lang-zh">UTAUT模型术语</h2>
+
+                <div class="term" data-terms="utaut unified theory of acceptance and use of technology 统一技术接受与使用理论">
+                    <div class="term-title">
+                        <span class="lang-en show">UTAUT (Unified Theory of Acceptance and Use of Technology)</span>
+                        <span class="lang-zh">UTAUT（统一技术接受与使用理论）</span>
+                        <span class="term-tag">Core Concept</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>A meta-theoretical framework developed by Venkatesh et al. (2003) that integrates cognitive, affective, and social elements from eight distinctive technology acceptance models to explain how individuals accept and use educational technologies.</p>
+                        <div class="quote">
+                            "Within this theoretical landscape, Venkatesh, Morris, Davis, and Davis's (2003) unified theory of acceptance and use of technology (UTAUT) provides a meta-theoretical framework by integrating cognitive, affective, and social elements from eight distinctive technology acceptance models." (Hwang, 2025, p.2)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>由Venkatesh等人(2003)开发的元理论框架，整合了八种不同技术接受模型中的认知、情感和社会元素，用于解释个体如何接受和使用教育技术。</p>
+                        <div class="quote">
+                            "在这一理论领域中，Venkatesh、Morris、Davis和Davis(2003)的技术接受与使用统一理论(UTAUT)通过整合八种不同技术接受模型中的认知、情感和社会元素，提供了一个元理论框架。" (黄炫彬，2025，第2页)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="term" data-terms="performance expectancy pe 性能期望">
+                    <div class="term-title">
+                        <span class="lang-en show">Performance Expectancy (PE)</span>
+                        <span class="lang-zh">性能期望 (PE)</span>
+                        <span class="term-tag">UTAUT Variable</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>The extent to which individuals find a technology useful for their performance (e.g., learning). In the study, this refers to how useful students perceived the language learning app to be for improving their English skills.</p>
+                        <div class="quote">
+                            "Performance expectancy was a significant predictor of behavioral intention, with the strongest effect, β* = 0.60, 95% CI [0.45, 0.75], p < .001." (Hwang, 2025, p.10)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>个人认为技术对其表现（例如学习）有用的程度。在研究中，这指的是学生认为语言学习应用对提高其英语技能有多大用处。</p>
+                        <div class="quote">
+                            "性能期望是行为意向的显著预测因素，具有最强效应，β* = 0.60, 95% CI [0.45, 0.75], p < .001。" (黄炫彬，2025，第10页)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="term" data-terms="effort expectancy ee 努力期望">
+                    <div class="term-title">
+                        <span class="lang-en show">Effort Expectancy (EE)</span>
+                        <span class="lang-zh">努力期望 (EE)</span>
+                        <span class="term-tag">UTAUT Variable</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>The extent to which individuals find a technology easy to use. This refers to students' perceptions of how easy or difficult it is to use the language learning app.</p>
+                        <div class="quote">
+                            "However, effort expectancy (β* = 0.09, 95% CI [-0.06, 0.25], p = .23) and facilitating conditions (β* = 0.12, 95% CI [-0.04, 0.27], p = .13) had no significant impact on behavioral intention." (Hwang, 2025, p.10)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>个人认为技术易于使用的程度。这指的是学生对语言学习应用使用难易程度的感知。</p>
+                        <div class="quote">
+                            "然而，努力期望 (β* = 0.09, 95% CI [-0.06, 0.25], p = .23) 和促进条件 (β* = 0.12, 95% CI [-0.04, 0.27], p = .13) 对行为意向没有显著影响。" (黄炫彬，2025，第10页)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="term" data-terms="social influence si 社会影响">
+                    <div class="term-title">
+                        <span class="lang-en show">Social Influence (SI)</span>
+                        <span class="lang-zh">社会影响 (SI)</span>
+                        <span class="term-tag">UTAUT Variable</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>The extent to which individuals feel supported by socially important others (e.g., teachers, parents, peers) in their use of a technology. This measured how much students felt that important people in their lives supported their use of the language learning app.</p>
+                        <div class="quote">
+                            "Social influence also significantly influenced behavioral intention, albeit to a lesser extent, β* = 0.23, 95% CI [0.13, 0.33], p < .001." (Hwang, 2025, p.10)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>个人在使用技术时感受到社会重要他人（如教师、父母、同伴）支持的程度。这衡量了学生感觉到生活中重要的人对他们使用语言学习应用的支持程度。</p>
+                        <div class="quote">
+                            "社会影响也显著影响行为意向，尽管程度较小，β* = 0.23, 95% CI [0.13, 0.33], p < .001。" (黄炫彬，2025，第10页)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="term" data-terms="facilitating conditions fc 促进条件">
+                    <div class="term-title">
+                        <span class="lang-en show">Facilitating Conditions (FC)</span>
+                        <span class="lang-zh">促进条件 (FC)</span>
+                        <span class="term-tag">UTAUT Variable</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>The extent to which individuals evaluate their surrounding environments (e.g., devices, learning spaces) as conducive to using a technology. This includes access to smartphones, internet connectivity, and comfortable learning spaces.</p>
+                        <div class="quote">
+                            "Additionally, both behavioral intention (β* = 0.24, 95% CI [0.05, 0.42], p = .01) and facilitating conditions (β* = 0.32, 95% CI [0.12, .51], p < .001) were significant predictors of actual app usage (i.e., usage behavior), supporting Hypotheses 5 and 6, respectively." (Hwang, 2025, p.11)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>个人评估其周围环境（如设备、学习空间）有利于使用技术的程度。这包括获取智能手机、互联网连接和舒适学习空间的能力。</p>
+                        <div class="quote">
+                            "此外，行为意向 (β* = 0.24, 95% CI [0.05, 0.42], p = .01) 和促进条件 (β* = 0.32, 95% CI [0.12, .51], p < .001) 都是实际应用使用（即使用行为）的显著预测因素，分别支持假设5和6。" (黄炫彬，2025，第11页)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="term" data-terms="behavioral intention bi 行为意向">
+                    <div class="term-title">
+                        <span class="lang-en show">Behavioral Intention (BI)</span>
+                        <span class="lang-zh">行为意向 (BI)</span>
+                        <span class="term-tag">UTAUT Variable</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>The extent to which individuals are inclined to accept a technology for use. This measures students' intention or willingness to use the language learning app.</p>
+                        <div class="quote">
+                            "The four exogenous variables collectively explained about 88.8% of the variance in behavioral intention (i.e., technology acceptance), which is higher than the average R² range of 38%–45% for behavior intention reported in Dwivedi et al.'s (2019) UTAUT meta-analysis." (Hwang, 2025, p.10)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>个人倾向于接受使用技术的程度。这衡量了学生使用语言学习应用的意向或意愿。</p>
+                        <div class="quote">
+                            "四个外生变量共同解释了行为意向（即技术接受）约88.8%的方差，这高于Dwivedi等人（2019）UTAUT元分析中报告的行为意向38%-45%的平均R²范围。" (黄炫彬，2025，第10页)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="term" data-terms="usage behavior actual usage 使用行为 实际使用">
+                    <div class="term-title">
+                        <span class="lang-en show">Usage Behavior (Actual Usage)</span>
+                        <span class="lang-zh">使用行为（实际使用）</span>
+                        <span class="term-tag">UTAUT Variable</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>The extent to which individuals persistently use a technology. In the study, this was measured by the number of lessons completed in the language learning app over a 3-month period.</p>
+                        <div class="quote">
+                            "For this study, I used the number of lessons completed as a measure of actual app usage behavior because this curriculum-oriented measure is a more reliable indicator of app engagement compared to a mere total time." (Hwang, 2025, p.6)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>个人持续使用技术的程度。在研究中，这是通过3个月期间在语言学习应用中完成的课程数量来衡量的。</p>
+                        <div class="quote">
+                            "在本研究中，我使用完成的课程数量作为实际应用使用行为的衡量标准，因为与仅仅衡量总时间相比，这种以课程为导向的衡量标准是应用参与度的更可靠指标。" (黄炫彬，2025，第6页)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="term" data-terms="exogenous variables 外生变量">
+                    <div class="term-title">
+                        <span class="lang-en show">Exogenous Variables</span>
+                        <span class="lang-zh">外生变量</span>
+                        <span class="term-tag">UTAUT Term</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>Variables that influence other variables in the model but are not influenced by other variables within the model. In UTAUT, these are Performance Expectancy, Effort Expectancy, Social Influence, and Facilitating Conditions.</p>
+                        <div class="quote">
+                            "The fundamental constructs of the original UTAUT and its extensions consist of four exogenous variables (i.e., performance expectancy, effort expectancy, social influence, and facilitating conditions) and two endogenous variables (i.e., behavioral intention and usage behavior)." (Hwang, 2025, p.2)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>影响模型中其他变量但不受模型内其他变量影响的变量。在UTAUT中，这些是性能期望、努力期望、社会影响和促进条件。</p>
+                        <div class="quote">
+                            "原始UTAUT及其扩展的基本构念包括四个外生变量（即性能期望、努力期望、社会影响和促进条件）和两个内生变量（即行为意向和使用行为）。" (黄炫彬，2025，第2页)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="term" data-terms="endogenous variables 内生变量">
+                    <div class="term-title">
+                        <span class="lang-en show">Endogenous Variables</span>
+                        <span class="lang-zh">内生变量</span>
+                        <span class="term-tag">UTAUT Term</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>Variables that are influenced by other variables within the model. In UTAUT, these are Behavioral Intention and Usage Behavior.</p>
+                        <div class="quote">
+                            "The fundamental constructs of the original UTAUT and its extensions consist of four exogenous variables (i.e., performance expectancy, effort expectancy, social influence, and facilitating conditions) and two endogenous variables (i.e., behavioral intention and usage behavior)." (Hwang, 2025, p.2)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>受模型内其他变量影响的变量。在UTAUT中，这些是行为意向和使用行为。</p>
+                        <div class="quote">
+                            "原始UTAUT及其扩展的基本构念包括四个外生变量（即性能期望、努力期望、社会影响和促进条件）和两个内生变量（即行为意向和使用行为）。" (黄炫彬，2025，第2页)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="term-category" data-category="research">
+            <div class="card">
+                <h2 class="lang-en show">Research Methodology Terms</h2>
+                <h2 class="lang-zh">研究方法术语</h2>
+
+                <div class="term" data-terms="structural equation modeling sem 结构方程模型">
+                    <div class="term-title">
+                        <span class="lang-en show">Structural Equation Modeling (SEM)</span>
+                        <span class="lang-zh">结构方程模型 (SEM)</span>
+                        <span class="term-tag">Statistical Method</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>A multivariate statistical analysis technique used to analyze structural relationships between measured variables and latent constructs. In the study, SEM was used to test the hypothesized UTAUT model.</p>
+                        <div class="quote">
+                            "Next, I used the lavaan R package to build measurement and structural models to test the hypothesized model (Figure 1)." (Hwang, 2025, p.7)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>一种多变量统计分析技术，用于分析测量变量和潜在构念之间的结构关系。在研究中，SEM被用来测试假设的UTAUT模型。</p>
+                        <div class="quote">
+                            "接下来，我使用lavaan R包构建测量和结构模型，以测试假设模型（图1）。" (黄炫彬，2025，第7页)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="term" data-terms="confirmatory factor analysis cfa 验证性因子分析">
+                    <div class="term-title">
+                        <span class="lang-en show">Confirmatory Factor Analysis (CFA)</span>
+                        <span class="lang-zh">验证性因子分析 (CFA)</span>
+                        <span class="term-tag">Statistical Method</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>A statistical technique used to verify the factor structure of a set of observed variables. In the study, CFA was used to assess the measurement model before testing the structural relationships in the UTAUT model.</p>
+                        <div class="quote">
+                            "Following Hiver and Al-Hoorie's (2020) SEM guidelines, I first used confirmatory factor analysis (CFA) to assess a measurement model." (Hwang, 2025, p.7)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>一种用于验证一组观察变量的因子结构的统计技术。在研究中，CFA被用来在测试UTAUT模型中的结构关系之前评估测量模型。</p>
+                        <div class="quote">
+                            "按照Hiver和Al-Hoorie（2020）的SEM指南，我首先使用验证性因子分析（CFA）来评估测量模型。" (黄炫彬，2025，第7页)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="term" data-terms="weighted least squares mean and variance adjusted wlsmv 加权最小二乘均值和方差调整">
+                    <div class="term-title">
+                        <span class="lang-en show">Weighted Least Squares Mean and Variance Adjusted (WLSMV)</span>
+                        <span class="lang-zh">加权最小二乘均值和方差调整 (WLSMV)</span>
+                        <span class="term-tag">Statistical Method</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>An estimation method used in structural equation modeling that is robust with ordinal and non-normal data. It was used in the study because the questionnaire data violated multivariate normality assumptions.</p>
+                        <div class="quote">
+                            "Additionally, I used the weighted least squares mean and variance adjusted (WLSMV) estimation method because this method is robust with ordinal and non-normal data (Kline, 2023)." (Hwang, 2025, p.7)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>结构方程模型中使用的一种估计方法，对序数和非正态数据具有稳健性。在研究中使用是因为问卷数据违反了多元正态性假设。</p>
+                        <div class="quote">
+                            "此外，我使用了加权最小二乘均值和方差调整（WLSMV）估计方法，因为这种方法对序数和非正态数据具有稳健性（Kline，2023）。" (黄炫彬，2025，第7页)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="term" data-terms="measurement model 测量模型">
+                    <div class="term-title">
+                        <span class="lang-en show">Measurement Model</span>
+                        <span class="lang-zh">测量模型</span>
+                        <span class="term-tag">Research Term</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>A model that specifies the relationships between observed variables (e.g., questionnaire items) and the latent constructs they are designed to measure. This model is assessed before testing the structural relationships between constructs.</p>
+                        <div class="quote">
+                            "The measurement model also demonstrated strong global fit: χ² (80) = 101.86, p = .05, CFI = 0.99, TLI = 0.98, RMSEA = 0.02 (90% CI [0.00, 0.03]), and SRMR = 0.02." (Hwang, 2025, p.9)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>一种指定观察变量（如问卷项目）与它们旨在测量的潜在构念之间关系的模型。在测试构念之间的结构关系之前，需要评估此模型。</p>
+                        <div class="quote">
+                            "测量模型也表现出强大的全局拟合度：χ² (80) = 101.86, p = .05, CFI = 0.99, TLI = 0.98, RMSEA = 0.02 (90% CI [0.00, 0.03]), SRMR = 0.02。" (黄炫彬，2025，第9页)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="term" data-terms="structural model 结构模型">
+                    <div class="term-title">
+                        <span class="lang-en show">Structural Model</span>
+                        <span class="lang-zh">结构模型</span>
+                        <span class="term-tag">Research Term</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>A model that specifies the hypothesized causal relationships between latent constructs. After validating the measurement model, the structural model tests the theoretical relationships between the constructs of interest.</p>
+                        <div class="quote">
+                            "The structural model demonstrated strong global fit: χ² (93) = 116.56, p = .05, CFI = 0.99, TLI = 0.99, RMSEA = 0.02 (90% CI [0.00, 0.03]), and SRMR = 0.03." (Hwang, 2025, p.10)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>一种指定潜在构念之间假设的因果关系的模型。在验证测量模型后，结构模型测试感兴趣构念之间的理论关系。</p>
+                        <div class="quote">
+                            "结构模型表现出强大的全局拟合度：χ² (93) = 116.56, p = .05, CFI = 0.99, TLI = 0.99, RMSEA = 0.02 (90% CI [0.00, 0.03]), SRMR = 0.03。" (黄炫彬，2025，第10页)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="term" data-terms="global fit local fit model fit indices 全局拟合 局部拟合 模型拟合指标">
+                    <div class="term-title">
+                        <span class="lang-en show">Global and Local Fit Indices</span>
+                        <span class="lang-zh">全局和局部拟合指标</span>
+                        <span class="term-tag">Statistical Term</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>Measures that indicate how well a model fits the observed data. Global fit indices (e.g., CFI, TLI, RMSEA, SRMR) assess overall model fit, while local fit indices (e.g., correlation residuals) examine specific parts of the model.</p>
+                        <div class="quote">
+                            "I evaluated the measurement and structural models using local and global fit measures. For local fit, Bollen-type correlation residuals less than .10 in absolute value were considered acceptable. For global fit, thresholds of ≥0.95 for Comparative Fit Index (CFI) and Tucker–Lewis Index (TLI), and ≤0.06 for root mean square error of approximation (RMSEA) and ≤0.08 for standardized root mean square residual (SRMR) were applied." (Hwang, 2025, p.7)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>指示模型与观察数据拟合程度的测量。全局拟合指标（如CFI、TLI、RMSEA、SRMR）评估整体模型拟合，而局部拟合指标（如相关残差）检查模型的特定部分。</p>
+                        <div class="quote">
+                            "我使用局部和全局拟合测量评估了测量和结构模型。对于局部拟合，Bollen型相关残差绝对值小于.10被视为可接受。对于全局拟合，比较拟合指数(CFI)和Tucker-Lewis指数(TLI)≥0.95，近似误差均方根(RMSEA)≤0.06，标准化均方根残差(SRMR)≤0.08的阈值被应用。" (黄炫彬，2025，第7页)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="term" data-terms="standardized coefficients beta 标准化系数">
+                    <div class="term-title">
+                        <span class="lang-en show">Standardized Coefficients (β*)</span>
+                        <span class="lang-zh">标准化系数 (β*)</span>
+                        <span class="term-tag">Statistical Term</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>Values that indicate the strength and direction of relationships between variables in a statistical model, adjusted to a common scale to allow for comparisons. Larger absolute values indicate stronger relationships.</p>
+                        <div class="quote">
+                            "Performance expectancy was a significant predictor of behavioral intention, with the strongest effect, β* = 0.60, 95% CI [0.45, 0.75], p < .001." (Hwang, 2025, p.10)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>指示统计模型中变量之间关系强度和方向的值，已调整为共同尺度以允许比较。较大的绝对值表示更强的关系。</p>
+                        <div class="quote">
+                            "性能期望是行为意向的显著预测因素，具有最强效应，β* = 0.60，95% CI [0.45, 0.75]，p < .001。" (黄炫彬，2025，第10页)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="term" data-terms="confidence interval ci 置信区间">
+                    <div class="term-title">
+                        <span class="lang-en show">Confidence Interval (CI)</span>
+                        <span class="lang-zh">置信区间 (CI)</span>
+                        <span class="term-tag">Statistical Term</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>A range of values that is likely to contain the true value of a parameter with a certain level of confidence. The study reports 95% confidence intervals for the standardized coefficients in the model.</p>
+                        <div class="quote">
+                            "The mean for each variable was 3.66 (95% CI [3.50, 3.82], SD = 1.39) for performance expectancy, 4.03 (95% CI [3.86, 4.20], SD = 1.49) for effort expectancy, 2.77 (95% CI [2.62, 2.92], SD = 1.33) for social influence, and 4.31 (95% CI [4.15, 4.47], SD = 1.40) for facilitating conditions." (Hwang, 2025, p.8)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>可能以一定置信度包含参数真实值的值范围。该研究报告了模型中标准化系数的95%置信区间。</p>
+                        <div class="quote">
+                            "每个变量的平均值为：性能期望3.66（95% CI [3.50, 3.82]，SD = 1.39），努力期望4.03（95% CI [3.86, 4.20]，SD = 1.49），社会影响2.77（95% CI [2.62, 2.92]，SD = 1.33），促进条件4.31（95% CI [4.15, 4.47]，SD = 1.40）。" (黄炫彬，2025，第8页)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="term" data-terms="reliability validity construct reliability convergent validity discriminant validity 可靠性 效度 构念可靠性 收敛效度 区分效度">
+                    <div class="term-title">
+                        <span class="lang-en show">Reliability and Validity</span>
+                        <span class="lang-zh">可靠性和效度</span>
+                        <span class="term-tag">Research Term</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>Reliability refers to the consistency of a measure, while validity refers to how well a measure assesses what it claims to measure. The study checked construct reliability (consistency of a set of items), convergent validity (items measure the same construct), and discriminant validity (constructs are distinct from each other).</p>
+                        <div class="quote">
+                            "Construct reliability was also satisfactory across all latent variables, with all values exceeding the threshold of 0.70. Additionally, the AVE for each latent variable was above the acceptable level of 0.50, indicating that the latent variables account for the majority of the variance among their respective indicators." (Hwang, 2025, p.9)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>可靠性指测量的一致性，而效度指测量评估其声称衡量的内容的程度。研究检查了构念可靠性（一组项目的一致性）、收敛效度（项目测量相同构念）和区分效度（构念彼此不同）。</p>
+                        <div class="quote">
+                            "所有潜在变量的构念可靠性也令人满意，所有值都超过了0.70的阈值。此外，每个潜在变量的AVE都高于0.50的可接受水平，表明潜在变量解释了各自指标方差的大部分。" (黄炫彬，2025，第9页)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="term-category" data-category="learning">
+            <div class="card">
+                <h2 class="lang-en show">Language Learning Terms</h2>
+                <h2 class="lang-zh">语言学习术语</h2>
+
+                <div class="term" data-terms="app-based language learning mobile-assisted language learning mall 基于应用程序的语言学习 移动辅助语言学习">
+                    <div class="term-title">
+                        <span class="lang-en show">App-Based Language Learning</span>
+                        <span class="lang-zh">基于应用程序的语言学习</span>
+                        <span class="term-tag">Core Concept</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>Learning a language through mobile applications that can be accessed on smartphones or tablets. This approach allows for language learning at any time and in any place, beyond the traditional classroom setting.</p>
+                        <div class="quote">
+                            "App-based language learning has gained attention for its potential to promote L2 learning beyond the classroom. However, few learners use L2 learning apps long enough to fully benefit from this learning method." (Hwang, 2025, p.1)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>通过可在智能手机或平板电脑上访问的移动应用程序学习语言。这种方法允许在任何时间和任何地点学习语言，超越传统课堂环境。</p>
+                        <div class="quote">
+                            "基于应用程序的语言学习因其促进课堂外第二语言学习的潜力而受到关注。然而，很少有学习者使用第二语言学习应用程序的时间足够长，以充分受益于这种学习方法。" (黄炫彬，2025，第1页)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="term" data-terms="l2 second language efl english as a foreign language 第二语言 英语作为外语">
+                    <div class="term-title">
+                        <span class="lang-en show">L2 (Second Language) / EFL (English as a Foreign Language)</span>
+                        <span class="lang-zh">L2（第二语言）/ EFL（英语作为外语）</span>
+                        <span class="term-tag">Language Term</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>L2 refers to any language learned after one's native language. EFL specifically refers to learning English in a country where English is not commonly spoken (e.g., learning English in South Korea). The study focused on young Korean adolescents learning English as a foreign language.</p>
+                        <div class="quote">
+                            "Using the unified theory of acceptance and use of technology, I explored the acceptance and use of a commercially available language learning app among young English as a foreign language (EFL) learners (N = 297, aged 12–13) in a self-study context." (Hwang, 2025, p.1)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>L2指的是在母语之后学习的任何语言。EFL特指在英语不常用的国家学习英语（例如在韩国学习英语）。该研究关注的是年轻的韩国青少年学习英语作为外语。</p>
+                        <div class="quote">
+                            "使用技术接受与使用统一理论，我探索了商业可用语言学习应用程序在自学环境中的接受和使用情况，研究对象为年轻的英语作为外语(EFL)学习者(N = 297，年龄12-13岁)。" (黄炫彬，2025，第1页)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="term" data-terms="beyond the classroom self-study self-directed informal learning 课堂外 自学 自主学习 非正式学习">
+                    <div class="term-title">
+                        <span class="lang-en show">Beyond the Classroom / Self-Study Context</span>
+                        <span class="lang-zh">课堂外 / 自学环境</span>
+                        <span class="term-tag">Learning Context</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>Learning that takes place outside of formal classroom instruction. In the study, this refers to students using the language learning app on their own time and by their own choice, without external requirements or supervision.</p>
+                        <div class="quote">
+                            "With the importance of second language (L2) learning beyond the classroom (Reinders, Lai, & Sundqvist, 2022), language learning apps have received considerable attention for their capacity to facilitate L2 learning at any time and in any place." (Hwang, 2025, p.1)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>发生在正式课堂教学之外的学习。在研究中，这指的是学生在自己的时间和自己的选择下使用语言学习应用程序，没有外部要求或监督。</p>
+                        <div class="quote">
+                            "随着课堂外第二语言(L2)学习的重要性(Reinders, Lai, & Sundqvist, 2022)，语言学习应用程序因其随时随地促进第二语言学习的能力而受到广泛关注。" (黄炫彬，2025，第1页)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="term" data-terms="free semester 自由学期">
+                    <div class="term-title">
+                        <span class="lang-en show">Free Semester</span>
+                        <span class="lang-zh">自由学期</span>
+                        <span class="term-tag">Educational Term</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>An educational policy in South Korea that aims to foster well-rounded personal development by relieving academic stress and encouraging students to explore their interests and potential career paths. During this period, students have fewer formal exams and more opportunities for exploratory learning.</p>
+                        <div class="quote">
+                            "In Spring of 2024, the students had a free semester, which aims to foster well-rounded personal development by relieving academic stress and encouraging students to explore their interests and potential career paths." (Hwang, 2025, p.5)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>韩国的一项教育政策，旨在通过减轻学业压力和鼓励学生探索兴趣和潜在职业道路来促进全面的个人发展。在此期间，学生减少正式考试，增加探索性学习的机会。</p>
+                        <div class="quote">
+                            "在2024年春季，学生们有一个自由学期，这旨在通过减轻学业压力和鼓励学生探索他们的兴趣和潜在职业道路来促进全面的个人发展。" (黄炫彬，2025，第5页)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="term" data-terms="reflective journaling diary 反思性日记写作 日记">
+                    <div class="term-title">
+                        <span class="lang-en show">Reflective Journaling</span>
+                        <span class="lang-zh">反思性日记写作</span>
+                        <span class="term-tag">Pedagogical Strategy</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>A pedagogical strategy where students record and reflect on their learning experiences. In the context of app-based language learning, this involves students keeping a diary of their app usage, which allows them to evaluate their learning progress and enables teachers to provide personalized feedback.</p>
+                        <div class="quote">
+                            "Another effective method involves students keeping a diary of their app-based language learning experiences (e.g., Kessler, 2023). This reflective journaling encourages students to evaluate their app usage and identify areas for improvement, while also enabling teachers to provide personalized feedback and targeted support." (Hwang, 2025, p.12)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>学生记录和反思其学习经验的教学策略。在基于应用程序的语言学习环境中，这涉及学生记录其应用使用情况的日记，使他们能够评估学习进度，并使教师能够提供个性化反馈。</p>
+                        <div class="quote">
+                            "另一种有效方法是让学生记录基于应用程序的语言学习经验的日记（例如，Kessler，2023）。这种反思性日记写作鼓励学生评估其应用使用情况并确定改进领域，同时也使教师能够提供个性化反馈和有针对性的支持。" (黄炫彬，2025，第12页)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="term-category" data-category="technology">
+            <div class="card">
+                <h2 class="lang-en show">Technology Terms</h2>
+                <h2 class="lang-zh">技术术语</h2>
+
+                <div class="term" data-terms="mango languages 芒果语言">
+                    <div class="term-title">
+                        <span class="lang-en show">Mango Languages</span>
+                        <span class="lang-zh">芒果语言</span>
+                        <span class="term-tag">Technology</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>The commercial language learning application used in the study. It had approximately 100,000 monthly active global users as of March 2024 and provides communication-focused L2 English activities in areas such as listening, speaking, vocabulary, and pronunciation.</p>
+                        <div class="quote">
+                            "The focal app of this project is Mango Languages, a commercially available language learning app that had approximately 100,000 monthly active global users as of March 2024. Among other comparable educational apps, Mango Languages was chosen because it provides communication-focused L2 English activities in areas such as listening, speaking, vocabulary, and pronunciation, which align well with the objectives of English education during a free semester." (Hwang, 2025, p.6)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>研究中使用的商业语言学习应用程序。截至2024年3月，它拥有约100,000名全球月活跃用户，并提供以沟通为重点的第二语言英语活动，如听力、口语、词汇和发音。</p>
+                        <div class="quote">
+                            "本项目的焦点应用是芒果语言，一款商业可用的语言学习应用，截至2024年3月，它拥有约100,000名全球月活跃用户。在其他类似的教育应用中，选择芒果语言是因为它提供以沟通为导向的第二语言英语活动，如听力、口语、词汇和发音，这些与自由学期期间的英语教育目标很好地契合。" (黄炫彬，2025，第6页)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="term" data-terms="technology acceptance 技术接受">
+                    <div class="term-title">
+                        <span class="lang-en show">Technology Acceptance</span>
+                        <span class="lang-zh">技术接受</span>
+                        <span class="term-tag">Core Concept</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>The willingness of a user or group of users to employ technology for the tasks it is designed to support. In the study, this refers to students' intention or willingness to use the language learning app (measured as behavioral intention).</p>
+                        <div class="quote">
+                            "In educational contexts, researchers have employed diverse theories and models to explain the successful acceptance of technology for learning (see Granić, 2022, for a systematic review). The core idea behind these approaches is that individuals' responses to technological and contextual features impact their intention to adopt educational technologies (i.e., acceptance), eventually influencing their persistent use for learning." (Hwang, 2025, p.2)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>用户或用户群体愿意采用技术来支持其设计的任务。在研究中，这指的是学生使用语言学习应用的意向或意愿（以行为意向衡量）。</p>
+                        <div class="quote">
+                            "在教育环境中，研究人员采用了多种理论和模型来解释学习技术的成功接受（参见Granić，2022年的系统综述）。这些方法背后的核心理念是，个人对技术和环境特征的反应影响他们采用教育技术的意向（即接受），最终影响他们持续使用以进行学习。" (黄炫彬，2025，第2页)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="term" data-terms="technology persistence usage attrition dropout 技术坚持使用 使用 流失 退出">
+                    <div class="term-title">
+                        <span class="lang-en show">Technology Persistence / Attrition</span>
+                        <span class="lang-zh">技术坚持使用 / 流失</span>
+                        <span class="term-tag">Technology Term</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>Persistence refers to continued use of a technology over time. Attrition or dropout refers to discontinuation of use. The study identified high attrition rates as a considerable problem in app-based learning in informal settings.</p>
+                        <div class="quote">
+                            "However, high attrition rates have been recognized as a considerable problem of app-based learning in informal settings where less external accountability makes persistent app engagement more challenging (Hwang, Coss, Loewen, & Tagarelli, 2024). Indeed, only a small group of learners use apps long enough to fully benefit from this learning method." (Hwang, 2025, p.2)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>坚持使用指随时间推移继续使用技术。流失或退出指停止使用。研究确认了高流失率是非正式环境中基于应用程序学习的一个重大问题。</p>
+                        <div class="quote">
+                            "然而，在外部责任度较低的非正式环境中，高流失率已被认为是基于应用程序学习的一个重大问题，这使得持续的应用参与更具挑战性(Hwang, Coss, Loewen, & Tagarelli, 2024)。事实上，只有一小部分学习者使用应用程序的时间足够长，能够充分受益于这种学习方法。" (黄炫彬，2025，第2页)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="term" data-terms="rosy retrospection 美好回顾">
+                    <div class="term-title">
+                        <span class="lang-en show">Rosy Retrospection</span>
+                        <span class="lang-zh">美好回顾</span>
+                        <span class="term-tag">Psychological Term</span>
+                    </div>
+                    <div class="term-definition lang-en show">
+                        <p>A cognitive bias in which individuals recall events more positively than they experienced them. The study mentions this as a potential issue with self-reported data on technology usage, which is why objective measures (app system logs) were used instead.</p>
+                        <div class="quote">
+                            "Furthermore, many previous studies measured technology usage largely through learners' self-reported data, which is prone to "rosy retrospection" (van Berkel, Ferreira, & Kostakos, 2018, p. 4), a tendency for individuals to recall events more positively than they experienced. To address this issue, I collected app system logs in real time as an objective measure of app usage." (Hwang, 2025, p.4)
+                        </div>
+                    </div>
+                    <div class="term-definition lang-zh">
+                        <p>一种认知偏差，个体回忆事件时比实际经历更积极。研究提到这是技术使用自我报告数据的潜在问题，这也是为什么使用客观测量（应用系统日志）替代的原因。</p>
+                        <div class="quote">
+                            "此外，许多先前的研究主要通过学习者的自我报告数据来测量技术使用情况，这容易产生"美好回顾"(van Berkel, Ferreira, & Kostakos, 2018, p. 4)，一种个体倾向于比实际经历更积极地回忆事件的倾向。为了解决这个问题，我实时收集应用系统日志作为应用使用的客观测量。" (黄炫彬，2025，第4页)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="container">
+        <div class="lang-en show">
+            <p>Based on: Hwang, H.-B. (2025). Acceptance and Use of App-Based Language Learning Among Young Adolescents in a Self-Directed Context. TESOL Quarterly.</p>
+            <p>This terminology dashboard is for educational purposes only.</p>
+        </div>
+        <div class="lang-zh">
+            <p>基于：黄炫彬（2025）。青少年在自主学习环境中对基于应用程序的语言学习的接受与使用。TESOL季刊。</p>
+            <p>此术语仪表板仅供教育目的使用。</p>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle between English and Chinese
+        const languageButtons = document.querySelectorAll('.language-btn');
+        languageButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const lang = this.getAttribute('data-lang');
+                
+                // Remove active class from all buttons
+                languageButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Hide all language content
+                document.querySelectorAll('.lang-en, .lang-zh').forEach(el => el.classList.remove('show'));
+                
+                // Show content for selected language
+                document.querySelectorAll(`.lang-${lang}`).forEach(el => el.classList.add('show'));
+            });
+        });
+
+        // Filter terms based on search
+        const searchBox = document.getElementById('searchBox');
+        const searchBoxZh = document.getElementById('searchBoxZh');
+        const noResults = document.getElementById('noResults');
+        
+        function filterTerms(searchValue, language) {
+            searchValue = searchValue.toLowerCase();
+            const terms = document.querySelectorAll('.term');
+            let matchFound = false;
+            
+            terms.forEach(term => {
+                const termData = term.getAttribute('data-terms').toLowerCase();
+                const isMatch = termData.includes(searchValue);
+                
+                if (isMatch) {
+                    term.classList.remove('hidden');
+                    matchFound = true;
+                } else {
+                    term.classList.add('hidden');
+                }
+            });
+            
+            // Show/hide categories based on whether they have visible terms
+            document.querySelectorAll('.term-category').forEach(category => {
+                const hasVisibleTerms = Array.from(category.querySelectorAll('.term')).some(term => !term.classList.contains('hidden'));
+                
+                if (hasVisibleTerms) {
+                    category.classList.remove('hidden');
+                } else {
+                    category.classList.add('hidden');
+                }
+            });
+            
+            // Show "no results" message if no matches found
+            if (matchFound) {
+                noResults.style.display = 'none';
+            } else {
+                noResults.style.display = 'block';
+            }
+        }
+        
+        searchBox.addEventListener('input', function() {
+            filterTerms(this.value, 'en');
+        });
+        
+        searchBoxZh.addEventListener('input', function() {
+            filterTerms(this.value, 'zh');
+        });
+        
+        // Category filtering
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const category = this.getAttribute('data-category');
+                
+                // Remove active class from all buttons
+                categoryButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Show all terms and categories if "all" is selected
+                if (category === 'all') {
+                    document.querySelectorAll('.term, .term-category').forEach(el => el.classList.remove('hidden'));
+                    return;
+                }
+                
+                // Hide all categories first
+                document.querySelectorAll('.term-category').forEach(cat => {
+                    if (cat.getAttribute('data-category') === category) {
+                        cat.classList.remove('hidden');
+                    } else {
+                        cat.classList.add('hidden');
+                    }
+                });
+                
+                // Reset search
+                searchBox.value = '';
+                searchBoxZh.value = '';
+                noResults.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>

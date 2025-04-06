@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .dashboard {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .section-title {
+            color: #1a365d;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .content {
+            margin: 1rem 0;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .quote {
+            background: #f8fafc;
+            padding: 1rem;
+            border-left: 4px solid #3b82f6;
+            margin: 1rem 0;
+        }
+        .stats {
+            background: #f0f9ff;
+            padding: 1rem;
+            border-radius: 4px;
+        }
+        .lang-toggle {
+            text-align: right;
+            margin-bottom: 1rem;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #e2e8f0;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        .data-table th {
+            background: #f8fafc;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <h1 style="text-align: center; color: #1a365d; margin-bottom: 2rem;">
+            Evaluating a Bracketing Protocol for Multiword Terms
+            <br>
+            多词术语括号协议评估
+        </h1>
+
+        <div class="section">
+            <h2 class="section-title">Research Questions & Objectives 研究问题与目标</h2>
+            <div class="content">
+                <div class="quote">
+                    "This paper presents a protocol that combines various models and applies it to a set of three-constituent MWTs in order to: (i) sort rules by their disambiguation potential, based on their likelihood of retrieving results from any corpus and their ability to solve bracketing; and (ii) ascertain the influence of corpus size and type in the results obtained."
+                </div>
+                <h3>Primary Research Questions:</h3>
+                <ul>
+                    <li>How effective are different bracketing rules in disambiguating multiword terms?</li>
+                    <li>What impact do corpus size and type have on bracketing results?</li>
+                    <li>How can existing bracketing models be combined for optimal results?</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Research Motivation 研究动机</h2>
+            <div class="content">
+                <div class="grid">
+                    <div>
+                        <h3>Current Challenges:</h3>
+                        <ul>
+                            <li>Complex constituent relations in scientific texts</li>
+                            <li>Translation accuracy depends on correct bracketing</li>
+                            <li>Existing NLP models have limitations</li>
+                            <li>Manual bracketing is time-consuming</li>
+                        </ul>
+                    </div>
+                    <div class="quote">
+                        <h4>Key Example:</h4>
+                        <p>"reactive power consumption could have various translations in Spanish, depending on whether the head of the term is power consumption, modified by reactive, or consumption, modified by reactive power."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Methodology 研究方法</h2>
+            <div class="content">
+                <div class="grid">
+                    <div>
+                        <h3>Corpora Details:</h3>
+                        <table class="data-table">
+                            <tr>
+                                <th>Corpus</th>
+                                <th>Size</th>
+                                <th>Type</th>
+                            </tr>
+                            <tr>
+                                <td>WPC</td>
+                                <td>3,025,237 words</td>
+                                <td>Domain-specific</td>
+                            </tr>
+                            <tr>
+                                <td>DOAJ</td>
+                                <td>2,662,763,697 words</td>
+                                <td>General scientific</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div>
+                        <h3>Protocol Components:</h3>
+                        <div class="stats">
+                            <ul>
+                                <li>12 Bracketing indicators</li>
+                                <li>34 CQL queries</li>
+                                <li>16 Bracketing rules</li>
+                                <li>103 Three-word MWTs analyzed</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Results 研究结果</h2>
+            <div class="content">
+                <div class="stats">
+                    <h3>Overall Protocol Performance:</h3>
+                    <ul>
+                        <li>WPC Accuracy: 86.4%</li>
+                        <li>DOAJ Accuracy: 79.6%</li>
+                        <li>Left Bracketing Success Rate: Higher than right bracketing</li>
+                    </ul>
+                </div>
+                <h3>Most Reliable Rules:</h3>
+                <table class="data-table">
+                    <tr>
+                        <th>Rule</th>
+                        <th>Accuracy</th>
+                        <th>Reliability</th>
+                    </tr>
+                    <tr>
+                        <td>Adjacency</td>
+                        <td>86.4%</td>
+                        <td>High</td>
+                    </tr>
+                    <tr>
+                        <td>Longer MWTs</td>
+                        <td>83.5%</td>
+                        <td>High</td>
+                    </tr>
+                    <tr>
+                        <td>Dependency</td>
+                        <td>76.7%</td>
+                        <td>Medium</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Discussion & Implications 讨论与启示</h2>
+            <div class="content">
+                <div class="grid">
+                    <div>
+                        <h3>Key Findings:</h3>
+                        <ul>
+                            <li>Domain-specific corpus (WPC) outperformed larger general corpus</li>
+                            <li>Three main rules sufficient for accurate bracketing</li>
+                            <li>Surface patterns more effective in larger corpora</li>
+                            <li>Protocol effectiveness varies with bracketing direction</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Future Research Directions:</h3>
+                        <ul>
+                            <li>Explore left/right bracketing trends</li>
+                            <li>Analyze failed cases in detail</li>
+                            <li>Investigate impact of domain specificity</li>
+                            <li>Study multidimensionality effects</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quote">
+                    <p>"The approach to bracketing presented and analyzed in this paper is expected to reduce many of the problems or difficulties in MWT translation, as well as other related tasks, derived from a misunderstanding of the internal dependencies in MWTs."</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

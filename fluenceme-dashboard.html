@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluenceme Distribution Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .language-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .language-btn {
+            padding: 8px 16px;
+            margin: 0 5px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .language-btn.active {
+            background-color: #4a6fa5;
+            color: white;
+        }
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 20px;
+        }
+        .chart-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .chart-title {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .data-container {
+            grid-column: span 2;
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .quote {
+            background-color: #f0f4f8;
+            border-left: 4px solid #4a6fa5;
+            padding: 15px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #4a6fa5;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 0 10px;
+        }
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            margin-right: 5px;
+            border-radius: 3px;
+        }
+        .hidden {
+            display: none;
+        }
+        .socio-variables {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 15px;
+        }
+        .variable-box {
+            background-color: #f0f4f8;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        @media (max-width: 768px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+            .data-container {
+                grid-column: span 1;
+            }
+            .socio-variables {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 id="main-title">Fluenceme Distribution Dashboard</h1>
+            <h2 id="subtitle">Comparing fluencemes across Australian, British, Canadian, and New Zealand English</h2>
+            <div class="language-toggle">
+                <button class="language-btn active" onclick="toggleLanguage('en')">English</button>
+                <button class="language-btn" onclick="toggleLanguage('zh')">中文</button>
+            </div>
+        </div>
+
+        <div class="dashboard-container">
+            <!-- Fluenceme Type Distribution Chart -->
+            <div class="chart-container">
+                <h3 class="chart-title" id="chart1-title">Fluenceme Type Distribution</h3>
+                <svg id="fluenceme-type-chart" width="100%" height="300"></svg>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #4a6fa5;"></div>
+                        <span id="unfilled-pauses-legend">Unfilled Pauses</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #f4a261;"></div>
+                        <span id="discourse-markers-legend">Discourse Markers</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #2a9d8f;"></div>
+                        <span id="filled-pauses-legend">Filled Pauses</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Variety Comparison Chart -->
+            <div class="chart-container">
+                <h3 class="chart-title" id="chart2-title">Fluenceme Distribution by Variety</h3>
+                <svg id="variety-chart" width="100%" height="300"></svg>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #e76f51;"></div>
+                        <span>Australian</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #2a9d8f;"></div>
+                        <span>British</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #4a6fa5;"></div>
+                        <span>Canadian</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #f4a261;"></div>
+                        <span>New Zealand</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data and Findings -->
+            <div class="data-container">
+                <h3 id="research-findings-title">Key Research Findings</h3>
+                
+                <div id="findings-en">
+                    <div class="quote">
+                        "Analysis using random forests revealed a consistent fluenceme distribution across the four varieties, with unfilled pauses being the most common, followed by discourse markers, and then filled pauses. This pattern suggests a 'common fluenceme core' among L1-English varieties." (p.94)
+                    </div>
+                    
+                    <h4>Fluenceme Distribution Data</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fluenceme Type</th>
+                                <th>Australian English</th>
+                                <th>Canadian English</th>
+                                <th>British English</th>
+                                <th>New Zealand English</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Discourse markers</td>
+                                <td>4,854</td>
+                                <td>6,368</td>
+                                <td>3,745</td>
+                                <td>101</td>
+                                <td>15,068</td>
+                            </tr>
+                            <tr>
+                                <td>Filled pauses</td>
+                                <td>1,966</td>
+                                <td>3,444</td>
+                                <td>2,713</td>
+                                <td>48</td>
+                                <td>8,171</td>
+                            </tr>
+                            <tr>
+                                <td>Unfilled pauses</td>
+                                <td>11,012</td>
+                                <td>10,771</td>
+                                <td>6,884</td>
+                                <td>44</td>
+                                <td>28,711</td>
+                            </tr>
+                            <tr>
+                                <td>Total (# of speakers)</td>
+                                <td>17,832 (197)</td>
+                                <td>20,583 (248)</td>
+                                <td>13,342 (265)</td>
+                                <td>193 (9)</td>
+                                <td>51,950 (719)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Sociolinguistic Variables Impact</h4>
+                    <div class="socio-variables">
+                        <div class="variable-box">
+                            <h5>Gender Effect</h5>
+                            <p>Male speakers use more filled pauses than female speakers across all age groups. Women use more unfilled pauses from their early twenties onwards. For discourse markers, men use them more frequently until age 35, when women's usage overtakes men's.</p>
+                            <div class="quote">
+                                "Male speakers tend to use filled pauses more frequently but fewer unfilled pauses compared to female speakers." (p.94)
+                            </div>
+                        </div>
+                        <div class="variable-box">
+                            <h5>Age Effect</h5>
+                            <p>Unfilled pauses are most frequent in middle-aged speakers. For discourse markers, usage slightly decreases with age. Filled pauses are most common among young speakers but stabilize after age 30.</p>
+                            <div class="quote">
+                                "Increasing age did not significantly affect the frequency of these strategies; however, older speakers tend to use discourse markers less frequently." (p.94)
+                            </div>
+                        </div>
+                        <div class="variable-box">
+                            <h5>Education & Occupation</h5>
+                            <p>Higher educated speakers tend to use fewer filled and unfilled pauses, but slightly more discourse markers, though these effects were quite mild.</p>
+                            <div class="quote">
+                                "Both education and occupation showed a slight positive correlation with overall fluency." (p.94)
+                            </div>
+                        </div>
+                        <div class="variable-box">
+                            <h5>Common Fluenceme Core</h5>
+                            <p>The study found remarkable similarity in fluenceme distribution across all four varieties, suggesting a fundamental "common fluenceme core" among L1-English speakers.</p>
+                            <div class="quote">
+                                "This pattern suggests a 'common fluenceme core' among L1-English varieties." (p.94)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chinese version of the findings -->
+                <div id="findings-zh" class="hidden">
+                    <div class="quote">
+                        "使用随机森林分析揭示了四种英语变体间一致的流利标记分布，其中无声停顿最为常见，其次是话语标记，然后是有声停顿。这种模式表明 L1 英语变体之间存在"共同的流利标记核心"。" (p.94)
+                    </div>
+                    
+                    <h4>流利标记分布数据</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>流利标记类型</th>
+                                <th>澳大利亚英语</th>
+                                <th>加拿大英语</th>
+                                <th>英国英语</th>
+                                <th>新西兰英语</th>
+                                <th>总计</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>话语标记</td>
+                                <td>4,854</td>
+                                <td>6,368</td>
+                                <td>3,745</td>
+                                <td>101</td>
+                                <td>15,068</td>
+                            </tr>
+                            <tr>
+                                <td>有声停顿</td>
+                                <td>1,966</td>
+                                <td>3,444</td>
+                                <td>2,713</td>
+                                <td>48</td>
+                                <td>8,171</td>
+                            </tr>
+                            <tr>
+                                <td>无声停顿</td>
+                                <td>11,012</td>
+                                <td>10,771</td>
+                                <td>6,884</td>
+                                <td>44</td>
+                                <td>28,711</td>
+                            </tr>
+                            <tr>
+                                <td>总计 (说话者数)</td>
+                                <td>17,832 (197)</td>
+                                <td>20,583 (248)</td>
+                                <td>13,342 (265)</td>
+                                <td>193 (9)</td>
+                                <td>51,950 (719)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>社会语言学变量影响</h4>
+                    <div class="socio-variables">
+                        <div class="variable-box">
+                            <h5>性别影响</h5>
+                            <p>男性说话者在所有年龄组中使用有声停顿的频率高于女性。女性从二十多岁开始使用更多无声停顿。对于话语标记，男性使用频率更高，直到35岁，此时女性的使用率超过男性。</p>
+                            <div class="quote">
+                                "男性说话者倾向于使用更多有声停顿，但与女性说话者相比使用更少的无声停顿。" (p.94)
+                            </div>
+                        </div>
+                        <div class="variable-box">
+                            <h5>年龄影响</h5>
+                            <p>无声停顿在中年说话者中最为频繁。对于话语标记，使用率随年龄略有下降。有声停顿在年轻说话者中最常见，但在30岁后趋于稳定。</p>
+                            <div class="quote">
+                                "年龄增长并未显著影响这些策略的使用频率；但是，年长说话者倾向于较少使用话语标记。" (p.94)
+                            </div>
+                        </div>
+                        <div class="variable-box">
+                            <h5>教育和职业</h5>
+                            <p>受教育程度较高的说话者倾向于使用较少的有声和无声停顿，但略多使用话语标记，尽管这些影响都很轻微。</p>
+                            <div class="quote">
+                                "教育和职业都与总体流利度显示出轻微的正相关。" (p.94)
+                            </div>
+                        </div>
+                        <div class="variable-box">
+                            <h5>共同流利标记核心</h5>
+                            <p>研究发现四种英语变体的流利标记分布有显著相似性，表明L1英语说话者之间存在基本的"共同流利标记核心"。</p>
+                            <div class="quote">
+                                "这种模式表明 L1 英语变体之间存在'共同的流利标记核心'。" (p.94)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // D3.js for visualization
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fluenceme Type Data
+            const fluencemeData = [
+                {type: "Unfilled Pauses", value: 28711, percentage: 55.3},
+                {type: "Discourse Markers", value: 15068, percentage: 29.0},
+                {type: "Filled Pauses", value: 8171, percentage: 15.7}
+            ];
+
+            // Variety Data (proportions based on the paper)
+            const varietyData = [
+                {variety: "Australian", value: 0.026},
+                {variety: "Canadian", value: 0.026},
+                {variety: "British", value: 0.024},
+                {variety: "New Zealand", value: 0.016}
+            ];
+
+            // Fluenceme x Variety Data (from Fig. 4 in the paper)
+            const combinedData = [
+                {variety: "Australian", type: "Discourse Markers", value: 0.023},
+                {variety: "Australian", type: "Filled Pauses", value: 0.014},
+                {variety: "Australian", type: "Unfilled Pauses", value: 0.041},
+                
+                {variety: "Canadian", type: "Discourse Markers", value: 0.022},
+                {variety: "Canadian", type: "Filled Pauses", value: 0.014},
+                {variety: "Canadian", type: "Unfilled Pauses", value: 0.042},
+                
+                {variety: "British", type: "Discourse Markers", value: 0.023},
+                {variety: "British", type: "Filled Pauses", value: 0.015},
+                {variety: "British", type: "Unfilled Pauses", value: 0.040},
+                
+                {variety: "New Zealand", type: "Discourse Markers", value: 0.018},
+                {variety: "New Zealand", type: "Filled Pauses", value: 0.014},
+                {variety: "New Zealand", type: "Unfilled Pauses", value: 0.025}
+            ];
+
+            // Create the fluenceme type chart
+            createBarChart('fluenceme-type-chart', fluencemeData);
+            
+            // Create the variety comparison chart
+            createVarietyChart('variety-chart', varietyData);
+        });
+
+        function createBarChart(id, data) {
+            // Set up SVG
+            const svg = document.getElementById(id);
+            const width = svg.clientWidth;
+            const height = svg.clientHeight;
+            const margin = {top: 20, right: 30, bottom: 40, left: 40};
+            const innerWidth = width - margin.left - margin.right;
+            const innerHeight = height - margin.top - margin.bottom;
+
+            // Clear SVG
+            svg.innerHTML = '';
+            
+            // Create container group
+            const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            g.setAttribute('transform', `translate(${margin.left},${margin.top})`);
+            svg.appendChild(g);
+
+            // Color scale
+            const colors = ['#4a6fa5', '#f4a261', '#2a9d8f'];
+
+            // X scale
+            const xScale = (x) => x * (innerWidth / data.length);
+            
+            // Y scale
+            const maxValue = Math.max(...data.map(d => d.percentage));
+            const yScale = (y) => innerHeight - (y / maxValue) * innerHeight;
+
+            // Draw bars
+            data.forEach((d, i) => {
+                const barWidth = innerWidth / data.length * 0.7;
+                const bar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                bar.setAttribute('x', xScale(i + 0.15));
+                bar.setAttribute('y', yScale(d.percentage));
+                bar.setAttribute('width', barWidth);
+                bar.setAttribute('height', innerHeight - yScale(d.percentage));
+                bar.setAttribute('fill', colors[i]);
+                g.appendChild(bar);
+
+                // Add values on top of bars
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', xScale(i + 0.15) + barWidth / 2);
+                text.setAttribute('y', yScale(d.percentage) - 5);
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('font-size', '12');
+                text.textContent = `${d.percentage.toFixed(1)}%`;
+                g.appendChild(text);
+
+                // Add labels below bars
+                const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                label.setAttribute('x', xScale(i + 0.15) + barWidth / 2);
+                label.setAttribute('y', innerHeight + 20);
+                label.setAttribute('text-anchor', 'middle');
+                label.setAttribute('font-size', '12');
+                label.setAttribute('class', 'type-label');
+                label.setAttribute('data-type', d.type);
+                label.textContent = d.type;
+                g.appendChild(label);
+            });
+
+            // Add y-axis label
+            const yAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            yAxisLabel.setAttribute('transform', 'rotate(-90)');
+            yAxisLabel.setAttribute('x', -innerHeight / 2);
+            yAxisLabel.setAttribute('y', -30);
+            yAxisLabel.setAttribute('text-anchor', 'middle');
+            yAxisLabel.setAttribute('font-size', '12');
+            yAxisLabel.setAttribute('id', 'y-axis-label');
+            yAxisLabel.textContent = 'Percentage';
+            g.appendChild(yAxisLabel);
+        }
+
+        function createVarietyChart(id, data) {
+            // Set up SVG
+            const svg = document.getElementById(id);
+            const width = svg.clientWidth;
+            const height = svg.clientHeight;
+            const margin = {top: 20, right: 30, bottom: 40, left: 40};
+            const innerWidth = width - margin.left - margin.right;
+            const innerHeight = height - margin.top - margin.bottom;
+
+            // Clear SVG
+            svg.innerHTML = '';
+            
+            // Create container group
+            const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            g.setAttribute('transform', `translate(${margin.left},${margin.top})`);
+            svg.appendChild(g);
+
+            // Color scale
+            const colors = ['#e76f51', '#2a9d8f', '#4a6fa5', '#f4a261'];
+
+            // X scale
+            const xScale = (x) => x * (innerWidth / data.length);
+            
+            // Y scale - we'll use 0.05 as the max value to match scale in paper
+            const maxValue = 0.05;
+            const yScale = (y) => innerHeight - (y / maxValue) * innerHeight;
+
+            // Draw bars
+            data.forEach((d, i) => {
+                const barWidth = innerWidth / data.length * 0.7;
+                const bar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                bar.setAttribute('x', xScale(i + 0.15));
+                bar.setAttribute('y', yScale(d.value));
+                bar.setAttribute('width', barWidth);
+                bar.setAttribute('height', innerHeight - yScale(d.value));
+                bar.setAttribute('fill', colors[i]);
+                g.appendChild(bar);
+
+                // Add values on top of bars
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', xScale(i + 0.15) + barWidth / 2);
+                text.setAttribute('y', yScale(d.value) - 5);
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('font-size', '12');
+                text.textContent = d.value.toFixed(3);
+                g.appendChild(text);
+
+                // Add labels below bars
+                const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                label.setAttribute('x', xScale(i + 0.15) + barWidth / 2);
+                label.setAttribute('y', innerHeight + 20);
+                label.setAttribute('text-anchor', 'middle');
+                label.setAttribute('font-size', '12');
+                label.setAttribute('class', 'variety-label');
+                label.setAttribute('data-variety', d.variety);
+                label.textContent = d.variety;
+                g.appendChild(label);
+            });
+
+            // Add y-axis label
+            const yAxisLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            yAxisLabel.setAttribute('transform', 'rotate(-90)');
+            yAxisLabel.setAttribute('x', -innerHeight / 2);
+            yAxisLabel.setAttribute('y', -30);
+            yAxisLabel.setAttribute('text-anchor', 'middle');
+            yAxisLabel.setAttribute('font-size', '12');
+            yAxisLabel.setAttribute('id', 'y-axis-variety-label');
+            yAxisLabel.textContent = 'Proportion';
+            g.appendChild(yAxisLabel);
+        }
+
+        function toggleLanguage(lang) {
+            // Toggle active class for buttons
+            document.querySelectorAll('.language-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.language-btn[onclick="toggleLanguage('${lang}')"]`).classList.add('active');
+            
+            // Toggle content visibility
+            if (lang === 'en') {
+                document.getElementById('findings-en').classList.remove('hidden');
+                document.getElementById('findings-zh').classList.add('hidden');
+                
+                // Update titles
+                document.getElementById('main-title').textContent = 'Fluenceme Distribution Dashboard';
+                document.getElementById('subtitle').textContent = 'Comparing fluencemes across Australian, British, Canadian, and New Zealand English';
+                document.getElementById('chart1-title').textContent = 'Fluenceme Type Distribution';
+                document.getElementById('chart2-title').textContent = 'Fluenceme Distribution by Variety';
+                document.getElementById('research-findings-title').textContent = 'Key Research Findings';
+                
+                // Update legend
+                document.getElementById('unfilled-pauses-legend').textContent = 'Unfilled Pauses';
+                document.getElementById('discourse-markers-legend').textContent = 'Discourse Markers';
+                document.getElementById('filled-pauses-legend').textContent = 'Filled Pauses';
+                
+                // Update axis labels
+                if (document.getElementById('y-axis-label')) {
+                    document.getElementById('y-axis-label').textContent = 'Percentage';
+                }
+                if (document.getElementById('y-axis-variety-label')) {
+                    document.getElementById('y-axis-variety-label').textContent = 'Proportion';
+                }
+                
+                // Update type labels
+                document.querySelectorAll('.type-label').forEach(label => {
+                    if (label.getAttribute('data-type') === 'Unfilled Pauses') {
+                        label.textContent = 'Unfilled Pauses';
+                    } else if (label.getAttribute('data-type') === 'Discourse Markers') {
+                        label.textContent = 'Discourse Markers';
+                    } else if (label.getAttribute('data-type') === 'Filled Pauses') {
+                        label.textContent = 'Filled Pauses';
+                    }
+                });
+            } else {
+                document.getElementById('findings-en').classList.add('hidden');
+                document.getElementById('findings-zh').classList.remove('hidden');
+                
+                // Update titles
+                document.getElementById('main-title').textContent = '流利标记分布仪表板';
+                document.getElementById('subtitle').textContent = '比较澳大利亚、英国、加拿大和新西兰英语中的流利标记';
+                document.getElementById('chart1-title').textContent = '流利标记类型分布';
+                document.getElementById('chart2-title').textContent = '各英语变体的流利标记分布';
+                document.getElementById('research-findings-title').textContent = '关键研究发现';
+                
+                // Update legend
+                document.getElementById('unfilled-pauses-legend').textContent = '无声停顿';
+                document.getElementById('discourse-markers-legend').textContent = '话语标记';
+                document.getElementById('filled-pauses-legend').textContent = '有声停顿';
+                
+                // Update axis labels
+                if (document.getElementById('y-axis-label')) {
+                    document.getElementById('y-axis-label').textContent = '百分比';
+                }
+                if (document.getElementById('y-axis-variety-label')) {
+                    document.getElementById('y-axis-variety-label').textContent = '比例';
+                }
+                
+                // Update type labels
+                document.querySelectorAll('.type-label').forEach(label => {
+                    if (label.getAttribute('data-type') === 'Unfilled Pauses') {
+                        label.textContent = '无声停顿';
+                    } else if (label.getAttribute('data-type') === 'Discourse Markers') {
+                        label.textContent = '话语标记';
+                    } else if (label.getAttribute('data-type') === 'Filled Pauses') {
+                        label.textContent = '有声停顿';
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

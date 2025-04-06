@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Distributional Cues in Construction Acquisition Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .header {
+      background-color: #335577;
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .language-toggle {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .lang-btn {
+      padding: 8px 16px;
+      border: none;
+      background-color: #ffffff;
+      color: #335577;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    
+    .lang-btn.active {
+      background-color: #ffcc00;
+    }
+    
+    .card {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .chart-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: space-between;
+    }
+    
+    .chart {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      width: calc(50% - 10px);
+      min-height: 300px;
+    }
+    
+    .key-findings {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    
+    .finding {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      width: calc(50% - 10px);
+      margin-bottom: 20px;
+    }
+    
+    .experiment {
+      margin-bottom: 30px;
+    }
+    
+    .quote {
+      font-style: italic;
+      border-left: 4px solid #335577;
+      padding-left: 15px;
+      margin: 15px 0;
+    }
+    
+    h1, h2, h3 {
+      color: #335577;
+    }
+    
+    .chinese {
+      display: none;
+    }
+    
+    @media (max-width: 768px) {
+      .chart, .finding {
+        width: 100%;
+      }
+    }
+    
+    /* Custom styles for specific visualizations */
+    .viz-container {
+      min-height: 300px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0;
+    }
+    
+    .cue-integration {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+    
+    .cue-box {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    
+    .cue {
+      background-color: #e1f5fe;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      width: 45%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .arrow-down {
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-top: 20px solid #335577;
+      margin: 10px auto;
+    }
+    
+    .output-box {
+      background-color: #e8f5e9;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      width: 60%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin: 0 auto;
+    }
+    
+    .effect-size {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    
+    .effect-bar {
+      height: 30px;
+      background-color: #bbdefb;
+      border-radius: 4px;
+      position: relative;
+      margin-top: 10px;
+    }
+    
+    .effect-fill {
+      height: 100%;
+      background-color: #2196f3;
+      border-radius: 4px;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    
+    .factor-label {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    
+    .speaker-comparison {
+      display: flex;
+      justify-content: space-between;
+      margin: 20px 0;
+    }
+    
+    .speaker-group {
+      width: 45%;
+      text-align: center;
+      padding: 15px;
+      border-radius: 8px;
+    }
+    
+    .ns-group {
+      background-color: #e8eaf6;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .nns-group {
+      background-color: #fff3e0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .vs {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div>
+        <h1 class="english">Distributional Cues in Construction Acquisition Dashboard</h1>
+        <h1 class="chinese">构式习得中的分布线索仪表板</h1>
+      </div>
+      <div class="language-toggle">
+        <button id="en-btn" class="lang-btn active">English</button>
+        <button id="zh-btn" class="lang-btn">中文</button>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2 class="english">Research Overview</h2>
+      <h2 class="chinese">研究概述</h2>
+      
+      <p class="english">This dashboard visualizes key findings from the research study "Distributional Cues in Construction Acquisition: A Comparative Study of Native and Nonnative English Speakers Using the As-Predicative Construction" by Ivana Domazetoska and Helen Zhao (2025).</p>
+      <p class="chinese">本仪表板可视化了Ivana Domazetoska和Helen Zhao（2025年）的研究"构式习得中的分布线索：以as谓语构式为例的英语母语者和非母语者对比研究"的关键发现。</p>
+      
+      <div class="quote english">
+        "This study investigates how distributional cues are integrated into the mental representation of the as-predicative construction by English native and nonnative speakers, drawing on associative learning theory. We examined speakers' constructional retrieval when given a verbal cue (Experiment 1) and their verb retrieval when given a constructional cue (Experiment 2)."
+      </div>
+      <div class="quote chinese">
+        "本研究基于联想学习理论，考察了英语母语者和非母语者如何将分布线索整合到as谓语构式的心理表征中。我们研究了说话者在给定动词线索时的构式提取（实验1）和在给定构式线索时的动词提取（实验2）。"
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2 class="english">Key Concepts</h2>
+      <h2 class="chinese">关键概念</h2>
+      
+      <div class="key-findings">
+        <div class="finding">
+          <h3 class="english">Verb Cue Validity</h3>
+          <h3 class="chinese">动词线索有效性</h3>
+          <p class="english">The predictive power of a verb to cue a constructional outcome, or ΔP (construction|verb). This reflects how reliably a verb predicts the occurrence of a specific construction.</p>
+          <p class="chinese">动词预测构式结果的能力，即ΔP（构式|动词）。这反映了动词预测特定构式出现的可靠性。</p>
+          <div class="quote english">
+            "Verb cue validity stands for the predictive power of the verb to cue a constructional outcome, or ΔP (construction|verb)."
+          </div>
+          <div class="quote chinese">
+            "动词线索有效性代表动词提示构式结果的预测能力，即ΔP（构式|动词）。"
+          </div>
+        </div>
+        
+        <div class="finding">
+          <h3 class="english">Construction Cue Validity</h3>
+          <h3 class="chinese">构式线索有效性</h3>
+          <p class="english">The predictive strength of the construction to cue a verbal outcome, or ΔP (verb|construction). This reflects how reliably a construction predicts the occurrence of a specific verb.</p>
+          <p class="chinese">构式预测动词结果的能力，即ΔP（动词|构式）。这反映了构式预测特定动词出现的可靠性。</p>
+          <div class="quote english">
+            "Construction cue validity (alternatively referred to as category validity) embodies the predictive strength of the construction to cue a verbal outcome in the other direction, or ΔP (verb|construction)."
+          </div>
+          <div class="quote chinese">
+            "构式线索有效性（也称为类别有效性）体现了构式向另一方向预测动词结果的能力，即ΔP（动词|构式）。"
+          </div>
+        </div>
+        
+        <div class="finding">
+          <h3 class="english">The As-Predicative Construction</h3>
+          <h3 class="chinese">As谓语构式</h3>
+          <p class="english">A syntactic structure (e.g., "They saw the situation as a failure") used to ascribe an attribute to the direct object as a reflection of the subject's perception, classification, or judgment.</p>
+          <p class="chinese">一种句法结构（例如，"They saw the situation as a failure"），用于将属性赋予直接宾语，反映主语的感知、分类或判断。</p>
+          <div class="quote english">
+            "The as-predicative construction is used to ascribe an attribute to the direct object, as a reflection of the subject's perception, classification, or judgment."
+          </div>
+          <div class="quote chinese">
+            "as谓语构式用于将属性赋予直接宾语，作为主语感知、分类或判断的反映。"
+          </div>
+        </div>
+        
+        <div class="finding">
+          <h3 class="english">Associative Learning Theory</h3>
+          <h3 class="chinese">联想学习理论</h3>
+          <p class="english">The theory that language acquisition involves generating predictions about events based on their associations with other events, where one event serves as a cue to predict another event as an outcome.</p>
+          <p class="chinese">该理论认为语言习得涉及根据事件与其他事件的关联来生成对事件的预测，其中一个事件作为线索来预测另一个事件作为结果。</p>
+          <div class="quote english">
+            "This study is underpinned by the premise that statistical learning involves generating predictions about events based on their associations with other events. This process entails tracking relationships between the events, where one event serves as a cue to predict the occurrence of another event as an outcome, which forms the basis of associative learning theory."
+          </div>
+          <div class="quote chinese">
+            "本研究基于这样一个前提：统计学习涉及根据事件与其他事件的关联来生成对事件的预测。这一过程需要追踪事件之间的关系，其中一个事件作为线索来预测另一个事件作为结果的发生，这构成了联想学习理论的基础。"
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card experiment">
+      <h2 class="english">Experiment 1: Construction Retrieval</h2>
+      <h2 class="chinese">实验1：构式提取</h2>
+      
+      <p class="english">In Experiment 1, participants were given a verb cue and asked to complete a sentence. The researchers examined how verb cue validity and construction cue validity affected speakers' retrieval of the as-predicative construction.</p>
+      <p class="chinese">在实验1中，参与者获得一个动词线索，并被要求完成一个句子。研究人员考察了动词线索有效性和构式线索有效性如何影响说话者对as谓语构式的提取。</p>
+      
+      <div class="viz-container">
+        <div class="cue-integration">
+          <h3 class="english">Cue Integration Model in Construction Retrieval</h3>
+          <h3 class="chinese">构式提取中的线索整合模型</h3>
+          
+          <div class="cue-box">
+            <div class="cue">
+              <h4 class="english">Verb Cue Validity</h4>
+              <h4 class="chinese">动词线索有效性</h4>
+              <p class="english">Predictive power of verb → construction</p>
+              <p class="chinese">动词→构式的预测能力</p>
+            </div>
+            <div class="cue">
+              <h4 class="english">Construction Cue Validity</h4>
+              <h4 class="chinese">构式线索有效性</h4>
+              <p class="english">Category membership of verb</p>
+              <p class="chinese">动词的类别成员资格</p>
+            </div>
+          </div>
+          
+          <div class="arrow-down"></div>
+          
+          <div class="output-box">
+            <h4 class="english">As-Predicative Construction</h4>
+            <h4 class="chinese">As谓语构式</h4>
+            <p class="english">e.g., "They saw the situation as a failure"</p>
+            <p class="chinese">例如，"They saw the situation as a failure"</p>
+          </div>
+        </div>
+      </div>
+      
+      <h3 class="english">Key Findings from Experiment 1</h3>
+      <h3 class="chinese">实验1的主要发现</h3>
+      
+      <div class="speaker-comparison">
+        <div class="speaker-group ns-group">
+          <h4 class="english">Native Speakers</h4>
+          <h4 class="chinese">母语者</h4>
+          <p class="english">Integrated both verb and construction cue validity with a slight preference for construction cue validity</p>
+          <p class="chinese">整合了动词和构式线索有效性，对构式线索有效性略有偏好</p>
+        </div>
+        
+        <div class="vs">VS</div>
+        
+        <div class="speaker-group nns-group">
+          <h4 class="english">Nonnative Speakers</h4>
+          <h4 class="chinese">非母语者</h4>
+          <p class="english">Showed stronger sensitivity to verb cue validity compared to construction cue validity</p>
+          <p class="chinese">对动词线索有效性表现出比构式线索有效性更强的敏感性</p>
+        </div>
+      </div>
+      
+      <h3 class="english">Factors Affecting Construction Retrieval</h3>
+      <h3 class="chinese">影响构式提取的因素</h3>
+      
+      <div class="effect-size">
+        <div style="width: 100%;">
+          <div class="factor-label english">Verb Frequency</div>
+          <div class="factor-label chinese">动词频率</div>
+          <div class="effect-bar">
+            <div class="effect-fill" style="width: 97%;"></div>
+          </div>
+          <p class="english">Strong negative effect: Higher frequency verbs decreased the likelihood of as-predicative retrieval</p>
+          <p class="chinese">强烈的负面影响：高频动词降低了as谓语构式提取的可能性</p>
+        </div>
+      </div>
+      
+      <div class="effect-size">
+        <div style="width: 100%;">
+          <div class="factor-label english">Voice (Active vs. Passive)</div>
+          <div class="factor-label chinese">语态（主动vs.被动）</div>
+          <div class="effect-bar">
+            <div class="effect-fill" style="width: 75%;"></div>
+          </div>
+          <p class="english">Significant effect: The as-predicative was more likely to be supplied in passive contexts</p>
+          <p class="chinese">显著影响：在被动语境中，as谓语构式更有可能被提供</p>
+        </div>
+      </div>
+      
+      <div class="effect-size">
+        <div style="width: 100%;">
+          <div class="factor-label english">L2 Proficiency (for Nonnative Speakers)</div>
+          <div class="factor-label chinese">二语熟练度（对于非母语者）</div>
+          <div class="effect-bar">
+            <div class="effect-fill" style="width: 65%;"></div>
+          </div>
+          <p class="english">Positive effect: Higher proficiency increased likelihood of target structure retrieval, particularly with verb cue validity</p>
+          <p class="chinese">积极影响：更高的熟练度增加了目标结构提取的可能性，特别是对于动词线索有效性</p>
+        </div>
+      </div>
+      
+      <div class="quote english">
+        "In Experiment 1, we observed that both speaker groups incorporated verb cue validity and construction cue validity in their construction retrieval, when cued by a verb."
+      </div>
+      <div class="quote chinese">
+        "在实验1中，我们观察到两组说话者在由动词提示的构式提取中都整合了动词线索有效性和构式线索有效性。"
+      </div>
+    </div>
+    
+    <div class="card experiment">
+      <h2 class="english">Experiment 2: Verb Retrieval</h2>
+      <h2 class="chinese">实验2：动词提取</h2>
+      
+      <p class="english">In Experiment 2, participants were given the as-predicative construction and asked to supply a verb. The researchers examined how verb cue validity and construction cue validity affected speakers' verb retrieval.</p>
+      <p class="chinese">在实验2中，参与者获得as谓语构式，并被要求提供一个动词。研究人员考察了动词线索有效性和构式线索有效性如何影响说话者的动词提取。</p>
+      
+      <div class="viz-container">
+        <div class="cue-integration">
+          <div class="output-box" style="margin-bottom: 20px;">
+            <h4 class="english">As-Predicative Construction</h4>
+            <h4 class="chinese">As谓语构式</h4>
+            <p class="english">e.g., "She ___ the puppy as ___."</p>
+            <p class="chinese">例如，"She ___ the puppy as ___."</p>
+          </div>
+          
+          <div class="arrow-down"></div>
+          
+          <div class="cue-box">
+            <div class="cue" style="background-color: #e8f5e9; width: 80%; margin: 0 auto;">
+              <h4 class="english">Construction Cue Validity</h4>
+              <h4 class="chinese">构式线索有效性</h4>
+              <p class="english">Primary factor in verb retrieval</p>
+              <p class="chinese">动词提取中的主要因素</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <h3 class="english">Key Findings from Experiment 2</h3>
+      <h3 class="chinese">实验2的主要发现</h3>
+      
+      <div class="speaker-comparison">
+        <div class="speaker-group ns-group">
+          <h4 class="english">Native Speakers</h4>
+          <h4 class="chinese">母语者</h4>
+          <p class="english">Relied exclusively on construction cue validity in verb retrieval</p>
+          <p class="chinese">在动词提取中仅依赖构式线索有效性</p>
+        </div>
+        
+        <div class="vs">VS</div>
+        
+        <div class="speaker-group nns-group">
+          <h4 class="english">Nonnative Speakers</h4>
+          <h4 class="chinese">非母语者</h4>
+          <p class="english">Also relied on construction cue validity, but to a lesser extent than native speakers</p>
+          <p class="chinese">也依赖构式线索有效性，但程度不如母语者</p>
+        </div>
+      </div>
+      
+      <h3 class="english">Factors Affecting Verb Retrieval</h3>
+      <h3 class="chinese">影响动词提取的因素</h3>
+      
+      <div class="effect-size">
+        <div style="width: 100%;">
+          <div class="factor-label english">Construction Cue Validity</div>
+          <div class="factor-label chinese">构式线索有效性</div>
+          <div class="effect-bar">
+            <div class="effect-fill" style="width: 100%;"></div>
+          </div>
+          <p class="english">Strong positive effect: The only parameter with certainty to reject the null value</p>
+          <p class="chinese">强烈的积极影响：唯一可以确定拒绝零假设的参数</p>
+        </div>
+      </div>
+      
+      <div class="effect-size">
+        <div style="width: 100%;">
+          <div class="factor-label english">Verb Frequency</div>
+          <div class="factor-label chinese">动词频率</div>
+          <div class="effect-bar">
+            <div class="effect-fill" style="width: 65%;"></div>
+          </div>
+          <p class="english">Positive effect: Higher frequency verbs were more likely to be retrieved</p>
+          <p class="chinese">积极影响：高频动词更有可能被提取</p>
+        </div>
+      </div>
+      
+      <div class="effect-size">
+        <div style="width: 100%;">
+          <div class="factor-label english">Voice (Active vs. Passive)</div>
+          <div class="factor-label chinese">语态（主动vs.被动）</div>
+          <div class="effect-bar">
+            <div class="effect-fill" style="width: 50%;"></div>
+          </div>
+          <p class="english">Mixed effect: Verb retrieval was favored in active contexts, but construction cue validity boosted verb retrieval in passive contexts</p>
+          <p class="chinese">混合影响：动词提取在主动语境中被偏好，但构式线索有效性提高了被动语境中的动词提取</p>
+        </div>
+      </div>
+      
+      <div class="quote english">
+        "In contrast to the results of Experiment 1, where we observed effects of both verb and construction cue validity, in Experiment 2 we only detected an effect of construction cue validity in verb retrieval, applicable to both speaker groups."
+      </div>
+      <div class="quote chinese">
+        "与实验1的结果相反，在实验1中我们观察到动词和构式线索有效性的影响，而在实验2中，我们仅检测到构式线索有效性在动词提取中的影响，这适用于两组说话者。"
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2 class="english">Research Implications</h2>
+      <h2 class="chinese">研究启示</h2>
+      
+      <p class="english">This research has important implications for understanding language acquisition and processing, particularly how distributional cues affect linguistic information retrieval.</p>
+      <p class="chinese">这项研究对理解语言习得和处理具有重要意义，特别是分布线索如何影响语言信息提取。</p>
+      
+      <div class="key-findings">
+        <div class="finding">
+          <h3 class="english">Directional Asymmetry</h3>
+          <h3 class="chinese">方向不对称性</h3>
+          <p class="english">The research suggests an asymmetry in how distributional cues are integrated based on the direction of retrieval (forward vs. backward).</p>
+          <p class="chinese">研究表明，基于提取方向（正向vs.反向），分布线索的整合存在不对称性。</p>
+          <div class="quote english">
+            "These findings raise a question regarding speakers' ability to integrate multiple distributional cues in parallel and the possible role of directionality in the retrieval of linguistic information."
+          </div>
+          <div class="quote chinese">
+            "这些发现引发了一个关于说话者平行整合多个分布线索的能力以及方向性在语言信息提取中可能作用的问题。"
+          </div>
+        </div>
+        
+        <div class="finding">
+          <h3 class="english">Native vs. Nonnative Processing</h3>
+          <h3 class="chinese">母语者vs.非母语者处理</h3>
+          <p class="english">The study reveals differences in how native and nonnative speakers integrate distributional cues, with L2 proficiency playing a significant role.</p>
+          <p class="chinese">研究揭示了母语者和非母语者整合分布线索的差异，二语熟练度起着重要作用。</p>
+          <div class="quote english">
+            "The present study supports the view that constructional categories partially emerge as a result of the integration of distributional information hinging on normative ΔP theory."
+          </div>
+          <div class="quote chinese">
+            "本研究支持这一观点：构式类别部分是由基于规范性ΔP理论的分布信息整合而产生的。"
+          </div>
+        </div>
+        
+        <div class="finding">
+          <h3 class="english">Cognitive Mechanisms</h3>
+          <h3 class="chinese">认知机制</h3>
+          <p class="english">Different cognitive mechanisms may be involved in construction retrieval (prediction generation) versus verb retrieval (memory search).</p>
+          <p class="chinese">构式提取（预测生成）与动词提取（记忆搜索）可能涉及不同的认知机制。</p>
+          <div class="quote english">
+            "Integrating multiple distributional cues may be easier in a forward-retrieval process, which follows natural adjacency patterns found in the linguistic environment such as 'verb + as' (seen as, known as, regarded as, etc.), as opposed to a backward-retrieval process where a verb needs to be recalled within a given constructional context."
+          </div>
+          <div class="quote chinese">
+            "在正向提取过程中整合多个分布线索可能更容易，这遵循语言环境中发现的自然邻接模式，如'动词 + as'（seen as, known as, regarded as等），而不是在给定构式语境中需要回忆动词的反向提取过程。"
+          </div>
+        </div>
+        
+        <div class="finding">
+          <h3 class="english">Future Research Directions</h3>
+          <h3 class="chinese">未来研究方向</h3>
+          <p class="english">The researchers emphasize the need for more systematic research, particularly accounting for L2 proficiency and possible crosslinguistic influence.</p>
+          <p class="chinese">研究人员强调需要更系统的研究，特别是考虑二语熟练度和可能的跨语言影响。</p>
+          <div class="quote english">
+            "We also strongly emphasize the need for more systematic research, particularly taking into account L2 proficiency and possible crosslinguistic influence."
+          </div>
+          <div class="quote chinese">
+            "我们也强烈强调需要更系统的研究，特别是考虑到二语熟练度和可能的跨语言影响。"
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('en-btn').addEventListener('click', function() {
+      document.getElementById('en-btn').classList.add('active');
+      document.getElementById('zh-btn').classList.remove('active');
+      
+      const englishElements = document.querySelectorAll('.english');
+      const chineseElements = document.querySelectorAll('.chinese');
+      
+      englishElements.forEach(element => {
+        element.style.display = 'block';
+      });
+      
+      chineseElements.forEach(element => {
+        element.style.display = 'none';
+      });
+    });
+    
+    document.getElementById('zh-btn').addEventListener('click', function() {
+      document.getElementById('zh-btn').classList.add('active');
+      document.getElementById('en-btn').classList.remove('active');
+      
+      const englishElements = document.querySelectorAll('.english');
+      const chineseElements = document.querySelectorAll('.chinese');
+      
+      englishElements.forEach(element => {
+        element.style.display = 'none';
+      });
+      
+      chineseElements.forEach(element => {
+        element.style.display = 'block';
+      });
+    });
+  </script>

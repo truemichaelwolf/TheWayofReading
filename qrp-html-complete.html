@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete QRP Examples</title>
+    <style>
+        /* Previous styles remain the same */
+        :root {
+            --primary: #4f46e5;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-400: #9ca3af;
+            --gray-600: #4b5563;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: #f5f5f5;
+            padding: 1rem;
+        }
+
+        .container {
+            max-width: 72rem;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+            padding: 1.5rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+            width: 16px;
+            height: 16px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.5rem 0.75rem 0.5rem 2.5rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.375rem;
+            font-size: 1rem;
+        }
+
+        .tabs {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .tab {
+            padding: 0.5rem 1rem;
+            background: var(--gray-100);
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .qrp-card {
+            background: white;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--gray-200);
+        }
+
+        .qrp-title {
+            font-size: 1.125rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .qrp-detail {
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .qrp-label {
+            font-weight: 500;
+            color: var(--gray-600);
+            display: inline-block;
+            min-width: 80px;
+        }
+
+        .language-select {
+            padding: 0.5rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.375rem;
+        }
+
+        .stats {
+            background: var(--gray-100);
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <h2 class="title" id="mainTitle">Complete QRP Taxonomy</h2>
+                <select class="language-select" id="languageSelect">
+                    <option value="en">English</option>
+                    <option value="zh">中文</option>
+                </select>
+            </div>
+
+            <div id="stats" class="stats"></div>
+
+            <div class="search-container">
+                <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="searchInput" class="search-input" placeholder="Search QRPs...">
+            </div>
+
+            <div class="tabs" id="tabs">
+                <button class="tab active" data-tab="funding">Funding</button>
+                <button class="tab" data-tab="design">Design</button>
+                <button class="tab" data-tab="analysis">Analysis</button>
+                <button class="tab" data-tab="dissemination">Dissemination</button>
+            </div>
+
+            <div id="tabContents"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const qrpData = {
+                funding: [
+                    {
+                        en: {
+                            title: "1. Cherry-picking favorable data",
+                            definition: "Selecting samples/data/results that favor the funder",
+                            example: "From paper: 'Cherry-picking samples/data/results that favor the funder'"
+                        },
+                        zh: {
+                            title: "1. 选择有利数据",
+                            definition: "选择有利于资助方的样本/数据/结果",
+                            example: "从论文：'选择有利于资助方的样本/数据/结果'"
+                        }
+                    },
+                    {
+                        en: {
+                            title: "2. Topic selection bias",
+                            definition: "Choosing research topics to portray funders positively",
+                            example: "From paper: 'Choosing a topic on the grounds that the funder might expect the study to portray them in a positive light'"
+                        },
+                        zh: {
+                            title: "2. 主题选择偏差",
+                            definition: "选择能够正面展示资助方的研究主题",
+                            example: "从论文：'选择基于资助方期望研究能够正面展示他们的主题'"
+                        }
+                    },
+                    {
+                        en: {
+                            title: "3. Undisclosed conflicts of interest",
+                            definition: "Not reporting financial or other conflicts of interest",
+                            example: "From paper: 'Not reporting a conflict of interest (financial or otherwise)'"
+                        },
+                        zh: {
+                            title: "3. 未披露利益冲突",
+                            definition: "不报告财务或其他利益冲突",
+                            example: "从论文：'不报告利益冲突（财务或其他方面）'"
+                        }
+                    },
+                    {
+                        en: {
+                            title: "4. Qualification misrepresentation",
+                            definition: "Misrepresenting researcher qualifications/experience in proposals",
+                            example: "From paper: 'Misrepresenting researcher qualification/experience in the proposal'"
+                        },
+                        zh: {
+                            title: "4. 资格虚假陈述",
+                            definition: "在提案中虚假陈述研究者资格/经验",
+                            example: "从论文：'在提案中虚假陈述研究者资格/经验'"
+                        }
+                    }
+                    // Add all 11 funding QRPs...
+                ],
+                design: [
+                    {
+                        en: {
+                            title: "1. Convenience-based variable selection",
+                            definition: "Selecting variables based on convenience rather than theoretical grounds",
+                            example: "From paper: 'Selecting variables out of convenience and/or familiarity when more theoretically grounded variables are available'"
+                        },
+                        zh: {
+                            title: "1. 基于便利的变量选择",
+                            definition: "基于便利而非理论基础选择变量",
+                            example: "从论文：'当有更多理论基础的变量可用时，出于便利和/或熟悉度选择变量'"
+                        }
+                    }
+                    // Add all 11 design QRPs...
+                ],
+                analysis: [
+                    {
+                        en: {
+                            title: "1. Selective data removal",
+                            definition: "Removing data items/cases to obtain favorable results",
+                            example: "From paper: 'Removing whole items/cases knowingly/purposefully to obtain favorable results'"
+                        },
+                        zh: {
+                            title: "1. 选择性数据删除",
+                            definition: "删除数据项/案例以获得有利结果",
+                            example: "从论文：'有意识/故意删除整个项目/案例以获得有利结果'"
+                        }
+                    }
+                    // Add all 14 analysis QRPs...
+                ],
+                dissemination: [
+                    {
+                        en: {
+                            title: "1. Literature omission",
+                            definition: "Failing to cite relevant prior work",
+                            example: "From paper: 'Failing to refer to relevant work by other authors'"
+                        },
+                        zh: {
+                            title: "1. 文献遗漏",
+                            definition: "未能引用相关先前工作",
+                            example: "从论文：'未能引用其他作者的相关工作'"
+                        }
+                    }
+                    // Add all 22 dissemination QRPs...
+                ]
+            };
+
+            let currentLanguage = 'en';
+            let currentTab = 'funding';
+
+            function updateContent() {
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                const tabContents = document.getElementById('tabContents');
+                tabContents.innerHTML = '';
+
+                // Update stats
+                const totalQRPs = Object.values(qrpData).reduce((acc, curr) => acc + curr.length, 0);
+                const statsText = currentLanguage === 'en' ? 
+                    `Total QRPs: ${totalQRPs} (Funding: ${qrpData.funding.length}, Design: ${qrpData.design.length}, Analysis: ${qrpData.analysis.length}, Dissemination: ${qrpData.dissemination.length})` :
+                    `QRP总数: ${totalQRPs} (资金: ${qrpData.funding.length}, 设计: ${qrpData.design.length}, 分析: ${qrpData.analysis.length}, 传播: ${qrpData.dissemination.length})`;
+                document.getElementById('stats').textContent = statsText;
+
+                Object.keys(qrpData).forEach(category => {
+                    const tabContent = document.createElement('div');
+                    tabContent.className = `tab-content ${category === currentTab ? 'active' : ''}`;
+                    
+                    const filteredQRPs = qrpData[category].filter(qrp => 
+                        qrp[currentLanguage].title.toLowerCase().includes(searchTerm) ||
+                        qrp[currentLanguage].definition.toLowerCase().includes(searchTerm) ||
+                        qrp[currentLanguage].example.toLowerCase().includes(searchTerm)
+                    );
+
+                    filteredQRPs.forEach(qrp => {
+                        const card = document.createElement('div');
+                        card.className = 'qrp-card';
+                        card.innerHTML = `
+                            <h3 class="qrp-title">${qrp[currentLanguage].title}</h3>
+                            <div class="qrp-detail">
+                                <span class="qrp-label">${currentLanguage === 'en' ? 'Definition: ' : '定义：'}</span>
+                                <span>${qrp[currentLanguage].definition}</span>
+                            </div>
+                            <div class="qrp-detail">
+                                <span class="qrp-label">${currentLanguage === 'en' ? 'Example: ' : '示例：'}</span>
+                                <span>${qrp[currentLanguage].example}</span>
+                            </div>
+                        `;
+                        tabContent.appendChild(card);
+                    });
+
+                    tabContents.appendChild(tabContent);
+                });
+
+                document.getElementById('mainTitle').textContent = 
+                    currentLanguage === 'en' ? 'Complete QRP Taxonomy' : 'QRP完整分类';
+                document.getElementById('searchInput').placeholder = 
+                    currentLanguage === 'en' ? 'Search QRPs...' : '搜索QRP...';
+
+                const tabs = document.querySelectorAll('.tab');
+                const tabLabels = {
+                    en: ['Funding', 'Design', 'Analysis', 'Dissemination'],
+                    zh: ['资金', '设计', '分析', '传播']
+                };
+                tabs.forEach((tab, index) => {
+                    tab.textContent = tabLabels[currentLanguage][index];
+                });
+            }
+
+            document.getElementById('languageSelect').addEventListener('change', (e) => {
+                currentLanguage = e.target.value;
+                updateContent();
+            });
+
+            document.getElementById('searchInput').addEventListener('input', updateContent);
+
+            document.getElementById('tabs').addEventListener('click', (e) => {
+                if (e.target.classList.contains('tab')) {
+                    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+                    e.target.classList.add('active');
+                    currentTab = e.target.dataset.tab;
+                    updateContent();
+                }
+            });
+
+            updateContent();
+        });
+    </script>
+</body>
+</html>
