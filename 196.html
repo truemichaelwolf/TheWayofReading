@@ -1,0 +1,1991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Love Fraud Analysis Dashboard</title>
+    <style>
+        :root {
+            --primary: #4a148c;
+            --primary-light: #7c43bd;
+            --primary-dark: #12005e;
+            --secondary: #f50057;
+            --secondary-light: #ff5983;
+            --secondary-dark: #bb002f;
+            --text-light: #f5f5f5;
+            --text-dark: #212121;
+            --bg-light: #f5f5f5;
+            --bg-dark: #212121;
+            --card-bg: #ffffff;
+            --chart-1: #7c43bd;
+            --chart-2: #f50057;
+            --chart-3: #2196f3;
+            --chart-4: #ff9800;
+            --chart-5: #4caf50;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header {
+            background-color: var(--primary);
+            color: var(--text-light);
+            padding: 30px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .header-bg {
+            background-image: linear-gradient(45deg, rgba(74, 20, 140, 0.9), rgba(245, 0, 87, 0.7)), 
+                              url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><path d="M20,100 C20,50 50,20 100,20 C150,20 180,50 180,100 C180,150 150,180 100,180 C50,180 20,150 20,100 Z" fill="none" stroke="white" stroke-width="2" opacity="0.2"/></svg>');
+            background-size: cover;
+            background-position: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.7;
+            z-index: 0;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .title {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            margin: 10px 0 0 0;
+            font-weight: normal;
+            font-size: 1.5em;
+            opacity: 0.9;
+        }
+        
+        .author {
+            margin-top: 10px;
+            font-style: italic;
+            font-size: 1.1em;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .col-12 {
+            grid-column: span 12;
+        }
+        
+        .col-8 {
+            grid-column: span 8;
+        }
+        
+        .col-6 {
+            grid-column: span 6;
+        }
+        
+        .col-4 {
+            grid-column: span 4;
+        }
+        
+        .col-3 {
+            grid-column: span 3;
+        }
+        
+        .card-title {
+            font-size: 1.4em;
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--primary);
+            border-bottom: 3px solid var(--secondary);
+            padding-bottom: 12px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .card-title::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--secondary);
+        }
+        
+        .card-content {
+            margin-bottom: 20px;
+        }
+        
+        .relationship-stages {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .relationship-stages::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: rgba(124, 67, 189, 0.2);
+            transform: translateY(-50%);
+            z-index: -1;
+        }
+        
+        .stage {
+            flex: 1;
+            min-width: 200px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 0 10px;
+            border-top: 4px solid var(--primary);
+            z-index: 2;
+        }
+        
+        .stage::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: calc(50% - 15px);
+            width: 30px;
+            height: 30px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            z-index: 3;
+        }
+        
+        .stage:not(:last-child)::after {
+            content: "→";
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: var(--primary);
+            font-weight: bold;
+            z-index: 4;
+        }
+        
+        .stage-title {
+            font-weight: bold;
+            margin: 15px 0 10px;
+            color: var(--primary);
+            font-size: 1.2em;
+        }
+        
+        .stage-description {
+            font-size: 0.95em;
+            margin-bottom: 15px;
+        }
+        
+        .stage-details {
+            font-size: 0.85em;
+            list-style-type: none;
+            padding: 0;
+            text-align: left;
+            background-color: rgba(124, 67, 189, 0.05);
+            padding: 10px;
+            border-radius: 5px;
+            height: 150px;
+            overflow-y: auto;
+        }
+        
+        .stage-details li {
+            padding: 3px 0;
+            border-bottom: 1px dashed rgba(124, 67, 189, 0.2);
+        }
+        
+        .quote {
+            font-style: italic;
+            padding: 20px;
+            background-color: rgba(245, 0, 87, 0.05);
+            border-left: 4px solid var(--secondary);
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .citation {
+            font-size: 0.85em;
+            color: #666;
+            text-align: right;
+            margin-top: 10px;
+        }
+        
+        .language-selector {
+            text-align: right;
+            margin: 20px 0;
+        }
+        
+        .language-btn {
+            padding: 12px 24px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .language-btn:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .language-btn.active {
+            background-color: var(--secondary);
+        }
+        
+        .en-content, .zh-content {
+            display: none;
+        }
+        
+        .en-content.active, .zh-content.active {
+            display: block;
+        }
+        
+        .chart-container {
+            height: 300px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            height: 250px;
+            margin-top: 20px;
+            padding-left: 40px;
+            position: relative;
+        }
+        
+        .bar-chart::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 40px;
+            width: calc(100% - 40px);
+            height: 100%;
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
+            background-size: 100% 25%;
+            z-index: 0;
+        }
+        
+        .bar-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            padding: 0 10px;
+        }
+        
+        .bar {
+            width: 40px;
+            background-color: var(--primary);
+            transition: height 1s ease;
+            border-radius: 5px 5px 0 0;
+            position: relative;
+        }
+        
+        .bar-label {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        
+        .bar-value {
+            position: absolute;
+            top: -20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .y-axis {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 40px;
+        }
+        
+        .y-axis span {
+            font-size: 0.8em;
+            color: #666;
+            transform: translateY(50%);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        thead {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+        
+        tbody tr:nth-child(even) {
+            background-color: rgba(124, 67, 189, 0.05);
+        }
+        
+        tbody tr:hover {
+            background-color: rgba(124, 67, 189, 0.1);
+        }
+        
+        .dimension-chart {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .dimension-item {
+            background-color: rgba(124, 67, 189, 0.1);
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .dimension-item:hover {
+            transform: translateY(-2px);
+            background-color: rgba(124, 67, 189, 0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dimension-item-icon {
+            margin-right: 8px;
+            width: 20px;
+            height: 20px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7em;
+            font-weight: bold;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px 20px;
+            text-align: center;
+            background-color: #ffffff;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            color: var(--text-dark);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 0;
+        }
+        
+        .tab.active {
+            color: white;
+        }
+        
+        .tab.active::before {
+            opacity: 1;
+        }
+        
+        .tab span {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .text-content {
+            text-align: justify;
+        }
+        
+        .highlight {
+            color: var(--secondary);
+            font-weight: bold;
+        }
+        
+        .stat-box {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .stat-item {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background-color: var(--primary);
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .donut-chart {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .donut-chart svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+        
+        .donut-chart circle {
+            fill: none;
+            stroke-width: 30;
+            cx: 100;
+            cy: 100;
+            r: 70;
+        }
+        
+        .chart-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .attribute-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+        
+        .attribute-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .attribute-item:last-child {
+            border-bottom: none;
+        }
+        
+        .attribute-icon {
+            min-width: 40px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(124, 67, 189, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .attribute-content {
+            flex-grow: 1;
+        }
+        
+        .attribute-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--primary-dark);
+        }
+        
+        .attribute-description {
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .text-columns {
+            column-count: 2;
+            column-gap: 30px;
+            margin: 20px 0;
+        }
+        
+        .timeline {
+            margin: 40px 0;
+            position: relative;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background-color: rgba(124, 67, 189, 0.2);
+        }
+        
+        .timeline-item {
+            margin-bottom: 30px;
+            position: relative;
+            display: flex;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            justify-content: flex-start;
+            padding-right: 50%;
+        }
+        
+        .timeline-item:nth-child(even) {
+            justify-content: flex-end;
+            padding-left: 50%;
+        }
+        
+        .timeline-content {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            width: 20px;
+            height: 20px;
+            background-color: var(--primary);
+            border-radius: 50%;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content::before {
+            right: -60px;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content::before {
+            left: -60px;
+        }
+        
+        .timeline-date {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .tactics-list {
+            counter-reset: tactics-counter;
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .tactics-item {
+            counter-increment: tactics-counter;
+            margin-bottom: 20px;
+            padding-left: 50px;
+            position: relative;
+        }
+        
+        .tactics-item::before {
+            content: counter(tactics-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 35px;
+            height: 35px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 1200px) {
+            .col-lg-12 {
+                grid-column: span 12;
+            }
+            
+            .col-lg-6 {
+                grid-column: span 6;
+            }
+            
+            .col-lg-4 {
+                grid-column: span 4;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .col-md-12 {
+                grid-column: span 12;
+            }
+            
+            .col-md-6 {
+                grid-column: span 6;
+            }
+            
+            .text-columns {
+                column-count: 1;
+            }
+            
+            .relationship-stages {
+                flex-direction: column;
+            }
+            
+            .relationship-stages::before {
+                width: 4px;
+                height: 100%;
+                left: 50%;
+                top: 0;
+                transform: translateX(-50%);
+            }
+            
+            .stage {
+                margin: 20px 0;
+            }
+            
+            .stage:not(:last-child)::after {
+                content: "↓";
+                top: auto;
+                right: 50%;
+                bottom: -30px;
+                transform: translateX(50%);
+            }
+            
+            .timeline-item {
+                padding: 0 0 0 60px !important;
+                justify-content: flex-start !important;
+            }
+            
+            .timeline::before {
+                left: 30px;
+                transform: none;
+            }
+            
+            .timeline-content::before {
+                left: -45px !important;
+                right: auto !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .col-sm-12 {
+                grid-column: span 12;
+            }
+            
+            .bar-chart {
+                padding-bottom: 100px;
+            }
+            
+            .bar-label {
+                position: absolute;
+                bottom: -40px;
+                left: 0;
+                width: 100%;
+                transform: rotate(-45deg);
+                transform-origin: left top;
+            }
+            
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .title {
+                font-size: 1.8em;
+            }
+            
+            .subtitle {
+                font-size: 1.2em;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-bg"></div>
+            <div class="header-content">
+                <h1 class="title">Love Fraud Analysis Dashboard</h1>
+                <h2 class="subtitle">The Personal Relationship Frame in Love Fraud</h2>
+                <p class="author">Based on research by Pamela Faber (Applied Corpus Linguistics, 2025)</p>
+            </div>
+        </div>
+
+        <div class="language-selector">
+            <button class="language-btn active" onclick="setLanguage('en')">English</button>
+            <button class="language-btn" onclick="setLanguage('zh')">中文</button>
+        </div>
+
+        <!-- English Content -->
+        <div class="en-content active">
+            <div class="dashboard">
+                <div class="card col-12 col-lg-12 col-md-12 col-sm-12">
+                    <h3 class="card-title">Research Overview</h3>
+                    <div class="card-content">
+                        <div class="grid-container">
+                            <div class="text-content">
+                                <p>This research analyzed love fraud events within the context of the <span class="highlight">PERSONAL_RELATION</span> and <span class="highlight">INTENTIONAL_DECEPTION</span> frames in FrameNet. The study focused specifically on RELATIONSHIP - examining its stages, participants, and dimensions through corpus analysis.</p>
+                                <p>The data consisted of extended conversations between 83 scammers and the researcher, recorded from January 2021 to June 2024. When analyzed on the SketchEngine platform, the collocates of "relationship" with the highest LogDice scores were identified and structured.</p>
+                                <div class="quote">
+                                    "Love fraud or romance scamming is a form of online deception that has become increasingly widespread in today's digital world. It is a variant of the 419 advance fee scam, in which fraudsters contact potential victims, via Internet, with an extremely lucrative offer. The victim is then asked to pay various fees upfront to receive a veritable fortune. However, after payment, the promised funds never materialize, and the scammer disappears with the victim's money."
+                                    <div class="citation">- Faber (2025), p.1</div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4>Key Research Findings:</h4>
+                                <div class="stat-box">
+                                    <div class="stat-item">
+                                        <div class="stat-value">83</div>
+                                        <div class="stat-label">Fraudsters analyzed</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">3 years</div>
+                                        <div class="stat-label">Research period</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">1,043,330</div>
+                                        <div class="stat-label">Words in corpus</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">4</div>
+                                        <div class="stat-label">Relationship stages</div>
+                                    </div>
+                                </div>
+                                
+                                <h4>Financial Impact:</h4>
+                                <ul>
+                                    <li><strong>US (2022):</strong> 70,000 victims reported losses of $1.3 billion, with median loss of $4,400 per victim</li>
+                                    <li><strong>UK (2022):</strong> £88 million lost to online dating fraud with average loss of £11,000 per victim</li>
+                                    <li><strong>UK (first half of 2023):</strong> £580 million stolen by fraudsters</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card col-8 col-lg-8 col-md-12 col-sm-12">
+                    <h3 class="card-title">Fraudster Personas & Historical Context</h3>
+                    <div class="card-content">
+                        <div class="grid-container">
+                            <div>
+                                <h4>Historical Context of Love Fraud</h4>
+                                <p>Love fraud is not a new phenomenon. The oldest version is the Spanish Prisoner, dating back to the 1500s:</p>
+                                <div class="quote">
+                                    "In this scam, the target is approached by a trickster, who claims to be in correspondence with a wealthy English nobleman, held captive in Spain. The trickster offers the victim the possibility of paying some of the costs of the captive nobleman's release. In return, he not only promises the victim a percentage of the reward, but also the hand of the prisoner's beautiful daughter."
+                                    <div class="citation">- Faber (2025), p.1</div>
+                                </div>
+                                <p>Modern versions are now conducted online, proliferating as more people use dating apps and social networking sites to search for romance.</p>
+                            </div>
+                            <div>
+                                <h4>Distribution of Fraudster Personas</h4>
+                                <div class="chart-container">
+                                    <div class="bar-chart">
+                                        <div class="y-axis">
+                                            <span>35%</span>
+                                            <span>30%</span>
+                                            <span>25%</span>
+                                            <span>20%</span>
+                                            <span>15%</span>
+                                            <span>10%</span>
+                                            <span>5%</span>
+                                            <span>0%</span>
+                                        </div>
+                                        <div class="bar-container">
+                                            <div class="bar" style="height: 34%;"></div>
+                                            <div class="bar-value">34%</div>
+                                            <div class="bar-label">US Army Generals</div>
+                                        </div>
+                                        <div class="bar-container">
+                                            <div class="bar" style="height: 23%;"></div>
+                                            <div class="bar-value">23%</div>
+                                            <div class="bar-label">UN Doctors</div>
+                                        </div>
+                                        <div class="bar-container">
+                                            <div class="bar" style="height: 19%;"></div>
+                                            <div class="bar-value">19%</div>
+                                            <div class="bar-label">Engineers</div>
+                                        </div>
+                                        <div class="bar-container">
+                                            <div class="bar" style="height: 18%;"></div>
+                                            <div class="bar-value">18%</div>
+                                            <div class="bar-label">Oil Riggers</div>
+                                        </div>
+                                        <div class="bar-container">
+                                            <div class="bar" style="height: 6%;"></div>
+                                            <div class="bar-value">6%</div>
+                                            <div class="bar-label">Others</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card col-4 col-lg-4 col-md-12 col-sm-12">
+                    <h3 class="card-title">Typical Fraudster Characteristics</h3>
+                    <div class="card-content">
+                        <div class="attribute-list">
+                            <div class="attribute-item">
+                                <div class="attribute-icon">👨‍💼</div>
+                                <div class="attribute-content">
+                                    <div class="attribute-title">Prestigious Occupation</div>
+                                    <div class="attribute-description">Portrays himself as a wealthy doctor, military officer, oil rigger, engineer, independent contractor, or businessman working in a far-off land.</div>
+                                </div>
+                            </div>
+                            <div class="attribute-item">
+                                <div class="attribute-icon">🏠</div>
+                                <div class="attribute-content">
+                                    <div class="attribute-title">Wealth Signaling</div>
+                                    <div class="attribute-description">Claims to own various properties and two or three cars, presenting himself as financially successful and stable.</div>
+                                </div>
+                            </div>
+                            <div class="attribute-item">
+                                <div class="attribute-icon">🙏</div>
+                                <div class="attribute-content">
+                                    <div class="attribute-title">Strong Religious Values</div>
+                                    <div class="attribute-description">Frequently describes himself as "God-fearing" and emphasizes his religious faith as the basis for his character.</div>
+                                </div>
+                            </div>
+                            <div class="attribute-item">
+                                <div class="attribute-icon">💔</div>
+                                <div class="attribute-content">
+                                    <div class="attribute-title">Previous Loss</div>
+                                    <div class="attribute-description">Either widowed or divorced, usually with one child in a boarding school or in the care of a guardian.</div>
+                                </div>
+                            </div>
+                            <div class="attribute-item">
+                                <div class="attribute-icon">🔍</div>
+                                <div class="attribute-content">
+                                    <div class="attribute-title">Searching for Love</div>
+                                    <div class="attribute-description">Claims to be in quest of a soulmate and future wife, rapidly building a serious relationship.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quote">
+                            "Not only does he own various properties and two or three cars, he also has all the virtues desirable in a long-term partner. He is either widowed or divorced, usually with one child in a boarding school or in the care of a guardian."
+                            <div class="citation">- Faber (2025), p.1</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card col-12 col-lg-12 col-md-12 col-sm-12">
+                    <h3 class="card-title">The Evolution of Love Fraud Relationships</h3>
+                    <div class="card-content">
+                        <p>The research reveals that fraudsters methodically progress through specific relationship stages to build trust and commitment, ultimately leading to financial requests:</p>
+                        
+                        <div class="relationship-stages">
+                            <div class="stage">
+                                <div class="stage-title">Stage 1: Friendship</div>
+                                <div class="stage-description">Building initial trust and connection</div>
+                                <ul class="stage-details">
+                                    <li><strong>Initiator:</strong> Friend request with complimentary message</li>
+                                    <li><strong>Key Terms:</strong> genuine friendship, true friendship, good friendship</li>
+                                    <li><strong>Common Scripts:</strong> "I will appreciate us being good friends in sincerity, honesty and trust."</li>
+                                    <li><strong>Values Emphasized:</strong> honesty, sincerity, trust, truthfulness</li>
+                                    <li><strong>Goal:</strong> Establish foundation of trust that will be leveraged later</li>
+                                </ul>
+                            </div>
+                            <div class="stage">
+                                <div class="stage-title">Stage 2: Soulmateship</div>
+                                <div class="stage-description">Deepening emotional connection</div>
+                                <ul class="stage-details">
+                                    <li><strong>Transition:</strong> "Destiny brought us together"</li>
+                                    <li><strong>Key Terms:</strong> soulmate, destiny, fate, future together</li>
+                                    <li><strong>Common Scripts:</strong> "When it comes to marriage, there's actually nothing superior than being with your soul mate."</li>
+                                    <li><strong>Timeframe:</strong> Rapid progression from friendship</li>
+                                    <li><strong>Goal:</strong> Create sense of cosmic connection and destiny</li>
+                                </ul>
+                            </div>
+                            <div class="stage">
+                                <div class="stage-title">Stage 3: Engagement</div>
+                                <div class="stage-description">Formal commitment prior to crisis</div>
+                                <ul class="stage-details">
+                                    <li><strong>Role Change:</strong> Victim becomes "fiancée"</li>
+                                    <li><strong>Key Terms:</strong> fiancé, fiancée, proposal, engagement</li>
+                                    <li><strong>Functionality:</strong> Enables victim to authorize actions and payments</li>
+                                    <li><strong>Common Examples:</strong> "You are writing on behalf of your fiancé for an immediate vacation..."</li>
+                                    <li><strong>Goal:</strong> Establish authority for victim to act on fraudster's behalf</li>
+                                </ul>
+                            </div>
+                            <div class="stage">
+                                <div class="stage-title">Stage 4: Marriage</div>
+                                <div class="stage-description">Linguistically creating spousal commitment</div>
+                                <ul class="stage-details">
+                                    <li><strong>Linguistic Shift:</strong> Begins calling victim "wife"</li>
+                                    <li><strong>Key Terms:</strong> husband, wife, marriage</li>
+                                    <li><strong>Common Scripts:</strong> "May you have a merry and cheerful day, my beautiful wife."</li>
+                                    <li><strong>Financial Implication:</strong> Spousal obligation to help financially</li>
+                                    <li><strong>Goal:</strong> Create obligation that precedes financial requests</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="quote">
+                            "The results show that fraudsters use scripts to construct a romantic relationship with victims, which begins with friendship, progresses to 'soulmateship' and engagement, and finally ends in an online 'marriage'. This is accomplished through the strategic use and repetition of terms that belong to the PERSONAL_RELATION frame in FrameNet. The objective is to extract as much money as possible from the victim."
+                            <div class="citation">- Faber (2025), Abstract</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card col-6 col-lg-6 col-md-12 col-sm-12">
+                    <h3 class="card-title">Dimensions of "Relationship" in Love Fraud</h3>
+                    <div class="card-content">
+                        <p>The linguistic analysis identified key dimensions of how fraudsters frame relationships, based on the modifiers with highest LogDice scores:</p>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Dimension</th>
+                                    <th>Modifiers</th>
+                                    <th>Example Phrases</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>LOCATION</strong></td>
+                                    <td>distance, long-distance, online</td>
+                                    <td>"Tell me, have you been in a long distance or online relationship before?"</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>TIME</strong></td>
+                                    <td>previous, past, future, new</td>
+                                    <td>"What positive lessons have you learned from your past relationships that will help you succeed in future relationships?"</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>DURATION</strong></td>
+                                    <td>long-lasting, longest, long-term</td>
+                                    <td>"That's what I want, a long term relationship."</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>POSITIVITY</strong></td>
+                                    <td>good, great, successful, healthy, strong, fruitful</td>
+                                    <td>"If we build a strong relationship, I will travel directly from here to meet you."</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>AFFECTIVITY</strong></td>
+                                    <td>loving, wonderful</td>
+                                    <td>"I am looking for a special, loving relationship."</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>DEPTH</strong></td>
+                                    <td>serious, real, honest, true, meaningful</td>
+                                    <td>"I'd love to find someone who'll understand how been hurt feels and would love to find an honest relationship."</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="quote">
+                            "If we build a strong relationship, I will travel directly from here [location] to meet you."
+                            <div class="citation">- Common phrase used by 11 different fraudsters</div>
+                        </div>
+                        
+                        <p>The most significant collocate relationships by LogDice score:</p>
+                        <ul>
+                            <li><strong>our relationship</strong> (LogDice 10.61) - Creating sense of mutual ownership</li>
+                            <li><strong>distance relationship</strong> (LogDice 10.02) - Explaining physical separation</li>
+                            <li><strong>serious relationship</strong> (LogDice 9.97) - Emphasizing commitment</li>
+                            <li><strong>build relationship</strong> (LogDice 12.66) - Most common verb associated with relationship</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card col-6 col-lg-6 col-md-12 col-sm-12">
+                    <h3 class="card-title">Key Values & Personality Attributes</h3>
+                    <div class="card-content">
+                        <p>Fraudsters emphasize specific values that appear in standardized scripts across different conversations:</p>
+                        
+                        <div class="chart-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Value</th>
+                                        <th>LogDice Score with Honesty</th>
+                                        <th>Strategic Purpose</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Sincerity</strong></td>
+                                        <td>11.89</td>
+                                        <td>Creating impression of authentic feelings</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Trust</strong></td>
+                                        <td>10.18</td>
+                                        <td>Building foundation for financial requests</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Truthful</strong></td>
+                                        <td>9.94</td>
+                                        <td>Appearing reliable and credible</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Truth</strong></td>
+                                        <td>8.96</td>
+                                        <td>Creating sense of transparency</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <h4>Common Scripts Emphasizing Values:</h4>
+                        <div class="quote">
+                            "The secret to be good friendship, is being a good listener, understanding of each other trust, truthful, honest, sincerity, believe, exchange of good Ideas and wiliness to help and assist each others in Life."
+                            <div class="citation">- Common fraudster script</div>
+                        </div>
+                        
+                        <div class="quote">
+                            "I will appreciate us being good friend in sincerity, honesty and trust."
+                            <div class="citation">- Used by 6 different fraudsters</div>
+                        </div>
+                        
+                        <div class="quote">
+                            "A Relationship is all about TRUST, SINCERITY and HONESTY."
+                            <div class="citation">- Used by multiple fraudsters</div>
+                        </div>
+                        
+                        <div class="quote">
+                            "Without honesty, love gets unhappy, and without trust, love gets unstable."
+                            <div class="citation">- Used by at least 2 fraudsters</div>
+                        </div>
+                        
+                        <p>The repetition of identical phrases across different fraudsters strongly suggests the use of standardized scripts or "formats" in the love fraud industry.</p>
+                    </div>
+                </div>
+                
+                <div class="card col-4 col-lg-4 col-md-6 col-sm-12">
+                    <h3 class="card-title">Cosmic Forces & Destiny</h3>
+                    <div class="card-content">
+                        <p>Fraudsters frequently attribute the relationship to cosmic forces or destiny, creating a sense that the meeting was predestined:</p>
+                        
+                        <div class="chart-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Higher Power</th>
+                                        <th>Common Phrases</th>
+                                        <th>Fraudster Count</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Destiny</strong></td>
+                                        <td>"Destiny brought us together"</td>
+                                        <td>20</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Fate</strong></td>
+                                        <td>"Meeting you was fate"</td>
+                                        <td>4</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>God</strong></td>
+                                        <td>"God brought us together"</td>
+                                        <td>2</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="quote">
+                            "In love fraud, a relationship is triggered by a cosmic force, or higher power (God, Fate, or Destiny) that has caused the paths of the fraudster and victim to cross. Both destiny and fate are terms that appeal to the human desire to believe that events do not randomly occur, and that everything happens for a reason."
+                            <div class="citation">- Faber (2025), p.4</div>
+                        </div>
+                        
+                        <p>This attribution to cosmic forces serves multiple strategic purposes:</p>
+                        <ul>
+                            <li>Creates sense of special meaning in the relationship</li>
+                            <li>Suggests relationship is beyond human control</li>
+                            <li>Implies resistance would be fighting destiny</li>
+                            <li>Establishes relationship as part of a "greater design"</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card col-4 col-lg-4 col-md-6 col-sm-12">
+                    <h3 class="card-title">Endearments & Female Attributes</h3>
+                    <div class="card-content">
+                        <p>Fraudsters use specific patterns of endearments to create emotional connection. The most common categories:</p>
+                        
+                        <h4>Endearment Categories:</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Terms</th>
+                                    <th>Example</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Female Ruler</strong></td>
+                                    <td>queen, princess</td>
+                                    <td>"You're my beautiful queen, whom God has sent into my life to be the queen of my life."</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Supernatural Being</strong></td>
+                                    <td>goddess, angel</td>
+                                    <td>"You look so enchanting, highly like goddess."</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>Female Attributes Emphasized:</h4>
+                        <div class="dimension-chart">
+                            <div class="dimension-item"><div class="dimension-item-icon">B</div>Beauty</div>
+                            <div class="dimension-item"><div class="dimension-item-icon">S</div>Strength</div>
+                            <div class="dimension-item"><div class="dimension-item-icon">I</div>Intelligence</div>
+                            <div class="dimension-item"><div class="dimension-item-icon">U</div>Uniqueness</div>
+                            <div class="dimension-item"><div class="dimension-item-icon">P</div>Piety</div>
+                            <div class="dimension-item"><div class="dimension-item-icon">G</div>Goodness</div>
+                        </div>
+                        
+                        <div class="quote">
+                            "The fraudster continuously tells the victim that she is the center of his life. He sometimes envisions her as royalty (queen, princess) or even as a supernatural being (goddess, angel)... This love-bombing occurred in the initial grooming process as a way to impair the victim's rationality and fuel poor decision-making, but it can also be used to soothe the victim when the fraudster's requests for money alarm her."
+                            <div class="citation">- Faber (2025), p.5</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card col-4 col-lg-4 col-md-12 col-sm-12">
+                    <h3 class="card-title">Crisis & Financial Requests</h3>
+                    <div class="card-content">
+                        <p>After establishing the relationship through the previous stages, fraudsters manufacture crises that require financial assistance:</p>
+                        
+                        <h4>Crisis Scenarios by Persona:</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Fraudster Type</th>
+                                    <th>Crisis Scenario</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>US General</strong></td>
+                                    <td>Fees for vacation leave approval; emergency shipping of possessions</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>UN Doctor</strong></td>
+                                    <td>Fiancée must request and pay for vacation approval</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Oil Rigger</strong></td>
+                                    <td>Contract termination fees to leave rig early</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Engineer</strong></td>
+                                    <td>Emergency shipping of box of gold or valuables</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>UNICEF Director</strong></td>
+                                    <td>Fees to claim inheritance</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="quote">
+                            "After mutual declarations of love, an emergency arises that can only be resolved with a large sum of money. Since the fraudster has no close friends or family and cannot access his bank account, he asks his fiancée for help and swears to pay her back when he returns home. Because they are in a committed relationship, the victim feels obliged to come to her fiancé's aid."
+                            <div class="citation">- Faber (2025), p.1-2</div>
+                        </div>
+                        
+                        <p>This phase typically incorporates a third party (security company, diplomatic service, oil company) who handles the payment, creating an impression of legitimacy.</p>
+                    </div>
+                </div>
+                
+                <div class="card col-12 col-lg-12 col-md-12 col-sm-12">
+                    <h3 class="card-title">Emotional Impact & Victim Profile</h3>
+                    <div class="card-content">
+                        <div class="grid-container">
+                            <div>
+                                <h4>Emotional Impact on Victims</h4>
+                                <div class="quote">
+                                    "In love fraud, the emotional loss is much worse than the loss of money because victims often mourn their phantom love long after their finances have recovered. According to Aborisade et al. (2024), love fraud victims are prone to suffer great psychological pain (shame, anxiety, depression, or even suicidal ideation)."
+                                    <div class="citation">- Faber (2025), p.2</div>
+                                </div>
+                                
+                                <p>The research indicates several key factors that make love fraud particularly devastating:</p>
+                                <ul>
+                                    <li><strong>Psychological Pain:</strong> Victims experience shame, anxiety, depression, and sometimes suicidal ideation</li>
+                                    <li><strong>Prolonged Mourning:</strong> Many victims continue to mourn their "phantom love" long after financial recovery</li>
+                                    <li><strong>Difficulty Releasing Attachment:</strong> Because victims never met the fraudster, they often find it difficult to erase their affection for the idealized image</li>
+                                    <li><strong>Romantic Illusion:</strong> The success of the fraud lies in making victims believe the relationship is real through language and frame construction</li>
+                                </ul>
+                            </div>
+                            
+                            <div>
+                                <h4>Typical Victim Profile</h4>
+                                <div class="quote">
+                                    "Typical female victims are well-educated middle-aged women, who are prone to romantic idealization. Precisely because they have never met the fraudster, they find it difficult to erase their affection for his idealized image even after they become aware of the deception."
+                                    <div class="citation">- Faber (2025), p.2</div>
+                                </div>
+                                
+                                <p>The research identifies key characteristics of typical victims:</p>
+                                <ul>
+                                    <li><strong>Demographics:</strong> Well-educated, middle-aged women</li>
+                                    <li><strong>Psychological Tendency:</strong> Prone to romantic idealization</li>
+                                    <li><strong>Religious Background:</strong> Often pious and family-oriented</li>
+                                    <li><strong>Situation:</strong> May be seeking connection after loss or loneliness</li>
+                                </ul>
+                                
+                                <p>Fraudsters specifically seek victims with these traits as they are more likely to respond positively to requests for financial support, especially when framed as helping a committed partner.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card col-12 col-lg-12 col-md-12 col-sm-12">
+                    <h3 class="card-title">Research Contributions & Implications</h3>
+                    <div class="card-content">
+                        <div class="grid-container">
+                            <div>
+                                <h4>Key Research Contributions</h4>
+                                <ul>
+                                    <li><strong>Frame Semantics Application:</strong> Applied Frame Semantics to analyze love fraud within PERSONAL_RELATIONSHIP and INTENTIONAL_DECEPTION frames</li>
+                                    <li><strong>Corpus Analysis:</strong> Identified lexical patterns and semantic co-occurrence with quantitative evidence</li>
+                                    <li><strong>Script Identification:</strong> Documented repetitive scripts used across different fraudsters</li>
+                                    <li><strong>Relationship Stage Mapping:</strong> Identified clear progression through friendship, soulmateship, engagement, and marriage phases</li>
+                                    <li><strong>Linguistic Signaling:</strong> Revealed how language constructs false relationships and creates obligation</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4>Practical Implications</h4>
+                                <ul>
+                                    <li><strong>Automated Detection:</strong> Findings could enhance machine-learning methods for love fraud detection</li>
+                                    <li><strong>Public Awareness:</strong> Helps raise awareness of linguistic patterns in love fraud</li>
+                                    <li><strong>Prevention Tools:</strong> Could be applied to content-based detection of deceptive discourse</li>
+                                    <li><strong>Education:</strong> Provides valuable information for potential victims on warning signs</li>
+                                    <li><strong>Law Enforcement:</strong> Offers linguistic patterns that may assist in investigation and prosecution</li>
+                                </ul>
+                                
+                                <div class="quote">
+                                    "These semantic co-occurrence patterns and lexical regularities not only empirically support the results of other researchers on the language of love fraud but could also add to the resources used by Suarez-Tangil et al. (2020), who have worked on developing automated detection systems using machine-learning methods."
+                                    <div class="citation">- Faber (2025), p.9</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chinese Content -->
+        <div class="zh-content">
+            <div class="dashboard">
+                <div class="card col-12 col-lg-12 col-md-12 col-sm-12">
+                    <h3 class="card-title">研究概述</h3>
+                    <div class="card-content">
+                        <div class="grid-container">
+                            <div class="text-content">
+                                <p>本研究在FrameNet中的<span class="highlight">个人关系</span>和<span class="highlight">故意欺骗</span>框架的背景下分析了爱情诈骗事件。研究特别关注关系——通过语料库分析考察其阶段、参与者和维度。</p>
+                                <p>研究数据包括研究者与83名诈骗者之间的延伸对话，记录时间从2021年1月至2024年6月。在SketchEngine平台上分析时，确定并构建了与"关系"具有最高LogDice分数的词语搭配。</p>
+                                <div class="quote">
+                                    "爱情诈骗或浪漫骗局是一种在当今数字世界中日益普遍的网络欺诈形式。它是419预付费诈骗的一种变体，诈骗者通过互联网联系潜在受害者，提供极其诱人的条件。然后要求受害者预先支付各种费用以获得巨额财富。然而，付款后，承诺的资金永远不会实现，诈骗者带着受害者的钱消失了。"
+                                    <div class="citation">- Faber (2025), 第1页</div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4>主要研究发现：</h4>
+                                <div class="stat-box">
+                                    <div class="stat-item">
+                                        <div class="stat-value">83</div>
+                                        <div class="stat-label">分析的诈骗者</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">3年</div>
+                                        <div class="stat-label">研究期</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">1,043,330</div>
+                                        <div class="stat-label">语料库词数</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-value">4</div>
+                                        <div class="stat-label">关系阶段</div>
+                                    </div>
+                                </div>
+                                
+                                <h4>财务影响：</h4>
+                                <ul>
+                                    <li><strong>美国 (2022):</strong> 70,000名受害者报告损失13亿美元，每位受害者平均损失4,400美元</li>
+                                    <li><strong>英国 (2022):</strong> 网络约会诈骗造成8,800万英镑损失，每位受害者平均损失11,000英镑</li>
+                                    <li><strong>英国 (2023上半年):</strong> 诈骗者窃取了5.8亿英镑</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card col-8 col-lg-8 col-md-12 col-sm-12">
+                    <h3 class="card-title">诈骗者角色与历史背景</h3>
+                    <div class="card-content">
+                        <div class="grid-container">
+                            <div>
+                                <h4>爱情诈骗的历史背景</h4>
+                                <p>爱情诈骗并非新现象。最古老的版本是西班牙囚犯骗局，可追溯到16世纪：</p>
+                                <div class="quote">
+                                    "在这一骗局中，目标被一个骗子接近，该骗子声称与一位被囚禁在西班牙的富有英国贵族有通信往来。骗子向受害者提供支付囚犯释放费用的可能性。作为回报，他不仅承诺受害者获得奖励的一部分，还承诺获得囚犯美丽女儿的婚约。"
+                                    <div class="citation">- Faber (2025), 第1页</div>
+                                </div>
+                                <p>现代版本现在在网上进行，随着越来越多的人使用约会应用程序和社交网站寻找浪漫关系而激增。</p>
+                            </div>
+                            <div>
+                                <h4>诈骗者角色分布</h4>
+                                <div class="chart-container">
+                                    <div class="bar-chart">
+                                        <div class="y-axis">
+                                            <span>35%</span>
+                                            <span>30%</span>
+                                            <span>25%</span>
+                                            <span>20%</span>
+                                            <span>15%</span>
+                                            <span>10%</span>
+                                            <span>5%</span>
+                                            <span>0%</span>
+                                        </div>
+                                        <div class="bar-container">
+                                            <div class="bar" style="height: 34%;"></div>
+                                            <div class="bar-value">34%</div>
+                                            <div class="bar-label">美国陆军将军</div>
+                                        </div>
+                                        <div class="bar-container">
+                                            <div class="bar" style="height: 23%;"></div>
+                                            <div class="bar-value">23%</div>
+                                            <div class="bar-label">联合国医生</div>
+                                        </div>
+                                        <div class="bar-container">
+                                            <div class="bar" style="height: 19%;"></div>
+                                            <div class="bar-value">19%</div>
+                                            <div class="bar-label">工程师</div>
+                                        </div>
+                                        <div class="bar-container">
+                                            <div class="bar" style="height: 18%;"></div>
+                                            <div class="bar-value">18%</div>
+                                            <div class="bar-label">石油钻井工人</div>
+                                        </div>
+                                        <div class="bar-container">
+                                            <div class="bar" style="height: 6%;"></div>
+                                            <div class="bar-value">6%</div>
+                                            <div class="bar-label">其他</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card col-4 col-lg-4 col-md-12 col-sm-12">
+                    <h3 class="card-title">典型诈骗者特征</h3>
+                    <div class="card-content">
+                        <div class="attribute-list">
+                            <div class="attribute-item">
+                                <div class="attribute-icon">👨‍💼</div>
+                                <div class="attribute-content">
+                                    <div class="attribute-title">显赫职业</div>
+                                    <div class="attribute-description">将自己描绘成在远方工作的富有医生、军官、石油钻井工人、工程师、独立承包商或商人。</div>
+                                </div>
+                            </div>
+                            <div class="attribute-item">
+                                <div class="attribute-icon">🏠</div>
+                                <div class="attribute-content">
+                                    <div class="attribute-title">财富信号</div>
+                                    <div class="attribute-description">声称拥有多处房产和两三辆汽车，表现自己经济成功且稳定。</div>
+                                </div>
+                            </div>
+                            <div class="attribute-item">
+                                <div class="attribute-icon">🙏</div>
+                                <div class="attribute-content">
+                                    <div class="attribute-title">强烈宗教价值观</div>
+                                    <div class="attribute-description">经常将自己描述为"敬畏上帝"，并强调其宗教信仰是其性格的基础。</div>
+                                </div>
+                            </div>
+                            <div class="attribute-item">
+                                <div class="attribute-icon">💔</div>
+                                <div class="attribute-content">
+                                    <div class="attribute-title">曾经的失去</div>
+                                    <div class="attribute-description">要么是寡居，要么是离婚，通常有一个在寄宿学校或由监护人照顾的孩子。</div>
+                                </div>
+                            </div>
+                            <div class="attribute-item">
+                                <div class="attribute-icon">🔍</div>
+                                <div class="attribute-content">
+                                    <div class="attribute-title">寻找爱情</div>
+                                    <div class="attribute-description">声称在寻找灵魂伴侣和未来妻子，迅速建立一段认真的关系。</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quote">
+                            "他不仅拥有各种房产和两三辆汽车，还拥有长期伴侣所需的所有美德。他要么是寡居，要么是离婚，通常有一个在寄宿学校或由监护人照顾的孩子。"
+                            <div class="citation">- Faber (2025), 第1页</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card col-12 col-lg-12 col-md-12 col-sm-12">
+                    <h3 class="card-title">爱情诈骗关系的演变</h3>
+                    <div class="card-content">
+                        <p>研究揭示了诈骗者通过特定的关系阶段有条不紊地进展，建立信任和承诺，最终导致资金请求：</p>
+                        
+                        <div class="relationship-stages">
+                            <div class="stage">
+                                <div class="stage-title">阶段1：友谊</div>
+                                <div class="stage-description">建立初步信任和联系</div>
+                                <ul class="stage-details">
+                                    <li><strong>发起者：</strong>带有恭维信息的好友请求</li>
+                                    <li><strong>关键术语：</strong>真诚的友谊，真实的友谊，良好的友谊</li>
+                                    <li><strong>常见脚本：</strong>"我希望我们能以真诚、诚实和信任建立良好的友谊。"</li>
+                                    <li><strong>强调的价值观：</strong>诚实，真诚，信任，真实性</li>
+                                    <li><strong>目标：</strong>建立信任基础，以便日后利用</li>
+                                </ul>
+                            </div>
+                            <div class="stage">
+                                <div class="stage-title">阶段2：灵魂伴侣</div>
+                                <div class="stage-description">加深情感联系</div>
+                                <ul class="stage-details">
+                                    <li><strong>过渡：</strong>"命运将我们带到一起"</li>
+                                    <li><strong>关键术语：</strong>灵魂伴侣，命运，宿命，共同的未来</li>
+                                    <li><strong>常见脚本：</strong>"谈到婚姻，实际上没有什么比与灵魂伴侣在一起更好的了。"</li>
+                                    <li><strong>时间框架：</strong>从友谊快速进展</li>
+                                    <li><strong>目标：</strong>创造宇宙联系和命运感</li>
+                                </ul>
+                            </div>
+                            <div class="stage">
+                                <div class="stage-title">阶段3：订婚</div>
+                                <div class="stage-description">危机前的正式承诺</div>
+                                <ul class="stage-details">
+                                    <li><strong>角色转变：</strong>受害者成为"未婚妻"</li>
+                                    <li><strong>关键术语：</strong>未婚夫，未婚妻，求婚，订婚</li>
+                                    <li><strong>功能性：</strong>使受害者能够授权行动和付款</li>
+                                    <li><strong>常见例子：</strong>"你代表你的未婚夫写信请求立即休假..."</li>
+                                    <li><strong>目标：</strong>建立受害者代表诈骗者行动的权威</li>
+                                </ul>
+                            </div>
+                            <div class="stage">
+                                <div class="stage-title">阶段4：婚姻</div>
+                                <div class="stage-description">语言上创造配偶承诺</div>
+                                <ul class="stage-details">
+                                    <li><strong>语言转变：</strong>开始称受害者为"妻子"</li>
+                                    <li><strong>关键术语：</strong>丈夫，妻子，婚姻</li>
+                                    <li><strong>常见脚本：</strong>"祝你快乐，我美丽的妻子。"</li>
+                                    <li><strong>财务影响：</strong>配偶有义务提供经济援助</li>
+                                    <li><strong>目标：</strong>在资金请求之前创造义务感</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="quote">
+                            "研究结果表明，诈骗者使用脚本构建与受害者的浪漫关系，这种关系始于友谊，进展为'灵魂伴侣关系'和订婚，最终以在线'婚姻'结束。这是通过战略性地使用和重复属于FrameNet中个人关系框架的术语来实现的。目的是从受害者那里提取尽可能多的钱。"
+                            <div class="citation">- Faber (2025), 摘要</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card col-6 col-lg-6 col-md-12 col-sm-12">
+                    <h3 class="card-title">爱情诈骗中"关系"的维度</h3>
+                    <div class="card-content">
+                        <p>语言分析确定了诈骗者框定关系的关键维度，基于具有最高LogDice分数的修饰语：</p>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>维度</th>
+                                    <th>修饰语</th>
+                                    <th>示例短语</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>位置</strong></td>
+                                    <td>距离，远距离，在线</td>
+                                    <td>"告诉我，你以前有过远距离或在线关系吗？"</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>时间</strong></td>
+                                    <td>以前的，过去的，未来的，新的</td>
+                                    <td>"你从过去的关系中学到了哪些积极的教训，能帮助你在未来的关系中成功？"</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>持续时间</strong></td>
+                                    <td>持久的，最长的，长期的</td>
+                                    <td>"这就是我想要的，一段长期关系。"</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>积极性</strong></td>
+                                    <td>好的，伟大的，成功的，健康的，强大的，富有成果的</td>
+                                    <td>"如果我们建立起牢固的关系，我将直接从这里前往与你见面。"</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>情感性</strong></td>
+                                    <td>充满爱的，美好的</td>
+                                    <td>"我正在寻找一段特殊的、充满爱的关系。"</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>深度</strong></td>
+                                    <td>认真的，真实的，诚实的，真诚的，有意义的</td>
+                                    <td>"我想找一个能理解受伤感受的人，想找到一段诚实的关系。"</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="quote">
+                            "如果我们建立起牢固的关系，我将直接从这里[地点]前往与你见面。"
+                            <div class="citation">- 11名不同诈骗者使用的常见短语</div>
+                        </div>
+                        
+                        <p>按LogDice分数排列的最重要的搭配关系：</p>
+                        <ul>
+                            <li><strong>我们的关系</strong> (LogDice 10.61) - 创造相互所有权感</li>
+                            <li><strong>远距离关系</strong> (LogDice 10.02) - 解释身体分离</li>
+                            <li><strong>认真的关系</strong> (LogDice 9.97) - 强调承诺</li>
+                            <li><strong>建立关系</strong> (LogDice 12.66) - 与关系最常见的动词</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card col-6 col-lg-6 col-md-12 col-sm-12">
+                    <h3 class="card-title">关键价值观与人格特质</h3>
+                    <div class="card-content">
+                        <p>诈骗者强调在不同对话中的标准脚本中出现的特定价值观：</p>
+                        
+                        <div class="chart-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>价值观</th>
+                                        <th>与诚实的LogDice分数</th>
+                                        <th>策略目的</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>真诚</strong></td>
+                                        <td>11.89</td>
+                                        <td>创造真实感情的印象</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>信任</strong></td>
+                                        <td>10.18</td>
+                                        <td>为财务请求建立基础</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>真实的</strong></td>
+                                        <td>9.94</td>
+                                        <td>显得可靠和可信</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>真相</strong></td>
+                                        <td>8.96</td>
+                                        <td>创造透明感</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <h4>强调价值观的常见脚本：</h4>
+                        <div class="quote">
+                            "良好友谊的秘诀在于做一个好的倾听者，相互理解，信任，真实，诚实，真诚，相信，交流好的想法以及在生活中乐于帮助和协助彼此。"
+                            <div class="citation">- 常见诈骗者脚本</div>
+                        </div>
+                        
+                        <div class="quote">
+                            "我希望我们能以真诚、诚实和信任建立良好的友谊。"
+                            <div class="citation">- 6名不同诈骗者使用</div>
+                        </div>
+                        
+                        <div class="quote">
+                            "一段关系就是关于信任、真诚和诚实。"
+                            <div class="citation">- 多名诈骗者使用</div>
+                        </div>
+                        
+                        <div class="quote">
+                            "没有诚实，爱情会不快乐，没有信任，爱情会不稳定。"
+                            <div class="citation">- 至少2名诈骗者使用</div>
+                        </div>
+                        
+                        <p>不同诈骗者重复相同短语的现象强烈表明爱情诈骗行业使用标准化脚本或"格式"。</p>
+                    </div>
+                </div>
+                
+                <div class="card col-4 col-lg-4 col-md-6 col-sm-12">
+                    <h3 class="card-title">宇宙力量与命运</h3>
+                    <div class="card-content">
+                        <p>诈骗者经常将关系归因于宇宙力量或命运，创造一种相遇是命中注定的感觉：</p>
+                        
+                        <div class="chart-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>更高力量</th>
+                                        <th>常见短语</th>
+                                        <th>诈骗者数量</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>命运</strong></td>
+                                        <td>"命运将我们带到一起"</td>
+                                        <td>20</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>宿命</strong></td>
+                                        <td>"遇见你是命中注定"</td>
+                                        <td>4</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>上帝</strong></td>
+                                        <td>"上帝将我们带到一起"</td>
+                                        <td>2</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="quote">
+                            "在爱情诈骗中，关系是由宇宙力量或更高的力量（上帝、命运或天意）触发的，这种力量使诈骗者和受害者的路径交叉。命运和宿命都是吸引人类希望事件并非随机发生，而是一切都有原因这一愿望的术语。"
+                            <div class="citation">- Faber (2025), 第4页</div>
+                        </div>
+                        
+                        <p>这种归因于宇宙力量服务于多种战略目的：</p>
+                        <ul>
+                            <li>在关系中创造特殊意义感</li>
+                            <li>暗示关系超出人类控制范围</li>
+                            <li>暗示抵抗就是与命运抗争</li>
+                            <li>将关系确立为"更伟大设计"的一部分</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="card col-4 col-lg-4 col-md-6 col-sm-12">
+                    <h3 class="card-title">亲昵称谓与女性特质</h3>
+                    <div class="card-content">
+                        <p>诈骗者使用特定模式的亲昵称谓来创造情感连接。最常见的类别：</p>
+                        
+                        <h4>亲昵称谓类别：</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>类别</th>
+                                    <th>术语</th>
+                                    <th>示例</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>女性统治者</strong></td>
+                                    <td>女王，公主</td>
+                                    <td>"你是我美丽的女王，是上帝派到我生命中成为我生命女王的人。"</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>超自然存在</strong></td>
+                                    <td>女神，天使</td>
+                                    <td>"你看起来如此迷人，非常像女神。"</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>强调的女性特质：</h4>
+                        <div class="dimension-chart">
+                            <div class="dimension-item"><div class="dimension-item-icon">B</div>美丽</div>
+                            <div class="dimension-item"><div class="dimension-item-icon">S</div>坚强</div>
+                            <div class="dimension-item"><div class="dimension-item-icon">I</div>智慧</div>
+                            <div class="dimension-item"><div class="dimension-item-icon">U</div>独特性</div>
+                            <div class="dimension-item"><div class="dimension-item-icon">P</div>虔诚</div>
+                            <div class="dimension-item"><div class="dimension-item-icon">G</div>善良</div>
+                        </div>
+                        
+                        <div class="quote">
+                            "诈骗者不断告诉受害者她是他生命的中心。他有时将她视为皇室（女王，公主）甚至是超自然存在（女神，天使）...这种情感轰炸发生在初期灌输过程中，旨在损害受害者的理性并助长糟糕的决策，但当诈骗者的金钱请求使受害者警觉时，也可用于安抚受害者。"
+                            <div class="citation">- Faber (2025), 第5页</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card col-4 col-lg-4 col-md-12 col-sm-12">
+                    <h3 class="card-title">危机与金钱请求</h3>
+                    <div class="card-content">
+                        <p>在通过前几个阶段建立关系后，诈骗者制造需要财务援助的危机：</p>
+                        
+                        <h4>根据角色的危机情境：</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>诈骗者类型</th>
+                                    <th>危机情境</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>美国将军</strong></td>
+                                    <td>休假批准费用；紧急运送财物</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>联合国医生</strong></td>
+                                    <td>未婚妻必须申请并支付休假批准</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>石油钻井工人</strong></td>
+                                    <td>提前离开钻井平台的合同终止费</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>工程师</strong></td>
+                                    <td>金条或贵重物品的紧急运输</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>联合国儿童基金会主任</strong></td>
+                                    <td>索取遗产的费用</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="quote">
+                            "在相互的爱情宣言之后，出现了一个只能用一大笔钱解决的紧急情况。由于诈骗者没有亲密的朋友或家人，也无法访问他的银行账户，他请求未婚妻帮忙，并发誓在他回家后偿还。因为他们处于一段有承诺的关系中，受害者觉得有义务帮助她的未婚夫。"
+                            <div class="citation">- Faber (2025), 第1-2页</div>
+                        </div>
+                        
+                        <p>这一阶段通常涉及第三方（安全公司、外交服务、石油公司），负责处理付款，创造合法性印象。</p>
+                    </div>
+                </div>
+                
+                <div class="card col-12 col-lg-12 col-md-12 col-sm-12">
+                    <h3 class="card-title">情感影响与受害者画像</h3>
+                    <div class="card-content">
+                        <div class="grid-container">
+                            <div>
+                                <h4>对受害者的情感影响</h4>
+                                <div class="quote">
+                                    "在爱情诈骗中，情感损失比金钱损失更为严重，因为受害者往往在财务恢复后很长时间仍为其幻影爱情哀悼。根据Aborisade等人（2024年）的研究，爱情诈骗受害者容易遭受巨大的心理痛苦（羞耻、焦虑、抑郁，甚至自杀意念）。"
+                                    <div class="citation">- Faber (2025), 第2页</div>
+                                </div>
+                                
+                                <p>研究表明，使爱情诈骗特别具有破坏性的几个关键因素：</p>
+                                <ul>
+                                    <li><strong>心理痛苦：</strong>受害者经历羞耻、焦虑、抑郁，有时甚至有自杀意念</li>
+                                    <li><strong>延长哀悼：</strong>许多受害者在经济恢复后很长时间仍继续为其"幻影爱情"哀悼</li>
+                                    <li><strong>难以释放依恋：</strong>由于受害者从未见过诈骗者，他们常常发现难以消除对其理想化形象的感情</li>
+                                    <li><strong>浪漫幻觉：</strong>诈骗的成功在于让受害者相信关系是真实的，通过语言和框架构建</li>
+                                </ul>
+                            </div>
+                            
+                            <div>
+                                <h4>典型受害者画像</h4>
+                                <div class="quote">
+                                    "典型的女性受害者是受过良好教育的中年女性，容易产生浪漫理想化。正是因为他们从未见过诈骗者，即使在意识到欺骗后，他们仍发现难以消除对其理想化形象的感情。"
+                                    <div class="citation">- Faber (2025), 第2页</div>
+                                </div>
+                                
+                                <p>研究确定了典型受害者的关键特征：</p>
+                                <ul>
+                                    <li><strong>人口统计：</strong>受过良好教育的中年女性</li>
+                                    <li><strong>心理倾向：</strong>容易产生浪漫理想化</li>
+                                    <li><strong>宗教背景：</strong>通常虔诚且重视家庭</li>
+                                    <li><strong>情境：</strong>可能在失去或孤独后寻求连接</li>
+                                </ul>
+                                
+                                <p>诈骗者特别寻找具有这些特质的受害者，因为他们更有可能积极响应资金请求，尤其是当这些请求被框定为帮助一个承诺的伴侣时。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card col-12 col-lg-12 col-md-12 col-sm-12">
+                    <h3 class="card-title">研究贡献与影响</h3>
+                    <div class="card-content">
+                        <div class="grid-container">
+                            <div>
+                                <h4>主要研究贡献</h4>
+                                <ul>
+                                    <li><strong>框架语义学应用：</strong>应用框架语义学在个人关系和故意欺骗框架内分析爱情诈骗</li>
+                                    <li><strong>语料库分析：</strong>通过定量证据识别词汇模式和语义共现</li>
+                                    <li><strong>脚本识别：</strong>记录不同诈骗者使用的重复脚本</li>
+                                    <li><strong>关系阶段映射：</strong>识别通过友谊、灵魂伴侣、订婚和婚姻阶段的明确进展</li>
+                                    <li><strong>语言信号：</strong>揭示语言如何构建虚假关系并创造义务感</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4>实际影响</h4>
+                                <ul>
+                                    <li><strong>自动检测：</strong>研究发现可以增强爱情诈骗检测的机器学习方法</li>
+                                    <li><strong>公众意识：</strong>帮助提高对爱情诈骗中语言模式的认识</li>
+                                    <li><strong>预防工具：</strong>可应用于基于内容的欺骗性话语检测</li>
+                                    <li><strong>教育：</strong>为潜在受害者提供关于警告信号的宝贵信息</li>
+                                    <li><strong>执法：</strong>提供可能有助于调查和起诉的语言模式</li>
+                                </ul>
+                                
+                                <div class="quote">
+                                    "这些语义共现模式和词汇规律性不仅经验性地支持其他研究者关于爱情诈骗语言的研究结果，还可以增加Suarez-Tangil等人（2020年）开发使用机器学习方法的自动检测系统的资源。"
+                                    <div class="citation">- Faber (2025), 第9页</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setLanguage(lang) {
+            // Hide all language content
+            document.querySelectorAll('.en-content, .zh-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Update active class for language buttons
+            document.querySelectorAll('.language-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected language content
+            document.querySelector('.' + lang + '-content').classList.add('active');
+            
+            // Update active button
+            document.querySelector('.language-btn[onclick="setLanguage(\'' + lang + '\')"]').classList.add('active');
+        }
+    </script>
+</body>
+</html>
