@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corpus Linguistics Evolution Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f5f7fa;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        h1, h2, h3, h4 {
+            color: #2c3e50;
+        }
+        .language-toggle {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+        .language-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            margin-left: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .language-btn:hover {
+            background-color: #2980b9;
+        }
+        .active-lang {
+            background-color: #2980b9;
+            font-weight: bold;
+        }
+        .dashboard-section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .chart-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .chart {
+            width: 48%;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .scholar-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .scholar-table th, .scholar-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .scholar-table th {
+            background-color: #f2f2f2;
+        }
+        .scholar-table tr:hover {
+            background-color: #f5f5f5;
+        }
+        .tool-card {
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 20px;
+            width: 30%;
+        }
+        .tool-cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .quote-box {
+            font-style: italic;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+            margin: 20px 0;
+            color: #555;
+        }
+        .highlight {
+            background-color: #fff4de;
+            padding: 3px 5px;
+            border-radius: 3px;
+        }
+        .english-content, .chinese-content {
+            display: none;
+        }
+        .active-content {
+            display: block;
+        }
+        #area-chart, #timeline-chart {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        @media (max-width: 768px) {
+            .chart, .tool-card {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 id="page-title">Corpus Linguistics Evolution Dashboard</h1>
+            <p id="page-subtitle">A visualization of the state-of-the-art review from beginning to ChatGPT era</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="language-toggle">
+            <button id="en-btn" class="language-btn active-lang" onclick="switchLanguage('en')">English</button>
+            <button id="zh-btn" class="language-btn" onclick="switchLanguage('zh')">中文</button>
+        </div>
+
+        <!-- Key Findings Section -->
+        <div class="dashboard-section">
+            <h2 id="findings-title">Key Findings</h2>
+            
+            <div id="english-findings" class="english-content active-content">
+                <p>The paper highlights the rapid development of corpus linguistics in terms of practical and methodological perspectives, particularly in investigating language use in different contexts.</p>
+                <div class="quote-box">
+                    "The findings reveal a rapid development of the field in terms of practical and methodological perspectives, specifically regarding the investigations of language uses in different contexts. Thus, this paper indicates a significantly strong correlation between CL and technological development, such as natural language processing (NLP), and how this approach could fill the research gap of utilising CL in other areas of linguistics." - Altameemi (2024)
+                </div>
+            </div>
+            
+            <div id="chinese-findings" class="chinese-content">
+                <p>该论文强调了语料库语言学在实践和方法论视角方面的快速发展，特别是在研究不同语境下的语言使用方面。</p>
+                <div class="quote-box">
+                    "研究结果显示，该领域在实践和方法论方面有着快速发展，特别是关于在不同语境中语言使用的研究。因此，本文表明语料库语言学与技术发展（如自然语言处理（NLP））之间存在显著的强相关性，以及这种方法如何能够填补在语言学其他领域中使用语料库语言学的研究空白。" - Altameemi (2024)
+                </div>
+            </div>
+        </div>
+
+        <!-- Research Areas Distribution -->
+        <div class="dashboard-section">
+            <h2 id="distribution-title">Research Areas Distribution</h2>
+            
+            <div class="chart-container">
+                <div id="area-chart">
+                    <svg width="100%" height="300">
+                        <!-- Area Chart for Research Areas -->
+                        <rect x="0" y="0" width="100%" height="100%" fill="#f9f9f9"></rect>
+                        
+                        <!-- Y-axis -->
+                        <line x1="50" y1="30" x2="50" y2="270" stroke="#333" stroke-width="1"></line>
+                        <text x="15" y="30" font-size="10">60</text>
+                        <text x="15" y="90" font-size="10">45</text>
+                        <text x="15" y="150" font-size="10">30</text>
+                        <text x="15" y="210" font-size="10">15</text>
+                        <text x="15" y="270" font-size="10">0</text>
+                        
+                        <!-- X-axis -->
+                        <line x1="50" y1="270" x2="650" y2="270" stroke="#333" stroke-width="1"></line>
+                        
+                        <!-- Data bars -->
+                        <rect x="70" y="70" width="60" height="200" fill="#3498db" opacity="0.8"></rect>
+                        <rect x="140" y="110" width="60" height="160" fill="#3498db" opacity="0.8"></rect>
+                        <rect x="210" y="180" width="60" height="90" fill="#3498db" opacity="0.8"></rect>
+                        <rect x="280" y="190" width="60" height="80" fill="#3498db" opacity="0.8"></rect>
+                        <rect x="350" y="200" width="60" height="70" fill="#3498db" opacity="0.8"></rect>
+                        <rect x="420" y="225" width="60" height="45" fill="#3498db" opacity="0.8"></rect>
+                        <rect x="490" y="240" width="60" height="30" fill="#3498db" opacity="0.8"></rect>
+                        
+                        <!-- Labels -->
+                        <text x="70" y="285" font-size="9" transform="rotate(45, 70, 285)">Discourse Studies</text>
+                        <text x="140" y="285" font-size="9" transform="rotate(45, 140, 285)">Pure Linguistics</text>
+                        <text x="210" y="285" font-size="9" transform="rotate(45, 210, 285)">Education</text>
+                        <text x="280" y="285" font-size="9" transform="rotate(45, 280, 285)">Methodological</text>
+                        <text x="350" y="285" font-size="9" transform="rotate(45, 350, 285)">Language Use</text>
+                        <text x="420" y="285" font-size="9" transform="rotate(45, 420, 285)">Methodology & Discourse</text>
+                        <text x="490" y="285" font-size="9" transform="rotate(45, 490, 285)">Pragmatics</text>
+                        
+                        <!-- Values -->
+                        <text x="100" y="60" font-size="10">59</text>
+                        <text x="170" y="100" font-size="10">49</text>
+                        <text x="240" y="170" font-size="10">28</text>
+                        <text x="310" y="180" font-size="10">24</text>
+                        <text x="380" y="190" font-size="10">21</text>
+                        <text x="450" y="215" font-size="10">15</text>
+                        <text x="520" y="230" font-size="10">10</text>
+                    </svg>
+                </div>
+                
+                <div id="english-chart-description" class="english-content active-content">
+                    <p><strong>Analysis:</strong> The chart shows the distribution of 217 research articles analyzed from three leading corpus linguistics journals between 2019-2022. CL and Discourse Studies dominate with 59 articles (27%), followed by Pure Linguistics with 49 articles (22%).</p>
+                </div>
+                
+                <div id="chinese-chart-description" class="chinese-content">
+                    <p><strong>分析：</strong> 该图表显示了2019-2022年间从三本领先的语料库语言学期刊中分析的217篇研究论文的分布。语料库语言学与话语研究以59篇论文（27%）居首，其次是纯语言学，有49篇论文（22%）。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prominent Scholars Section -->
+        <div class="dashboard-section">
+            <h2 id="scholars-title">Prominent Scholars in Corpus Linguistics</h2>
+            
+            <div id="english-scholars" class="english-content active-content">
+                <table class="scholar-table">
+                    <thead>
+                        <tr>
+                            <th>Scholar</th>
+                            <th>Focus Area</th>
+                            <th>Key Contributions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>John Sinclair</td>
+                            <td>Founder of the field</td>
+                            <td>Corpus, concordance, collocation; Pioneered corpus-based lexicography</td>
+                        </tr>
+                        <tr>
+                            <td>Michael Halliday</td>
+                            <td>Systemic functional linguistics</td>
+                            <td>Analyzing language use in context through corpus data</td>
+                        </tr>
+                        <tr>
+                            <td>Douglas Biber</td>
+                            <td>Language variation across registers</td>
+                            <td>Multi-dimensional analysis of register variation</td>
+                        </tr>
+                        <tr>
+                            <td>Geoffrey Leech</td>
+                            <td>English grammar and vocabulary</td>
+                            <td>Corpus-based approaches to grammar, word frequencies</td>
+                        </tr>
+                        <tr>
+                            <td>Tony McEnery</td>
+                            <td>Corpus methodology, discourse analysis</td>
+                            <td>Applications of corpus methods to various linguistic domains</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="quote-box">
+                    "Table 1 above indicates that the scholars have considered practical methods and applications that can facilitate the efficiency of analysing linguistic patterns as well as theoretical bases." - Altameemi (2024)
+                </div>
+            </div>
+            
+            <div id="chinese-scholars" class="chinese-content">
+                <table class="scholar-table">
+                    <thead>
+                        <tr>
+                            <th>学者</th>
+                            <th>研究领域</th>
+                            <th>主要贡献</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>John Sinclair</td>
+                            <td>该领域的创始人</td>
+                            <td>语料库、索引、搭配；开创了基于语料库的词典编纂学</td>
+                        </tr>
+                        <tr>
+                            <td>Michael Halliday</td>
+                            <td>系统功能语言学</td>
+                            <td>通过语料库数据分析语境中的语言使用</td>
+                        </tr>
+                        <tr>
+                            <td>Douglas Biber</td>
+                            <td>不同语域的语言变化</td>
+                            <td>语域变化的多维分析</td>
+                        </tr>
+                        <tr>
+                            <td>Geoffrey Leech</td>
+                            <td>英语语法和词汇</td>
+                            <td>基于语料库的语法方法，词频研究</td>
+                        </tr>
+                        <tr>
+                            <td>Tony McEnery</td>
+                            <td>语料库方法论，话语分析</td>
+                            <td>语料库方法在各种语言学领域的应用</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="quote-box">
+                    "上表表明，这些学者考虑了可以促进语言模式分析效率的实用方法和应用程序，以及理论基础。" - Altameemi (2024)
+                </div>
+            </div>
+        </div>
+
+        <!-- Corpus Tools Section -->
+        <div class="dashboard-section">
+            <h2 id="tools-title">Corpus Linguistics Tools</h2>
+            
+            <div id="english-tools" class="english-content active-content">
+                <p>The paper provides a comprehensive review of various corpus linguistics tools, highlighting their features, advantages, and limitations.</p>
+                
+                <div class="tool-cards-container">
+                    <div class="tool-card">
+                        <h3>AntConc</h3>
+                        <p><strong>Pros:</strong> User-friendly, free, open source, multiple functions</p>
+                        <p><strong>Cons:</strong> Only processes plain text files, limited technical support</p>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <h3>Sketch Engine</h3>
+                        <p><strong>Pros:</strong> Large corpus (4B+ words), customizable queries, multiple languages</p>
+                        <p><strong>Cons:</strong> Paid service, slow loading, limited query types</p>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <h3>LancsBox</h3>
+                        <p><strong>Pros:</strong> Data visualization, collocation networks, multiple languages</p>
+                        <p><strong>Cons:</strong> Limited corpus size (max 50M words), limited support</p>
+                    </div>
+                </div>
+                
+                <div class="quote-box">
+                    "An important aspect that CL should consider is focusing on which tool facilitates answering the research question(s)." - Altameemi (2024)
+                </div>
+            </div>
+            
+            <div id="chinese-tools" class="chinese-content">
+                <p>该论文对各种语料库语言学工具进行了全面的评述，强调了它们的特点、优势和局限性。</p>
+                
+                <div class="tool-cards-container">
+                    <div class="tool-card">
+                        <h3>AntConc</h3>
+                        <p><strong>优点：</strong> 用户友好，免费，开源，多种功能</p>
+                        <p><strong>缺点：</strong> 只处理纯文本文件，技术支持有限</p>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <h3>Sketch Engine</h3>
+                        <p><strong>优点：</strong> 大型语料库（超过40亿词），可定制查询，多种语言</p>
+                        <p><strong>缺点：</strong> 付费服务，加载速度慢，查询类型有限</p>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <h3>LancsBox</h3>
+                        <p><strong>优点：</strong> 数据可视化，搭配网络，多种语言</p>
+                        <p><strong>缺点：</strong> 语料库大小有限（最大5000万词），技术支持有限</p>
+                    </div>
+                </div>
+                
+                <div class="quote-box">
+                    "语料库语言学应该考虑的一个重要方面是关注哪种工具有助于回答研究问题。" - Altameemi (2024)
+                </div>
+            </div>
+        </div>
+
+        <!-- Future with ChatGPT Section -->
+        <div class="dashboard-section">
+            <h2 id="chatgpt-title">Future of Corpus Linguistics with ChatGPT</h2>
+            
+            <div id="english-chatgpt" class="english-content active-content">
+                <p>The paper discusses the potential integration of corpus linguistics with ChatGPT and other NLP technologies:</p>
+                
+                <ul>
+                    <li>ChatGPT can help in <span class="highlight">automatic building and annotating of corpora</span></li>
+                    <li>Integration could <span class="highlight">reduce bias in corpus selection</span></li>
+                    <li>ChatGPT might help <span class="highlight">identify linguistic patterns and errors</span></li>
+                    <li>Potential to <span class="highlight">analyze large datasets</span> more efficiently</li>
+                </ul>
+                
+                <div class="quote-box">
+                    "Since CL is dependent on the application of technological tools, it is important to discuss how the rapid development of technology influences the field of CL. Chat Generative Pre-trained Transformer (ChatGPT) is a search engine that utilises NLP. ChatGPT was selected for this research because it shares the notion with CL of focusing on applying the practical use of language in various contexts." - Altameemi (2024)
+                </div>
+            </div>
+            
+            <div id="chinese-chatgpt" class="chinese-content">
+                <p>该论文讨论了语料库语言学与ChatGPT和其他自然语言处理技术的潜在整合：</p>
+                
+                <ul>
+                    <li>ChatGPT可以帮助<span class="highlight">自动构建和注释语料库</span></li>
+                    <li>整合可以<span class="highlight">减少语料库选择中的偏见</span></li>
+                    <li>ChatGPT可能有助于<span class="highlight">识别语言模式和错误</span></li>
+                    <li>有潜力更有效地<span class="highlight">分析大型数据集</span></li>
+                </ul>
+                
+                <div class="quote-box">
+                    "由于语料库语言学依赖于技术工具的应用，讨论技术的快速发展如何影响语料库语言学领域是很重要的。ChatGPT是一个利用自然语言处理的搜索引擎。选择ChatGPT进行此研究是因为它与语料库语言学有着共同的理念，即专注于在各种语境中应用语言的实际使用。" - Altameemi (2024)
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline Section -->
+        <div class="dashboard-section">
+            <h2 id="timeline-title">Evolution of Corpus Linguistics</h2>
+            
+            <div id="timeline-chart">
+                <svg width="100%" height="300">
+                    <!-- Timeline Chart -->
+                    <rect x="0" y="0" width="100%" height="100%" fill="#f9f9f9"></rect>
+                    
+                    <!-- Timeline line -->
+                    <line x1="50" y1="150" x2="650" y2="150" stroke="#333" stroke-width="2"></line>
+                    
+                    <!-- Timeline points -->
+                    <circle cx="100" cy="150" r="8" fill="#3498db"></circle>
+                    <circle cx="200" cy="150" r="8" fill="#3498db"></circle>
+                    <circle cx="300" cy="150" r="8" fill="#3498db"></circle>
+                    <circle cx="400" cy="150" r="8" fill="#3498db"></circle>
+                    <circle cx="500" cy="150" r="8" fill="#3498db"></circle>
+                    <circle cx="600" cy="150" r="8" fill="#3498db"></circle>
+                    
+                    <!-- Timeline labels (above) -->
+                    <text x="100" y="120" font-size="12" text-anchor="middle">1960s</text>
+                    <text x="100" y="100" font-size="10" text-anchor="middle">Brown Corpus</text>
+                    
+                    <text x="200" y="120" font-size="12" text-anchor="middle">1980s</text>
+                    <text x="200" y="100" font-size="10" text-anchor="middle">Computational methods</text>
+                    
+                    <text x="300" y="120" font-size="12" text-anchor="middle">1990s</text>
+                    <text x="300" y="100" font-size="10" text-anchor="middle">BNC creation</text>
+                    
+                    <!-- Timeline labels (below) -->
+                    <text x="400" y="180" font-size="12" text-anchor="middle">2000s</text>
+                    <text x="400" y="200" font-size="10" text-anchor="middle">Web corpora</text>
+                    
+                    <text x="500" y="180" font-size="12" text-anchor="middle">2010s</text>
+                    <text x="500" y="200" font-size="10" text-anchor="middle">Big data approaches</text>
+                    
+                    <text x="600" y="180" font-size="12" text-anchor="middle">2020s</text>
+                    <text x="600" y="200" font-size="10" text-anchor="middle">ChatGPT & NLP</text>
+                </svg>
+            </div>
+            
+            <div id="english-timeline" class="english-content active-content">
+                <p>The evolution of corpus linguistics has been closely tied to technological advancements, from early computer-based corpora to modern NLP integration with tools like ChatGPT.</p>
+                <div class="quote-box">
+                    "With the evolvement of more sophisticated linguistic tools, researchers can delve even deeper into new research questions to investigate unexplored linguistic phenomena. Additionally, the integration of CL with ChatGPT holds great potential for the understanding of language in the digital age." - Altameemi (2024)
+                </div>
+            </div>
+            
+            <div id="chinese-timeline" class="chinese-content">
+                <p>语料库语言学的演变与技术进步密切相关，从早期基于计算机的语料库到现代与ChatGPT等工具的自然语言处理集成。</p>
+                <div class="quote-box">
+                    "随着更复杂的语言学工具的发展，研究人员可以更深入地探索新的研究问题，研究未被探索的语言现象。此外，语料库语言学与ChatGPT的整合对于理解数字时代的语言具有巨大的潜力。" - Altameemi (2024)
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p id="footer-text">Data source: Altameemi, Y. M. (2024). State-of-the-Art Review of the Corpus Linguistics Field From the Beginning Until the Development of ChatGPT. Theory and Practice in Language Studies, Vol. 14, No. 2, pp. 423-431.</p>
+        </div>
+    </div>
+
+    <script>
+        function switchLanguage(lang) {
+            // Update active button
+            document.getElementById('en-btn').classList.remove('active-lang');
+            document.getElementById('zh-btn').classList.remove('active-lang');
+            document.getElementById(lang + '-btn').classList.add('active-lang');
+            
+            // Hide all content
+            const englishContent = document.querySelectorAll('.english-content');
+            const chineseContent = document.querySelectorAll('.chinese-content');
+            
+            englishContent.forEach(el => el.classList.remove('active-content'));
+            chineseContent.forEach(el => el.classList.remove('active-content'));
+            
+            // Show selected language content
+            if (lang === 'en') {
+                englishContent.forEach(el => el.classList.add('active-content'));
+                document.getElementById('page-title').innerText = 'Corpus Linguistics Evolution Dashboard';
+                document.getElementById('page-subtitle').innerText = 'A visualization of the state-of-the-art review from beginning to ChatGPT era';
+                document.getElementById('findings-title').innerText = 'Key Findings';
+                document.getElementById('distribution-title').innerText = 'Research Areas Distribution';
+                document.getElementById('scholars-title').innerText = 'Prominent Scholars in Corpus Linguistics';
+                document.getElementById('tools-title').innerText = 'Corpus Linguistics Tools';
+                document.getElementById('chatgpt-title').innerText = 'Future of Corpus Linguistics with ChatGPT';
+                document.getElementById('timeline-title').innerText = 'Evolution of Corpus Linguistics';
+                document.getElementById('footer-text').innerText = 'Data source: Altameemi, Y. M. (2024). State-of-the-Art Review of the Corpus Linguistics Field From the Beginning Until the Development of ChatGPT. Theory and Practice in Language Studies, Vol. 14, No. 2, pp. 423-431.';
+            } else {
+                chineseContent.forEach(el => el.classList.add('active-content'));
+                document.getElementById('page-title').innerText = '语料库语言学演变仪表板';
+                document.getElementById('page-subtitle').innerText = '从开始到ChatGPT时代的最新研究可视化';
+                document.getElementById('findings-title').innerText = '主要发现';
+                document.getElementById('distribution-title').innerText = '研究领域分布';
+                document.getElementById('scholars-title').innerText = '语料库语言学的杰出学者';
+                document.getElementById('tools-title').innerText = '语料库语言学工具';
+                document.getElementById('chatgpt-title').innerText = 'ChatGPT时代的语料库语言学未来';
+                document.getElementById('timeline-title').innerText = '语料库语言学的演变';
+                document.getElementById('footer-text').innerText = '数据来源：Altameemi, Y. M. (2024). 从开始到ChatGPT发展的语料库语言学领域最新评述。语言研究的理论与实践，第14卷，第2期，423-431页。';
+            }
+        }
+    </script>
+</body>
+</html>
