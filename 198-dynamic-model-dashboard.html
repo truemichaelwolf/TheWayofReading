@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constructionist Grammar and the Dynamic Model</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .dashboard {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .header {
+            background-color: #1a5276;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        h1, h2, h3 {
+            color: #1a5276;
+        }
+        
+        .header h1 {
+            color: white;
+            margin-bottom: 10px;
+        }
+        
+        .tab-container {
+            margin-top: 20px;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .tab-btn.active {
+            background-color: #1a5276;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .language-toggle {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
+        
+        .lang-btn {
+            padding: 5px 10px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        .lang-btn.active {
+            background-color: #1a5276;
+            color: white;
+        }
+        
+        .lang-content {
+            display: none;
+        }
+        
+        .lang-content.active {
+            display: block;
+        }
+        
+        .quote {
+            border-left: 4px solid #1a5276;
+            padding-left: 15px;
+            margin: 15px 0;
+            font-style: italic;
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+        }
+        
+        .model-diagram {
+            width: 100%;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .diagram-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .phase-box {
+            width: 18%;
+            padding: 15px;
+            margin: 0 5px;
+            background-color: #e8f4fc;
+            border-radius: 5px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 200px;
+            position: relative;
+        }
+        
+        .phase-box::after {
+            content: "→";
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            font-size: 24px;
+            color: #1a5276;
+        }
+        
+        .phase-box:last-child::after {
+            content: "";
+        }
+        
+        .phase-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #1a5276;
+        }
+        
+        .construction-productivity {
+            width: 100%;
+            height: 300px;
+            margin-top: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #1a5276;
+            color: white;
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .column-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .interactive-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .interactive-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .author-info {
+            font-size: 0.9em;
+            color: #666;
+            text-align: right;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="language-toggle">
+        <button class="lang-btn active" onclick="changeLanguage('en')">English</button>
+        <button class="lang-btn" onclick="changeLanguage('zh')">中文</button>
+    </div>
+
+    <div class="header">
+        <div class="lang-content active" id="en-header">
+            <h1>Constructionist Grammar and the Dynamic Model</h1>
+            <p>An interactive exploration of Thomas Hoffmann's approach to integrating Construction Grammar with the Dynamic Model of Post-Colonial Englishes</p>
+        </div>
+        <div class="lang-content" id="zh-header">
+            <h1>构式语法与动态模型</h1>
+            <p>对托马斯·霍夫曼将构式语法与后殖民英语动态模型相结合方法的交互式探索</p>
+        </div>
+    </div>
+
+    <div class="dashboard">
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="changeTab('introduction')">
+                    <span class="lang-en">Introduction</span>
+                    <span class="lang-zh hidden">介绍</span>
+                </button>
+                <button class="tab-btn" onclick="changeTab('dynamic-model')">
+                    <span class="lang-en">Dynamic Model</span>
+                    <span class="lang-zh hidden">动态模型</span>
+                </button>
+                <button class="tab-btn" onclick="changeTab('construction-grammar')">
+                    <span class="lang-en">Construction Grammar</span>
+                    <span class="lang-zh hidden">构式语法</span>
+                </button>
+                <button class="tab-btn" onclick="changeTab('integration')">
+                    <span class="lang-en">Integration</span>
+                    <span class="lang-zh hidden">整合</span>
+                </button>
+                <button class="tab-btn" onclick="changeTab('evidence')">
+                    <span class="lang-en">Empirical Evidence</span>
+                    <span class="lang-zh hidden">实证证据</span>
+                </button>
+            </div>
+
+            <!-- Introduction Tab -->
+            <div class="tab-content active" id="introduction">
+                <div class="card">
+                    <div class="lang-content active" id="en-intro">
+                        <h2>Understanding Post-Colonial Englishes</h2>
+                        <p>This dashboard presents the key insights from Thomas Hoffmann's research on integrating Construction Grammar with Edgar Schneider's Dynamic Model of Post-Colonial Englishes (PCEs).</p>
+                        
+                        <div class="quote">
+                            "Today, there can be no doubt that English is the global language (Crystal 2003). From Australia to Zimbabwe, it spoken in countries all over the world and it is the language of international communication (used, e.g., as the language in which most of the content on YouTube, TikTok or Twitter is created)."
+                        </div>
+                        
+                        <p>Hoffmann argues that adding a cognitive, constructionist perspective to Schneider's sociolinguistic model not only provides a more comprehensive explanation of how PCEs evolve but also generates new testable research questions.</p>
+                        
+                        <div class="quote">
+                            "As mentioned above, the Dynamic Model is essentially a sociolinguistic model that considers linguistic changes to be predominantly driven by forces related to identity-construction. Recently, in a series of publications, Hoffmann (2014, 2019, 2020, 2021) claimed that the Dynamic Model can be meaningfully complemented by adding a cognitive, constructionist perspective to this, outlining how the various phases of the Dynamic Model should correlate with the productivity of constructional templates (the Dynamic Model Productivity hypothesis)."
+                        </div>
+                    </div>
+                    <div class="lang-content" id="zh-intro">
+                        <h2>理解后殖民英语</h2>
+                        <p>本仪表板展示了托马斯·霍夫曼关于将构式语法与埃德加·施耐德的后殖民英语动态模型(PCEs)整合的研究的关键见解。</p>
+                        
+                        <div class="quote">
+                            "今天，毫无疑问，英语是全球语言(Crystal 2003)。从澳大利亚到津巴布韦，它在世界各国被使用，是国际交流的语言(例如，它是YouTube、TikTok或Twitter上大部分内容所创建的语言)。"
+                        </div>
+                        
+                        <p>霍夫曼认为，在施耐德的社会语言学模型中增加认知构式视角，不仅为后殖民英语如何演变提供了更全面的解释，还产生了新的可测试研究问题。</p>
+                        
+                        <div class="quote">
+                            "如上所述，动态模型本质上是一个社会语言学模型，认为语言变化主要由与身份构建相关的力量驱动。最近，在一系列出版物中，霍夫曼(2014，2019，2020，2021)声称动态模型可以通过添加认知构式视角而有意义地补充，概述了动态模型的各个阶段应该如何与构式模板的生产力相关联(动态模型生产力假设)。"
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic Model Tab -->
+            <div class="tab-content" id="dynamic-model">
+                <div class="card">
+                    <div class="lang-content active" id="en-dynamic-model">
+                        <h2>Schneider's Dynamic Model</h2>
+                        <p>The Dynamic Model, proposed by Edgar Schneider in 2003, has become the most influential account of how Post-Colonial Englishes (PCEs) evolve over time. It outlines five distinct evolutionary phases that new varieties of English typically go through.</p>
+                        
+                        <div class="quote">
+                            "In contrast to earlier, static theories, Schneider developed a sociolinguistic model that took a diachronic, dynamic perspective on the evolution of Post-colonial Englishes (PCEs)."
+                        </div>
+                    </div>
+                    <div class="lang-content" id="zh-dynamic-model">
+                        <h2>施耐德的动态模型</h2>
+                        <p>动态模型由埃德加·施耐德于2003年提出，已成为关于后殖民英语(PCEs)如何随时间演变的最具影响力的解释。它概述了新英语变体通常经历的五个不同的演变阶段。</p>
+                        
+                        <div class="quote">
+                            "与早期的静态理论相比，施耐德开发了一个社会语言学模型，该模型从历时和动态的角度看待后殖民英语(PCEs)的演变。"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="diagram-container">
+                        <div class="phase-box">
+                            <div class="phase-title">Phase I</div>
+                            <div class="lang-content active" id="en-phase1">Foundation</div>
+                            <div class="lang-content" id="zh-phase1">基础</div>
+                        </div>
+                        <div class="phase-box">
+                            <div class="phase-title">Phase II</div>
+                            <div class="lang-content active" id="en-phase2">Exonormative Stabilization</div>
+                            <div class="lang-content" id="zh-phase2">外部规范稳定</div>
+                        </div>
+                        <div class="phase-box">
+                            <div class="phase-title">Phase III</div>
+                            <div class="lang-content active" id="en-phase3">Nativization</div>
+                            <div class="lang-content" id="zh-phase3">本土化</div>
+                        </div>
+                        <div class="phase-box">
+                            <div class="phase-title">Phase IV</div>
+                            <div class="lang-content active" id="en-phase4">Endonormative Stabilization</div>
+                            <div class="lang-content" id="zh-phase4">内部规范稳定</div>
+                        </div>
+                        <div class="phase-box">
+                            <div class="phase-title">Phase V</div>
+                            <div class="lang-content active" id="en-phase5">Differentiation</div>
+                            <div class="lang-content" id="zh-phase5">分化</div>
+                        </div>
+                    </div>
+
+                    <div class="lang-content active" id="en-phases-description">
+                        <h3>The Five Phases</h3>
+                        <p><strong>Phase I (Foundation):</strong> When English is first transplanted to a new colony with limited communication between settler (STL) and indigenous (IDG) strands.</p>
+                        <p><strong>Phase II (Exonormative Stabilization):</strong> The settler strand adapts to the new home but maintains a British linguistic identity.</p>
+                        <p><strong>Phase III (Nativization):</strong> After political independence, settlers accept the colony as their new home, leading to widespread linguistic changes from lexical borrowing to grammatical innovations.</p>
+                        <p><strong>Phase IV (Endonormative Stabilization):</strong> New linguistic norms are accepted even in formal usage, creating a homogeneous linguistic landscape.</p>
+                        <p><strong>Phase V (Differentiation):</strong> The variety differentiates into new regional and social dialects.</p>
+                        
+                        <div class="quote">
+                            "The Dynamic Model is essentially a sociolinguistic model in which identity-construction is the main driving force of linguistic change. While sociolinguistic factors clearly play a crucial role in the development of PCEs, recently, in a series of publications, Hoffmann argued that the model needs to be complemented by a cognitive theory."
+                        </div>
+                    </div>
+                    <div class="lang-content" id="zh-phases-description">
+                        <h3>五个阶段</h3>
+                        <p><strong>第一阶段 (基础):</strong> 英语首次移植到新殖民地，定居者(STL)和本土(IDG)之间的交流有限。</p>
+                        <p><strong>第二阶段 (外部规范稳定):</strong> 定居者适应新家园但保持英国语言身份。</p>
+                        <p><strong>第三阶段 (本土化):</strong> 政治独立后，定居者接受殖民地作为新家园，导致从词汇借用到语法创新的广泛语言变化。</p>
+                        <p><strong>第四阶段 (内部规范稳定):</strong> 新的语言规范被接受，甚至在正式使用中，创造了同质的语言景观。</p>
+                        <p><strong>第五阶段 (分化):</strong> 语言变体分化为新的区域和社会方言。</p>
+                        
+                        <div class="quote">
+                            "动态模型本质上是一个社会语言学模型，其中身份构建是语言变化的主要驱动力。虽然社会语言学因素在后殖民英语发展中明显起着至关重要的作用，但最近，在一系列出版物中，霍夫曼认为该模型需要由认知理论来补充。"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="lang-content active" id="en-varieties">
+                        <h3>Classification of Varieties by Phase</h3>
+                        <table>
+                            <tr>
+                                <th>Phase I</th>
+                                <th>Phase II</th>
+                                <th>Phase III</th>
+                                <th>Phase IV</th>
+                                <th>Phase V</th>
+                            </tr>
+                            <tr>
+                                <td>-</td>
+                                <td>
+                                    Bangladeshi English<br>
+                                    Pakistani English<br>
+                                    Philippine English
+                                </td>
+                                <td>
+                                    Malaysian English<br>
+                                    Indian English<br>
+                                    Kenyan English<br>
+                                    Tanzanian English<br>
+                                    Nigerian English<br>
+                                    Hong Kong English<br>
+                                    Sri Lankan English<br>
+                                    Ghanaian English
+                                </td>
+                                <td>
+                                    Singaporean English<br>
+                                    Jamaican English
+                                </td>
+                                <td>
+                                    American English<br>
+                                    Australian English<br>
+                                    New Zealand English<br>
+                                    Canadian English<br>
+                                    Irish English<br>
+                                    South African English
+                                </td>
+                            </tr>
+                        </table>
+                        <p><em>Note: This classification is based on Brunner and Hoffmann (2020) and may differ from other researchers' assessments.</em></p>
+                        
+                        <div class="quote">
+                            "Note that the above classification is not uncontroversial, as several studies have argued that particular varieties should be assigned to different phases. Mukherjee (2007), e.g., suggests that Indian English is in Phase 4; similarly, Borlongan (2016) argues that Philippine English has approached Phase 4 (but see Martin 2014 for a critical discussion of this claim)."
+                        </div>
+                    </div>
+                    <div class="lang-content" id="zh-varieties">
+                        <h3>按阶段分类的英语变体</h3>
+                        <table>
+                            <tr>
+                                <th>第一阶段</th>
+                                <th>第二阶段</th>
+                                <th>第三阶段</th>
+                                <th>第四阶段</th>
+                                <th>第五阶段</th>
+                            </tr>
+                            <tr>
+                                <td>-</td>
+                                <td>
+                                    孟加拉国英语<br>
+                                    巴基斯坦英语<br>
+                                    菲律宾英语
+                                </td>
+                                <td>
+                                    马来西亚英语<br>
+                                    印度英语<br>
+                                    肯尼亚英语<br>
+                                    坦桑尼亚英语<br>
+                                    尼日利亚英语<br>
+                                    香港英语<br>
+                                    斯里兰卡英语<br>
+                                    加纳英语
+                                </td>
+                                <td>
+                                    新加坡英语<br>
+                                    牙买加英语
+                                </td>
+                                <td>
+                                    美国英语<br>
+                                    澳大利亚英语<br>
+                                    新西兰英语<br>
+                                    加拿大英语<br>
+                                    爱尔兰英语<br>
+                                    南非英语
+                                </td>
+                            </tr>
+                        </table>
+                        <p><em>注：此分类基于Brunner和Hoffmann(2020)，可能与其他研究者的评估不同。</em></p>
+                        
+                        <div class="quote">
+                            "请注意，上述分类并非无争议，因为一些研究认为特定变体应该分配到不同的阶段。例如，Mukherjee(2007)建议印度英语处于第4阶段；同样，Borlongan(2016)认为菲律宾英语已接近第4阶段(但请参阅Martin 2014对此主张的批判性讨论)。"
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Construction Grammar Tab -->
+            <div class="tab-content" id="construction-grammar">
+                <div class="card">
+                    <div class="lang-content active" id="en-cxg">
+                        <h2>Construction Grammar</h2>
+                        <p>Construction Grammar defines constructions as arbitrary, symbolic pairings of form and meaning. Unlike traditional approaches that separate lexicon from syntax, Construction Grammar sees all linguistic knowledge as captured by constructions along a lexicon-syntax continuum.</p>
+                        
+                        <div class="quote">
+                            "In Construction Grammar, constructions are defined as arbitrary, symbolic pairings of form and meaning (represented as FORM ↔ MEANING in the following)."
+                        </div>
+                        
+                        <p>Constructions vary in their level of schematicity, from fully fixed expressions to highly abstract patterns:</p>
+                        
+                        <h3>Types of Constructions</h3>
+                        <table>
+                            <tr>
+                                <th>Type</th>
+                                <th>Example</th>
+                                <th>Schematicity</th>
+                            </tr>
+                            <tr>
+                                <td>Morpheme construction</td>
+                                <td>N-en (earthen, silken)</td>
+                                <td>Partly schematic</td>
+                            </tr>
+                            <tr>
+                                <td>Word construction</td>
+                                <td>"Tree"</td>
+                                <td>Fixed</td>
+                            </tr>
+                            <tr>
+                                <td>Idiom construction</td>
+                                <td>"Kick the bucket"</td>
+                                <td>Partly schematic</td>
+                            </tr>
+                            <tr>
+                                <td>Argument structure</td>
+                                <td>Transitive construction</td>
+                                <td>Fully schematic</td>
+                            </tr>
+                        </table>
+                        
+                        <div class="quote">
+                            "In stark contrast to other theories, Construction Grammar does not assume a strict division of lexicon and syntax. Most syntactic theories treat words as meaningful and syntactic rules as not carrying any meaning (beyond the instruction to compositionally add up the meaning of the individual words of a sentence). Instead of such a words-and-rules model, Construction Grammar argues that all linguistic knowledge can be captured by constructions: 'It's constructions all the way down!' (Goldberg 2003: 223; 2006: 18)."
+                        </div>
+                    </div>
+                    <div class="lang-content" id="zh-cxg">
+                        <h2>构式语法</h2>
+                        <p>构式语法将构式定义为形式和意义的任意象征性配对。与传统方法将词汇与句法分开不同，构式语法认为所有语言知识都可以通过词汇-句法连续体上的构式来捕捉。</p>
+                        
+                        <div class="quote">
+                            "在构式语法中，构式被定义为形式和意义的任意象征性配对(在下文中表示为FORM ↔ MEANING)。"
+                        </div>
+                        
+                        <p>构式在其图式性水平上有所不同，从完全固定的表达到高度抽象的模式：</p>
+                        
+                        <h3>构式类型</h3>
+                        <table>
+                            <tr>
+                                <th>类型</th>
+                                <th>例子</th>
+                                <th>图式性</th>
+                            </tr>
+                            <tr>
+                                <td>语素构式</td>
+                                <td>N-en (earthen, silken)</td>
+                                <td>部分图式化</td>
+                            </tr>
+                            <tr>
+                                <td>词构式</td>
+                                <td>"Tree"</td>
+                                <td>固定</td>
+                            </tr>
+                            <tr>
+                                <td>习语构式</td>
+                                <td>"Kick the bucket"</td>
+                                <td>部分图式化</td>
+                            </tr>
+                            <tr>
+                                <td>论元结构</td>
+                                <td>及物构式</td>
+                                <td>完全图式化</td>
+                            </tr>
+                        </table>
+                        
+                        <div class="quote">
+                            "与其他理论形成鲜明对比，构式语法不假设词汇和句法之间的严格划分。大多数句法理论将词视为有意义的，而句法规则不带任何意义(除了组合句子中各个词的意义的指令)。与这种词汇和规则模型不同，构式语法认为所有语言知识都可以由构式捕捉："一直都是构式！"(Goldberg 2003: 223; 2006: 18)。"
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="lang-content active" id="en-cxg-examples">
+                        <h3>Example Constructions</h3>
+                        <div class="column-2">
+                            <div>
+                                <h4>Way Construction</h4>
+                                <p>Examples: "the boy works his way into the lives of a middle class family", "You also insinuate your way into the media", "they are smiling their way to the bank"</p>
+                                <p><strong>Meaning:</strong> A subject moves along a path even with non-movement verbs.</p>
+                            </div>
+                            <div>
+                                <h4>V the hell out of NP Construction</h4>
+                                <p>Examples: "Quentin acts the hell out of this next scene", "that guy could act the crap out of any role", "Michael Fassbender really acted the shit out of this one"</p>
+                                <p><strong>Meaning:</strong> Intensified action - "excessively"</p>
+                            </div>
+                        </div>
+                        <div class="column-2">
+                            <div>
+                                <h4>V the TIME away Construction</h4>
+                                <p>Examples: "dance the night away", "laughed the day away", "slept the afternoon away"</p>
+                                <p><strong>Meaning:</strong> "By Ving, the subject spent the time period N (heedlessly)"</p>
+                            </div>
+                            <div>
+                                <h4>Comparative Correlative</h4>
+                                <p>Examples: "the more you eat the fatter you'll get"</p>
+                                <p><strong>Meaning:</strong> Correlation between two comparative states</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lang-content" id="zh-cxg-examples">
+                        <h3>构式例子</h3>
+                        <div class="column-2">
+                            <div>
+                                <h4>Way构式</h4>
+                                <p>例子："the boy works his way into the lives of a middle class family", "You also insinuate your way into the media", "they are smiling their way to the bank"</p>
+                                <p><strong>意义：</strong>即使使用非移动动词，主语也沿着路径移动。</p>
+                            </div>
+                            <div>
+                                <h4>V the hell out of NP构式</h4>
+                                <p>例子："Quentin acts the hell out of this next scene", "that guy could act the crap out of any role", "Michael Fassbender really acted the shit out of this one"</p>
+                                <p><strong>意义：</strong>强化的动作-"过度地"</p>
+                            </div>
+                        </div>
+                        <div class="column-2">
+                            <div>
+                                <h4>V the TIME away构式</h4>
+                                <p>例子："dance the night away", "laughed the day away", "slept the afternoon away"</p>
+                                <p><strong>意义：</strong>"通过V-ing，主语(漫不经心地)度过了N时间段"</p>
+                            </div>
+                            <div>
+                                <h4>比较关联构式</h4>
+                                <p>例子："the more you eat the fatter you'll get"</p>
+                                <p><strong>意义：</strong>两个比较状态之间的关联</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Integration Tab -->
+            <div class="tab-content" id="integration">
+                <div class="card">
+                    <div class="lang-content active" id="en-integration">
+                        <h2>Integrating Construction Grammar with the Dynamic Model</h2>
+                        <p>Hoffmann argues that Construction Grammar offers a cognitive explanation for the linguistic changes observed in Schneider's Dynamic Model. This integration helps explain why and how certain linguistic patterns emerge at different stages of PCE development.</p>
+                        
+                        <div class="quote">
+                            "Construction Grammar, thus, offers a cognitive explanation for findings that have been uncovered by the sociolinguistic Dynamic Model. In addition to this, the constructionist perspective allows us to predict the qualitative type and quantitative distribution of innovative constructions in PCEs."
+                        </div>
+                        
+                        <h3>Dynamic Model Productivity Hypothesis</h3>
+                        <div class="quote">
+                            "Dynamic Model Productivity hypothesis: Varieties in later phases of the Dynamic Model show i) more productivity of the slots of (semi-)schematic construction than varieties in earlier developmental phases due to ii) less reliance on prototypical and frequent fillers."
+                        </div>
+                        
+                        <p>This hypothesis suggests that as varieties progress through the Dynamic Model phases, their constructional templates become more abstract and schematic, with greater productivity and less reliance on prototypical examples.</p>
+                    </div>
+                    <div class="lang-content" id="zh-integration">
+                        <h2>将构式语法与动态模型整合</h2>
+                        <p>霍夫曼认为，构式语法为施耐德动态模型中观察到的语言变化提供了认知解释。这种整合有助于解释为什么以及如何在PCE发展的不同阶段出现某些语言模式。</p>
+                        
+                        <div class="quote">
+                            "因此，构式语法为社会语言学动态模型揭示的发现提供了认知解释。除此之外，构式视角使我们能够预测PCE中创新构式的质性类型和数量分布。"
+                        </div>
+                        
+                        <h3>动态模型生产力假设</h3>
+                        <div class="quote">
+                            "动态模型生产力假设：动态模型后期阶段的变体显示i)比早期发展阶段的变体表现出(半)图式构式插槽的更多生产力，这是由于ii)对典型和频繁填充物的较少依赖。"
+                        </div>
+                        
+                        <p>该假设表明，随着变体在动态模型阶段的推进，其构式模板变得更加抽象和图式化，具有更大的生产力，对典型例子的依赖性降低。</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="lang-content active" id="en-phase-constructions">
+                        <h3>Constructional Changes Across Dynamic Model Phases</h3>
+                        <table>
+                            <tr>
+                                <th>Phase</th>
+                                <th>Constructional Changes</th>
+                            </tr>
+                            <tr>
+                                <td>Foundation (I)</td>
+                                <td>Limited influence from indigenous languages, mostly toponymic borrowings (fully substantive constructions)</td>
+                            </tr>
+                            <tr>
+                                <td>Exonormative Stabilization (II)</td>
+                                <td>Borrowing of non-schematic constructions for local fauna, flora, customs (fully substantive, locally salient, frequent constructions)</td>
+                            </tr>
+                            <tr>
+                                <td>Nativization (III)</td>
+                                <td>Significant innovations "at the interface between lexis and grammar" - introduction of partly lexically filled and partly schematic meso-constructions</td>
+                            </tr>
+                            <tr>
+                                <td>Endonormative Stabilization (IV)</td>
+                                <td>Similar constructions shared by large parts of the population - stable and homogeneous constructional networks</td>
+                            </tr>
+                            <tr>
+                                <td>Differentiation (V)</td>
+                                <td>Functional re-alignment and innovation of constructions as linguistic means of identity expression - highest level of constructional productivity</td>
+                            </tr>
+                        </table>
+                        
+                        <div class="quote">
+                            "From a constructionist perspective, the nativization phase is particularly interesting. Remember that Construction Grammar sees lexis and grammar not as separate modules of linguistic knowledge but interprets them as poles on a lexis-syntax continuum. Thus, the theory offers a straightforward explanation for Schneider's claim that innovations at this stage occur 'at the interface between lexis and grammar' (Schneider 2007: 83)."
+                        </div>
+                    </div>
+                    <div class="lang-content" id="zh-phase-constructions">
+                        <h3>动态模型各阶段的构式变化</h3>
+                        <table>
+                            <tr>
+                                <th>阶段</th>
+                                <th>构式变化</th>
+                            </tr>
+                            <tr>
+                                <td>基础 (I)</td>
+                                <td>来自本土语言的影响有限，主要是地名借用（完全实质性构式）</td>
+                            </tr>
+                            <tr>
+                                <td>外部规范稳定 (II)</td>
+                                <td>为当地动植物、习俗借用非图式化构式（完全实质性、局部显著、频繁构式）</td>
+                            </tr>
+                            <tr>
+                                <td>本土化 (III)</td>
+                                <td>"在词汇和语法之间的接口"发生重大创新 - 引入部分词汇填充且部分图式化的中观构式</td>
+                            </tr>
+                            <tr>
+                                <td>内部规范稳定 (IV)</td>
+                                <td>人口中大部分共享相似构式 - 稳定且同质的构式网络</td>
+                            </tr>
+                            <tr>
+                                <td>分化 (V)</td>
+                                <td>作为身份表达语言手段的构式功能重新调整和创新 - 最高水平的构式生产力</td>
+                            </tr>
+                        </table>
+                        
+                        <div class="quote">
+                            "从构式角度看，本土化阶段特别有趣。请记住，构式语法将词汇和语法视为不是语言知识的独立模块，而是解释它们为词汇-句法连续体上的极点。因此，该理论为施耐德的主张提供了直接解释，即此阶段的创新发生在'词汇和语法的接口'(Schneider 2007: 83)。"
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="lang-content active" id="en-innovation-examples">
+                        <h3>Examples of Innovations in PCEs at the Lexis-Grammar Interface</h3>
+                        <ul>
+                            <li>Singapore English: <em>resemble to s.o.</em> instead of <em>resemble s.o.</em></li>
+                            <li>East African English: <em>pick s.o.</em> instead of <em>pick s.o. up</em></li>
+                            <li>New Zealand English: <em>protest sth.</em> instead of <em>protest against sth.</em></li>
+                        </ul>
+                        
+                        <p>These patterns mirror first language acquisition, where children initially use partly schematic "meso-constructions" before developing more abstract representations.</p>
+                        
+                        <div class="quote">
+                            "During their nativization phase, PCEs, thus, follow a pattern that is already typical of first language acquisition. As Hoffmann (2021) points out, this does not mean that PCEs will stop at this stage: as van Rooy (2010: 15) rightly points out, adult learners (here of the IDG group) will be 'able to generalise rules on the basis of less evidence, because their cognitive abilities to notice patterns are more advanced'."
+                        </div>
+                    </div>
+                    <div class="lang-content" id="zh-innovation-examples">
+                        <h3>词汇-语法接口上PCE创新的例子</h3>
+                        <ul>
+                            <li>新加坡英语：<em>resemble to s.o.</em> 代替 <em>resemble s.o.</em></li>
+                            <li>东非英语：<em>pick s.o.</em> 代替 <em>pick s.o. up</em></li>
+                            <li>新西兰英语：<em>protest sth.</em> 代替 <em>protest against sth.</em></li>
+                        </ul>
+                        
+                        <p>这些模式反映了第一语言习得，儿童最初使用部分图式化的"中观构式"，然后发展出更抽象的表征。</p>
+                        
+                        <div class="quote">
+                            "因此，在其本土化阶段，PCE遵循一种已经是第一语言习得典型的模式。正如霍夫曼(2021)指出的，这并不意味着PCE将停留在这个阶段：正如van Rooy(2010: 15)正确指出的，成人学习者(这里指IDG群体)将'能够在更少证据的基础上泛化规则，因为他们注意到模式的认知能力更加先进'。"
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evidence Tab -->
+            <div class="tab-content" id="evidence">
+                <div class="card">
+                    <div class="lang-content active" id="en-empirical">
+                        <h2>Empirical Evidence</h2>
+                        <p>To test the Dynamic Model Productivity hypothesis, researchers have analyzed various constructions across different varieties of English, using corpus data from the Corpus of Web-based Global English (GloWbE).</p>
+                        
+                        <div class="quote">
+                            "For the study of Englishes around the world, one corpus that is used widely is the Corpus of Web-based Global English (GloWbE www.english-corpora.org/glowbe/), which comprises 1.9 billion words from twenty national varieties of English (including British English)."
+                        </div>
+                        
+                        <p>The researchers employ sophisticated statistical methods to account for differences in sample sizes and the Zipfian distribution of linguistic items:</p>
+                        
+                        <div class="quote">
+                            "Therefore, the productivity of constructional slots is subject to a 'Large Number of Rare Events' (LNRE) model analysis (Baroni & Evert 2014; Zeldes 2013: 266–272; Brunner & Hoffmann 2020): These models take into account the Zipfian distribution of linguistic items (the fact that a small number of types account for a large number of tokens, while the majority of types only occur once in any given sample) and are, thus, able correct for differences in sample size when measuring productivity across samples from corpora of varying size."
+                        </div>
+                    </div>
+                    <div class="lang-content" id="zh-empirical">
+                        <h2>实证证据</h2>
+                        <p>为了测试动态模型生产力假设，研究人员分析了不同英语变体中的各种构式，使用来自基于网络的全球英语语料库(GloWbE)的数据。</p>
+                        
+                        <div class="quote">
+                            "对于世界各地英语的研究，广泛使用的一个语料库是基于网络的全球英语语料库(GloWbE www.english-corpora.org/glowbe/)，它包括来自二十个国家英语变体的19亿单词(包括英国英语)。"
+                        </div>
+                        
+                        <p>研究人员采用复杂的统计方法来解决样本大小差异和语言项目的齐普夫分布问题：</p>
+                        
+                        <div class="quote">
+                            "因此，构式插槽的生产力需要进行'大量罕见事件'(LNRE)模型分析(Baroni & Evert 2014; Zeldes 2013: 266–272; Brunner & Hoffmann 2020)：这些模型考虑了语言项目的齐普夫分布(少数类型占据大量标记，而大多数类型在任何给定样本中只出现一次的事实)，因此，在衡量来自不同大小语料库的样本之间的生产力时，能够校正样本大小的差异。"
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="lang-content active" id="en-results">
+                        <h3>Research Findings</h3>
+                        <p>Studies have examined several constructions to test the Dynamic Model Productivity hypothesis:</p>
+                        
+                        <div class="column-2">
+                            <div>
+                                <h4>1. Comparative Correlative Construction</h4>
+                                <p><strong>Finding:</strong> Phase III varieties like Philippine English rely more on specific comparative word combinations (e.g., higher…lower), while more advanced varieties show greater variability with fewer fixed patterns.</p>
+                            </div>
+                            <div>
+                                <h4>2. Way Construction</h4>
+                                <p><strong>Finding:</strong> Phase II varieties plateau at around 200 different verb types, while Phase V varieties show the highest productivity with more than 600 verb types. Phase III and IV varieties occupy the middle ground.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="column-2">
+                            <div>
+                                <h4>3. V the hell out of NP Construction</h4>
+                                <p><strong>Finding:</strong> Phase II varieties exhibit the lowest type productivity, while Phase V varieties show the highest slot productivity. Phase III varieties are higher than Phase II but lower than Phase IV.</p>
+                            </div>
+                            <div>
+                                <h4>4. V the TIME away Construction</h4>
+                                <p><strong>Finding:</strong> Generally conforms to the hypothesis with Phase II showing least productivity and Phase V the highest, though Phase III unexpectedly showed higher productivity than Phase IV.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="quote">
+                            "As Figure 3 shows, the results generally conform to the Dynamic Model Productivity hypothesis: Phase II varieties exhibit the least productivity, while Phase V have the highest productivity of the V slot. At the same time, in contrast to the predictions of the Dynamic Model Productivity hypothesis, Phase IV varieties seem to be less productive than Phase III varieties – with the latter even exceeding the productivity of the GB reference variety."
+                        </div>
+                    </div>
+                    <div class="lang-content" id="zh-results">
+                        <h3>研究发现</h3>
+                        <p>研究已经检验了几种构式以测试动态模型生产力假设：</p>
+                        
+                        <div class="column-2">
+                            <div>
+                                <h4>1. 比较关联构式</h4>
+                                <p><strong>发现：</strong>第三阶段变体如菲律宾英语更依赖具体的比较词组合(如higher…lower)，而更高级的变体则显示更大的可变性，固定模式更少。</p>
+                            </div>
+                            <div>
+                                <h4>2. Way构式</h4>
+                                <p><strong>发现：</strong>第二阶段变体在约200个不同动词类型处趋于平稳，而第五阶段变体显示最高生产力，超过600个动词类型。第三和第四阶段变体处于中间地带。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="column-2">
+                            <div>
+                                <h4>3. V the hell out of NP构式</h4>
+                                <p><strong>发现：</strong>第二阶段变体表现出最低类型生产力，而第五阶段变体显示最高插槽生产力。第三阶段变体高于第二阶段但低于第四阶段。</p>
+                            </div>
+                            <div>
+                                <h4>4. V the TIME away构式</h4>
+                                <p><strong>发现：</strong>总体符合假设，第二阶段显示最低生产力，第五阶段最高，尽管第三阶段意外地显示出比第四阶段更高的生产力。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="quote">
+                            "如图3所示，结果总体上符合动态模型生产力假设：第二阶段变体表现出最低生产力，而第五阶段变体对V插槽具有最高生产力。同时，与动态模型生产力假设的预测相反，第四阶段变体似乎比第三阶段变体生产力低—后者甚至超过了GB参考变体的生产力。"
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="lang-content active" id="en-conclusions">
+                        <h3>Conclusions and Future Directions</h3>
+                        <p>The integration of Construction Grammar with the Dynamic Model has produced promising results but also highlights areas for further research:</p>
+                        
+                        <ul>
+                            <li>Most studies broadly support the Dynamic Model Productivity hypothesis</li>
+                            <li>Some unexpected results suggest the need for more detailed analyses of specific varieties</li>
+                            <li>Current corpora, while large, may not be sufficient for all research questions</li>
+                            <li>Future studies should include experimental methods and sociolinguistic interviews</li>
+                        </ul>
+                        
+                        <div class="quote">
+                            "20 years ago, the publication of the Dynamic Model (Schneider 2003) constituted a major landmark in the studies of Englishes world-wide. As argued in the present paper, one way to extend the explanatory power of the Dynamic Model is to complement it with a Construction Grammar approach, which adds a cognitive perspective to the model and gives raise to new research questions and predictions."
+                        </div>
+                        
+                        <div class="quote">
+                            "Current big databases, e.g., such as GloWbE already enable researchers to carry out first tests of the productivity of constructional schemas across varieties. At the same time, the paper also showed that even these big data corpora are not big enough to answer all questions that arise from a Construction Grammar approach to the Dynamic Model. New and exciting experimental and observational studies (drawing, e.g., on sociolinguistic interviews) are clearly needed to fully exploit the potential of Construction Grammar as the cognitive theory of the Dynamic Model."
+                        </div>
+                    </div>
+                    <div class="lang-content" id="zh-conclusions">
+                        <h3>结论和未来方向</h3>
+                        <p>构式语法与动态模型的整合产生了有希望的结果，但也突显了需要进一步研究的领域：</p>
+                        
+                        <ul>
+                            <li>大多数研究广泛支持动态模型生产力假设</li>
+                            <li>一些意外结果表明需要对特定变体进行更详细的分析</li>
+                            <li>当前语料库虽大，但可能不足以解答所有研究问题</li>
+                            <li>未来研究应包括实验方法和社会语言学访谈</li>
+                        </ul>
+                        
+                        <div class="quote">
+                            "20年前，动态模型(Schneider 2003)的出版构成了世界各地英语研究的一个重要里程碑。正如本文所论述的，扩展动态模型解释力的一种方式是用构式语法方法补充它，这为模型添加了认知视角，并提出了新的研究问题和预测。"
+                        </div>
+                        
+                        <div class="quote">
+                            "当前的大型数据库，如GloWbE，已经使研究人员能够对各种变体中构式模式的生产力进行首次测试。同时，本文还表明，即使是这些大数据语料库也不足以回答从构式语法方法对动态模型提出的所有问题。显然需要新的和令人兴奋的实验和观察研究(例如，利用社会语言学访谈)，以充分利用构式语法作为动态模型认知理论的潜力。"
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="author-info">
+        <div class="lang-content active" id="en-author">
+            <p>Based on "Constructionist Grammar and the Dynamic Model" by Thomas Hoffmann (January 2025)<br>
+            Catholic University of Eichstätt-Ingolstadt</p>
+        </div>
+        <div class="lang-content" id="zh-author">
+            <p>基于托马斯·霍夫曼(2025年1月)的"构式语法与动态模型"<br>
+            艾希施泰特-英戈尔施塔特天主教大学</p>
+        </div>
+    </div>
+
+    <script>
+        function changeTab(tabId) {
+            // Hide all tabs
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show the selected tab
+            document.getElementById(tabId).classList.add('active');
+            
+            // Update active button
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Find the button that was clicked and add the active class
+            const activeButton = Array.from(tabButtons).find(button => {
+                return button.getAttribute('onclick').includes(tabId);
+            });
+            
+            if (activeButton) {
+                activeButton.classList.add('active');
+            }
+        }
+        
+        function changeLanguage(lang) {
+            // Toggle language content
+            const enContents = document.querySelectorAll('.lang-content');
+            const enLabels = document.querySelectorAll('.lang-en');
+            const zhLabels = document.querySelectorAll('.lang-zh');
+            
+            enContents.forEach(content => {
+                content.classList.remove('active');
+                if (content.id.startsWith(lang + '-')) {
+                    content.classList.add('active');
+                }
+            });
+            
+            // Toggle button active state
+            const langButtons = document.querySelectorAll('.lang-btn');
+            langButtons.forEach(button => {
+                button.classList.remove('active');
+                if (button.textContent.includes(lang === 'en' ? 'English' : '中文')) {
+                    button.classList.add('active');
+                }
+            });
+            
+            // Toggle button labels
+            if (lang === 'en') {
+                enLabels.forEach(label => label.classList.remove('hidden'));
+                zhLabels.forEach(label => label.classList.add('hidden'));
+            } else {
+                enLabels.forEach(label => label.classList.add('hidden'));
+                zhLabels.forEach(label => label.classList.remove('hidden'));
+            }
+        }
+    </script>
+</body>
+</html>
