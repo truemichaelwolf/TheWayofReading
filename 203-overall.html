@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GO (a)round and V vs. GO (a)round Ving Constructions</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 15px;
+        }
+        .lang-toggle {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .lang-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .lang-btn:hover {
+            background-color: #2980b9;
+        }
+        .lang-btn.active {
+            background-color: #2c3e50;
+        }
+        .lang-content {
+            display: none;
+        }
+        .lang-content.active {
+            display: block;
+        }
+        .feature-box {
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .feature-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .feature-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #3498db;
+        }
+        .tab-container {
+            margin-top: 20px;
+        }
+        .tab-buttons {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab-btn {
+            padding: 10px 20px;
+            background-color: #f8f9fa;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .tab-btn:hover {
+            background-color: #e9ecef;
+        }
+        .tab-btn.active {
+            background-color: #fff;
+            border-top: 2px solid #3498db;
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            border-bottom: 1px solid #fff;
+            margin-bottom: -1px;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-top: none;
+            background-color: #fff;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .visualization {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .vis-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .vis-box {
+            width: 48%;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+        }
+        .quote {
+            font-style: italic;
+            padding: 15px;
+            border-left: 3px solid #3498db;
+            background-color: #ecf0f1;
+            margin: 15px 0;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .highlight {
+            background-color: #fffacd;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .pie-chart {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #3498db 0% 18%, 
+                #e74c3c 18% 32%, 
+                #2ecc71 32% 45%, 
+                #f39c12 45% 58%, 
+                #9b59b6 58% 71%, 
+                #1abc9c 71% 85%, 
+                #d35400 85% 100%
+            );
+            margin: 0 auto;
+            position: relative;
+        }
+        .legend {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 10px;
+        }
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            margin-right: 5px;
+            border-radius: 3px;
+        }
+        .chart-title {
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .graph-container {
+            width: 100%;
+            height: 300px;
+            position: relative;
+            margin-top: 20px;
+        }
+        .bar {
+            position: absolute;
+            bottom: 0;
+            width: 40px;
+            background-color: #3498db;
+            transition: height 0.5s;
+            border-radius: 5px 5px 0 0;
+        }
+        .bar-label {
+            position: absolute;
+            bottom: -25px;
+            text-align: center;
+            width: 100%;
+            font-size: 14px;
+        }
+        .bar-value {
+            position: absolute;
+            top: -25px;
+            text-align: center;
+            width: 100%;
+            font-size: 14px;
+        }
+        @media (max-width: 768px) {
+            .vis-box {
+                width: 100%;
+            }
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>GO (a)round and V vs. GO (a)round Ving</h1>
+        <div class="lang-toggle">
+            <button class="lang-btn active" onclick="toggleLanguage('en')">English</button>
+            <button class="lang-btn" onclick="toggleLanguage('zh')">中文</button>
+        </div>
+
+        <div id="en-content" class="lang-content active">
+            <h2>A Multivariate Distinctive Collexeme Analysis</h2>
+            <p>This interactive dashboard visualizes the findings from the research paper on multivariate distinctive collexeme analysis of the GO (a)round and V vs. GO (a)round Ving constructions by Kim Ebensgaard Jensen and Stefan Th. Gries (2025).</p>
+            
+            <div class="quote">
+                "Distinctive collexeme analysis has proven very useful in identifying distinctive patterns of lexemic attraction among multiple constructions. However, if construction grammar is to take seriously the usage-based tenet that context is a crucial component of the language system, multivariate methods are required."
+            </div>
+
+            <p>The study applies a novel multivariate collexeme analysis based on association rules to analyze two seemingly similar constructions:</p>
+            <ul>
+                <li><strong>GO (a)round and V</strong>: e.g., "He's going around and spying on us."</li>
+                <li><strong>GO (a)round Ving</strong>: e.g., "Well I don't go around assaulting people."</li>
+            </ul>
+
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="openTab('features')">Features Analyzed</button>
+                    <button class="tab-btn" onclick="openTab('results')">Key Findings</button>
+                    <button class="tab-btn" onclick="openTab('examples')">Example Sentences</button>
+                    <button class="tab-btn" onclick="openTab('visualizations')">Visualizations</button>
+                </div>
+
+                <div id="features" class="tab-content active">
+                    <h3>8 Features Analyzed</h3>
+                    <p>The researchers analyzed these constructions using 8 different feature dimensions:</p>
+                    
+                    <div class="feature-grid">
+                        <div class="feature-box">
+                            <div class="feature-title">Collexeme</div>
+                            <p>Lexemes in the V and Ving positions (214 lexemes total)</p>
+                        </div>
+                        <div class="feature-box">
+                            <div class="feature-title">Colligation</div>
+                            <p>Grammatical categories co-occurring with the constructions (e.g., simple present, progressive aspect)</p>
+                        </div>
+                        <div class="feature-box">
+                            <div class="feature-title">Modality</div>
+                            <p>Types of modality: epistemic, deontic, or none</p>
+                        </div>
+                        <div class="feature-box">
+                            <div class="feature-title">Polarity</div>
+                            <p>Negative polarity (with negator) or affirmative polarity (without negator)</p>
+                        </div>
+                        <div class="feature-box">
+                            <div class="feature-title">Semantic Prosody</div>
+                            <p>Emergent semantic categories among collexemes (120 prosodies total)</p>
+                        </div>
+                        <div class="feature-box">
+                            <div class="feature-title">Discourse Prosody</div>
+                            <p>Attitudinal patterns: positive, negative, or neutral</p>
+                        </div>
+                        <div class="feature-box">
+                            <div class="feature-title">Register</div>
+                            <p>Registers from COCA: academic, fiction, magazines, movies, news, spoken, TV</p>
+                        </div>
+                        <div class="feature-box">
+                            <div class="feature-title">Speech Act</div>
+                            <p>Function of utterances: statements, questions, directives, commissives</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="results" class="tab-content">
+                    <h3>Key Findings</h3>
+                    
+                    <h4>GO (a)round and V</h4>
+                    <ul>
+                        <li>Associated with <span class="highlight">neutral discourse prosody</span></li>
+                        <li>Only appears with <span class="highlight">deontic modality</span> in rules</li>
+                        <li>Strongly associated with <span class="highlight">spoken register</span></li>
+                        <li>Only appears with <span class="highlight">affirmative polarity</span> (never with negation)</li>
+                        <li>Associated with controlled future tense, especially with affirmative polarity</li>
+                        <li>No distinctive collexemes or semantic prosodies were identified due to low frequency</li>
+                    </ul>
+
+                    <h4>GO (a)round Ving</h4>
+                    <ul>
+                        <li>Preferred by specific verbs: <span class="highlight">do, kill, look, pretend, talk, think</span></li>
+                        <li>Preferred by verbs with <span class="highlight">'unpleasant' semantic prosodies</span> (ACCUSATION, DESTRUCTION, IMMODESTY, THREAT, VIOLENCE)</li>
+                        <li>Strong preference for <span class="highlight">negative discourse prosody</span> (20 rules vs. only 4 for positive)</li>
+                        <li>Associated with <span class="highlight">directives and commissives</span> speech acts (never with positive discourse prosody)</li>
+                        <li>Often involves <span class="highlight">do-insertion</span> and <span class="highlight">modalized VP</span></li>
+                        <li>Only associates with <span class="highlight">deontic modality</span> (not epistemic)</li>
+                        <li>Negative contexts appear more in fictional representations of spoken language (fiction, movies, TV) than actual spoken language</li>
+                    </ul>
+
+                    <div class="quote">
+                        "Our analysis suggests that the concept of distinctiveness must necessarily be expanded to include a construction's broader context of usage. This is in line with Kemmer and Barlow's (2000) usage-based tenet that context plays a crucial role in the operation of the language system."
+                    </div>
+                </div>
+
+                <div id="examples" class="tab-content">
+                    <h3>Example Sentences</h3>
+                    
+                    <h4>GO (a)round and V Examples</h4>
+                    <ol>
+                        <li>"So what they're doing is, they're going around and paying off all of these countries to sign onto the deal." (COCA 2015 SPOK Fox: Fox Hannity)</li>
+                        <li>"In my mind, as I saw it happen, she was just going to go around and shoot everyone." (COCA 2010 NEWS NYTimes)</li>
+                        <li>"You know he invented a little camera. He's going around and spying on us." (COCA 2012 MOV 3 Day Test)</li>
+                    </ol>
+
+                    <h4>GO (a)round Ving Examples</h4>
+                    <ol>
+                        <li>"Well I don't go around assaulting people" (COCA 2019 TV Warrior)</li>
+                        <li>"Unlike a lot of older women with money to burn, she doesn't go around buying fabulous designer fashions that were created for twenty-five-year-olds but look ridiculous on a sixty-five-year-old." (COCA 2010 FIC Bk:ThreadSoThin)</li>
+                        <li>"You shouldn't go around fighting strangers in the forest." (COCA 2010 TV Adventure Time)</li>
+                        <li>"You can't go around killing kids!" (COCA 2017 TV It's Always Sunny in Philadelphia)</li>
+                        <li>"Matt, you can't go around hitting people just because you don't like what they say." (COCA 2010 MOV Breaking the Press)</li>
+                    </ol>
+                </div>
+
+                <div id="visualizations" class="tab-content">
+                    <h3>Visualizations</h3>
+                    
+                    <div class="vis-container">
+                        <div class="vis-box">
+                            <div class="chart-title">GO (a)round and V Features</div>
+                            <div class="pie-chart"></div>
+                            <div class="legend">
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #3498db;"></div>
+                                    <span>Neutral discourse prosody</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #e74c3c;"></div>
+                                    <span>Deontic modality</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #2ecc71;"></div>
+                                    <span>Spoken register</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #f39c12;"></div>
+                                    <span>Affirmative polarity</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #9b59b6;"></div>
+                                    <span>Commissives</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #1abc9c;"></div>
+                                    <span>Statements</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #d35400;"></div>
+                                    <span>Future tense</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="vis-box">
+                            <div class="chart-title">Discourse Prosody Comparison</div>
+                            <div class="graph-container">
+                                <div class="bar" style="left: 80px; height: 20%; background-color: #3498db;">
+                                    <div class="bar-label">Positive</div>
+                                    <div class="bar-value">4</div>
+                                </div>
+                                <div class="bar" style="left: 180px; height: 100%; background-color: #e74c3c;">
+                                    <div class="bar-label">Negative</div>
+                                    <div class="bar-value">20</div>
+                                </div>
+                                <div class="bar" style="left: 280px; height: 80%; background-color: #2ecc71;">
+                                    <div class="bar-label">Neutral</div>
+                                    <div class="bar-value">16</div>
+                                </div>
+                            </div>
+                            <p style="text-align: center; margin-top: 30px;">Discourse prosody rules for GO (a)round Ving</p>
+                        </div>
+                    </div>
+                    
+                    <div class="vis-box" style="width: 100%;">
+                        <div class="chart-title">Key Distinctive Features</div>
+                        <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                            <thead>
+                                <tr style="background-color: #f2f2f2;">
+                                    <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">Feature</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">GO (a)round and V</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">GO (a)round Ving</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">Common collexemes</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">introduce, check, round</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">do, kill, look, pretend, talk, think</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">Discourse prosody</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">Neutral</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">Negative (especially with fiction, movies, TV)</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">Polarity</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">Only affirmative</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">Both negative and affirmative</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">Registers</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">Spoken</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">Fiction, movies, TV</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">Semantic prosody</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">No clear pattern</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">VIOLENCE, ACCUSATION, THREAT</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="zh-content" class="lang-content">
+            <h2>多变量区别性搭配词分析</h2>
+            <p>这个交互式仪表板可视化了Kim Ebensgaard Jensen和Stefan Th. Gries（2025年）关于GO (a)round and V与GO (a)round Ving结构的多变量区别性搭配词分析研究论文的发现。</p>
+            
+            <div class="quote">
+                "区别性搭配词分析在识别多个结构之间的词汇吸引模式方面被证明非常有用。然而，如果构式语法要认真对待基于使用的原则，即语境是语言系统的关键组成部分，则需要多变量方法。"
+            </div>
+
+            <p>该研究应用了一种基于关联规则的新型多变量搭配词分析方法，分析了两种看似相似的结构：</p>
+            <ul>
+                <li><strong>GO (a)round and V</strong>：例如，"He's going around and spying on us."（他正在到处监视我们。）</li>
+                <li><strong>GO (a)round Ving</strong>：例如，"Well I don't go around assaulting people."（我不会到处攻击人。）</li>
+            </ul>
+
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="openTab('features-zh')">分析特征</button>
+                    <button class="tab-btn" onclick="openTab('results-zh')">主要发现</button>
+                    <button class="tab-btn" onclick="openTab('examples-zh')">示例句子</button>
+                    <button class="tab-btn" onclick="openTab('visualizations-zh')">可视化</button>
+                </div>
+
+                <div id="features-zh" class="tab-content active">
+                    <h3>分析的8个特征</h3>
+                    <p>研究人员使用8个不同的特征维度分析了这些结构：</p>
+                    
+                    <div class="feature-grid">
+                        <div class="feature-box">
+                            <div class="feature-title">搭配词（Collexeme）</div>
+                            <p>V和Ving位置上的词汇（共214个词汇）</p>
+                        </div>
+                        <div class="feature-box">
+                            <div class="feature-title">词类搭配（Colligation）</div>
+                            <p>与结构共现的语法类别（如：一般现在时，进行时态）</p>
+                        </div>
+                        <div class="feature-box">
+                            <div class="feature-title">情态（Modality）</div>
+                            <p>情态类型：认识情态、道义情态或无</p>
+                        </div>
+                        <div class="feature-box">
+                            <div class="feature-title">极性（Polarity）</div>
+                            <p>否定极性（有否定词）或肯定极性（无否定词）</p>
+                        </div>
+                        <div class="feature-box">
+                            <div class="feature-title">语义韵律（Semantic Prosody）</div>
+                            <p>搭配词中的语义类别（共120种韵律）</p>
+                        </div>
+                        <div class="feature-box">
+                            <div class="feature-title">话语韵律（Discourse Prosody）</div>
+                            <p>态度模式：积极、消极或中性</p>
+                        </div>
+                        <div class="feature-box">
+                            <div class="feature-title">语域（Register）</div>
+                            <p>COCA中的语域：学术、小说、杂志、电影、新闻、口语、电视</p>
+                        </div>
+                        <div class="feature-box">
+                            <div class="feature-title">言语行为（Speech Act）</div>
+                            <p>话语功能：陈述、提问、指令、承诺</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="results-zh" class="tab-content">
+                    <h3>主要发现</h3>
+                    
+                    <h4>GO (a)round and V</h4>
+                    <ul>
+                        <li>与<span class="highlight">中性话语韵律</span>相关</li>
+                        <li>在规则中仅出现<span class="highlight">道义情态</span></li>
+                        <li>与<span class="highlight">口语语域</span>强相关</li>
+                        <li>仅出现<span class="highlight">肯定极性</span>（从不与否定词一起使用）</li>
+                        <li>与受控未来时态相关，尤其是在肯定极性条件下</li>
+                        <li>由于频率较低，未识别出明显的搭配词或语义韵律</li>
+                    </ul>
+
+                    <h4>GO (a)round Ving</h4>
+                    <ul>
+                        <li>特定动词偏好：<span class="highlight">do, kill, look, pretend, talk, think</span></li>
+                        <li>偏好带有<span class="highlight">"不愉快"语义韵律</span>的动词（指责、破坏、不适当、威胁、暴力）</li>
+                        <li>强烈偏好<span class="highlight">负面话语韵律</span>（20条规则 vs. 仅4条积极规则）</li>
+                        <li>与<span class="highlight">指令和承诺</span>言语行为相关（从不与积极话语韵律一起出现）</li>
+                        <li>经常涉及<span class="highlight">do插入</span>和<span class="highlight">情态化动词短语</span></li>
+                        <li>仅与<span class="highlight">道义情态</span>相关（非认识情态）</li>
+                        <li>负面语境在口语的虚构表现（小说、电影、电视）中出现得比实际口语中更多</li>
+                    </ul>
+
+                    <div class="quote">
+                        "我们的分析表明，区别性的概念必须扩展到包括结构更广泛的使用语境。这与Kemmer和Barlow（2000）基于使用的原则一致，即语境在语言系统的运作中起着关键作用。"
+                    </div>
+                </div>
+
+                <div id="examples-zh" class="tab-content">
+                    <h3>示例句子</h3>
+                    
+                    <h4>GO (a)round and V 示例</h4>
+                    <ol>
+                        <li>"So what they're doing is, they're going around and paying off all of these countries to sign onto the deal."（所以他们正在做的是，他们到处付钱给这些国家签署协议。）(COCA 2015 SPOK Fox: Fox Hannity)</li>
+                        <li>"In my mind, as I saw it happen, she was just going to go around and shoot everyone."（在我的想象中，当我看到它发生时，她只是要到处射杀每个人。）(COCA 2010 NEWS NYTimes)</li>
+                        <li>"You know he invented a little camera. He's going around and spying on us."（你知道他发明了一个小相机。他正在到处监视我们。）(COCA 2012 MOV 3 Day Test)</li>
+                    </ol>
+
+                    <h4>GO (a)round Ving 示例</h4>
+                    <ol>
+                        <li>"Well I don't go around assaulting people"（我不会到处攻击人）(COCA 2019 TV Warrior)</li>
+                        <li>"Unlike a lot of older women with money to burn, she doesn't go around buying fabulous designer fashions that were created for twenty-five-year-olds but look ridiculous on a sixty-five-year-old."（与许多有钱可花的老年女性不同，她不会到处购买为25岁人设计的时尚服装，这些在65岁的人身上看起来很可笑。）(COCA 2010 FIC Bk:ThreadSoThin)</li>
+                        <li>"You shouldn't go around fighting strangers in the forest."（你不应该在森林里到处与陌生人打架。）(COCA 2010 TV Adventure Time)</li>
+                        <li>"You can't go around killing kids!"（你不能到处杀害孩子！）(COCA 2017 TV It's Always Sunny in Philadelphia)</li>
+                        <li>"Matt, you can't go around hitting people just because you don't like what they say."（Matt，你不能仅仅因为不喜欢别人说的话就到处打人。）(COCA 2010 MOV Breaking the Press)</li>
+                    </ol>
+                </div>
+
+                <div id="visualizations-zh" class="tab-content">
+                    <h3>可视化</h3>
+                    
+                    <div class="vis-container">
+                        <div class="vis-box">
+                            <div class="chart-title">GO (a)round and V 特征</div>
+                            <div class="pie-chart"></div>
+                            <div class="legend">
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #3498db;"></div>
+                                    <span>中性话语韵律</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #e74c3c;"></div>
+                                    <span>道义情态</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #2ecc71;"></div>
+                                    <span>口语语域</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #f39c12;"></div>
+                                    <span>肯定极性</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #9b59b6;"></div>
+                                    <span>承诺言语行为</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #1abc9c;"></div>
+                                    <span>陈述言语行为</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: #d35400;"></div>
+                                    <span>未来时态</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="vis-box">
+                            <div class="chart-title">话语韵律比较</div>
+                            <div class="graph-container">
+                                <div class="bar" style="left: 80px; height: 20%; background-color: #3498db;">
+                                    <div class="bar-label">积极</div>
+                                    <div class="bar-value">4</div>
+                                </div>
+                                <div class="bar" style="left: 180px; height: 100%; background-color: #e74c3c;">
+                                    <div class="bar-label">消极</div>
+                                    <div class="bar-value">20</div>
+                                </div>
+                                <div class="bar" style="left: 280px; height: 80%; background-color: #2ecc71;">
+                                    <div class="bar-label">中性</div>
+                                    <div class="bar-value">16</div>
+                                </div>
+                            </div>
+                            <p style="text-align: center; margin-top: 30px;">GO (a)round Ving的话语韵律规则</p>
+                        </div>
+                    </div>
+                    
+                    <div class="vis-box" style="width: 100%;">
+                        <div class="chart-title">关键区别特征</div>
+                        <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                            <thead>
+                                <tr style="background-color: #f2f2f2;">
+                                    <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">特征</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">GO (a)round and V</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">GO (a)round Ving</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">常见搭配词</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">introduce, check, round</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">do, kill, look, pretend, talk, think</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">话语韵律</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">中性</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">消极（尤其是在小说、电影、电视中）</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">极性</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">仅肯定</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">肯定和否定都有</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">语域</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">口语</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">小说、电影、电视</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">语义韵律</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">无明显模式</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">暴力、指责、威胁</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Research Implications</h2>
+        
+        <div id="en-implications" class="lang-content active">
+            <div class="feature-grid">
+                <div class="feature-box">
+                    <div class="feature-title">Theoretical Implications</div>
+                    <p>The concept of distinctiveness must be expanded to include a construction's broader context of usage, supporting Kemmer and Barlow's (2000) tenet that context plays a crucial role in language systems.</p>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-title">Methodological Contribution</div>
+                    <p>Multivariate collexeme analysis provides richer descriptions of constructions than traditional collostructional analyses by identifying complex configurations of features.</p>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-title">Understanding Constructions</div>
+                    <p>Constructions should be viewed as multidimensional entities with both internal and external properties, reintroducing Fillmore's (1988) distinction.</p>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-title">Functional Difference</div>
+                    <p>The analysis reveals that GO (a)round Ving tends to express disapproval of unpleasant behaviors, while GO (a)round and V has more neutral discourse functions.</p>
+                </div>
+            </div>
+            
+            <div class="quote">
+                "Constructions could be described in terms of what Herbst (2018) calls collo-profiles — representations of 'collo-items' occurring with constructions. Essentially, our findings in this study constitute a step towards building what we can call distinctive collo-profiles pertaining to the two constructions."
+            </div>
+        </div>
+        
+        <div id="zh-implications" class="lang-content">
+            <div class="feature-grid">
+                <div class="feature-box">
+                    <div class="feature-title">理论意义</div>
+                    <p>区别性的概念必须扩展到包括结构更广泛的使用语境，支持Kemmer和Barlow（2000）的原则，即语境在语言系统中起着关键作用。</p>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-title">方法论贡献</div>
+                    <p>多变量搭配词分析通过识别复杂的特征配置，提供了比传统搭配结构分析更丰富的结构描述。</p>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-title">理解构式</div>
+                    <p>构式应被视为具有内部和外部属性的多维实体，重新引入Fillmore（1988）的区分。</p>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-title">功能差异</div>
+                    <p>分析表明，GO (a)round Ving倾向于表达对不愉快行为的不认同，而GO (a)round and V具有更中性的话语功能。</p>
+                </div>
+            </div>
+            
+            <div class="quote">
+                "构式可以用Herbst（2018）所称的搭配概况（collo-profiles）来描述——表示与构式一起出现的'搭配项目'。本质上，我们在这项研究中的发现构成了构建我们可以称之为与这两种构式相关的独特搭配概况的一步。"
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleLanguage(lang) {
+            const contents = document.querySelectorAll('.lang-content');
+            const buttons = document.querySelectorAll('.lang-btn');
+            
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            if (lang === 'en') {
+                document.getElementById('en-content').classList.add('active');
+                document.getElementById('en-implications').classList.add('active');
+                document.querySelector('.lang-btn:nth-child(1)').classList.add('active');
+            } else {
+                document.getElementById('zh-content').classList.add('active');
+                document.getElementById('zh-implications').classList.add('active');
+                document.querySelector('.lang-btn:nth-child(2)').classList.add('active');
+            }
+        }
+        
+        function openTab(tabId) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            document.getElementById(tabId).classList.add('active');
+            
+            // Find and activate the correct button
+            const activeTabIndex = Array.from(tabContents).findIndex(content => content.id === tabId);
+            if (activeTabIndex !== -1) {
+                tabButtons[activeTabIndex % 4].classList.add('active');
+            }
+        }
+        
+        // Animation for bars on load
+        window.addEventListener('load', function() {
+            const bars = document.querySelectorAll('.bar');
+            bars.forEach(bar => {
+                const originalHeight = bar.style.height;
+                bar.style.height = '0';
+                setTimeout(() => {
+                    bar.style.height = originalHeight;
+                }, 300);
+            });
+        });
+    </script>
+</body>
+</html>
