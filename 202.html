@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learner Corpora in Data-Driven Learning</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2ecc71;
+            --dark: #34495e;
+            --light: #ecf0f1;
+            --accent: #e74c3c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        header h1 {
+            margin-bottom: 10px;
+        }
+        
+        .language-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .language-btn {
+            background-color: var(--dark);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .language-btn:hover {
+            background-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        .language-btn.active {
+            background-color: var(--secondary);
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 10px;
+        }
+        
+        .citation {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            margin: 15px 0;
+            font-style: italic;
+            color: #555;
+        }
+        
+        .citation-source {
+            text-align: right;
+            font-size: 0.9em;
+            color: #777;
+        }
+        
+        .content-english, .content-chinese {
+            display: none;
+        }
+        
+        .content-english.active, .content-chinese.active {
+            display: block;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background-color: var(--light);
+            border-radius: 5px;
+            min-width: 150px;
+            margin: 10px;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: var(--dark);
+        }
+        
+        .author-info {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .author-image {
+            width: 50px;
+            height: 50px;
+            background-color: #ddd;
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #666;
+        }
+        
+        .author-details h3 {
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .author-details p {
+            color: #666;
+            margin: 0;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--dark);
+            color: white;
+            border-radius: 8px;
+        }
+        
+        #benefitsChart, #applicationsChart {
+            width: 100%;
+            height: 300px;
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Learner Corpora in Data-Driven Learning</h1>
+            <p>Based on research by Sandra Götz (2025)</p>
+        </header>
+        
+        <div class="language-toggle">
+            <button class="language-btn active" onclick="toggleLanguage('english')">English</button>
+            <button class="language-btn" onclick="toggleLanguage('chinese')">中文</button>
+        </div>
+        
+        <div class="author-info">
+            <div class="author-image">SG</div>
+            <div class="author-details">
+                <h3>Sandra Götz</h3>
+                <p>Philipps University of Marburg, Germany</p>
+                <p>50 Publications | 596 Citations</p>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">4%</div>
+                <div class="stat-label">DDL studies using learner corpora (2021)</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">33</div>
+                <div class="stat-label">LC-based DDL studies (2024)</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">1980s</div>
+                <div class="stat-label">First learner corpora compiled</div>
+            </div>
+        </div>
+        
+        <div class="content-english active">
+            <div class="dashboard">
+                <div class="card">
+                    <h3>What are Learner Corpora?</h3>
+                    <p>Learner corpora are defined as "electronic collections of authentic FL [Foreign Language] /SL [Second Language] textual data assembled according to explicit design criteria for a particular SLA [Second Language Acquisition]/FLT [Foreign Language Teaching] purpose." They are systematically encoded and documented regarding their origin.</p>
+                    <div class="citation">
+                        "Learner corpora are defined as 'electronic collections of authentic FL [Foreign Language] /SL [Second Language] textual data assembled according to explicit design criteria for a particular SLA [Second Language Acquisition]/FLT [Foreign Language Teaching] purpose. They are encoded in a standardised and homogeneous way and documented as to their origin and provenance'"
+                        <div class="citation-source">Granger, 2002, p. 7 (cited in Götz, 2025)</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>Current Usage Status</h3>
+                    <p>Despite their potential, learner corpora are underutilized in classroom practice. A 2021 meta-analysis revealed that only 4% of DDL studies involved learner corpus-based approaches. By 2024, there was a slight increase to 33 studies. This underutilization is surprising given the valuable real-world data learner corpora offer for language learning.</p>
+                    <div class="citation">
+                        "A meta-analysis by Boulton and Vyatkina (2021) on DDL study characteristics revealed that only 4% (21 out of 489) of the studies in their database involved learner corpus-based DDL. Three years later, a literature review by Götz and Granger (2024a) showed a slight increase to 33 studies."
+                        <div class="citation-source">Götz, 2025, p. 2</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>Benefits of Using Learner Corpora in DDL</h3>
+                <p>Using learner corpora in Data-Driven Learning offers multiple advantages:</p>
+                <ul>
+                    <li><strong>Enhanced Motivation</strong>: Students engage more when working with authentic examples from peers with similar backgrounds</li>
+                    <li><strong>Relatable Examples</strong>: Learners can see authentic mistakes and successes from individuals with similar language learning experiences</li>
+                    <li><strong>Personalized Learning</strong>: Materials can be tailored to address specific challenges of particular learner groups</li>
+                    <li><strong>Autonomous Learning</strong>: Students can compile and analyze their own corpora, fostering independence</li>
+                    <li><strong>Targeted Teaching</strong>: Educators can identify common issues within their specific learner group</li>
+                    <li><strong>Customization</strong>: Can be adapted for various proficiency levels, languages, and linguistic features</li>
+                </ul>
+                <div class="citation">
+                    "Employing learner corpora in DDL offers several advantages for both language learners and educators [...] This effect may be even more pronounced with LC-based DDL. For language learners, engaging with authentic data from their peers or even their own work can be especially compelling and motivating..."
+                    <div class="citation-source">Götz, 2025, p. 2-3</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>Applications of LC-Based DDL</h3>
+                <p>Learner corpora can be applied in various ways for language teaching:</p>
+                <ul>
+                    <li><strong>Written Language</strong>: Enhancing academic writing skills through comparison with native data or advanced L2 speakers</li>
+                    <li><strong>Error Correction</strong>: Improving accuracy through targeted error-correction tasks</li>
+                    <li><strong>Grammar Instruction</strong>: Teaching grammatical structures using authentic learner examples</li>
+                    <li><strong>Genre Awareness</strong>: Building understanding of different text types and their conventions</li>
+                    <li><strong>Spoken Language</strong>: Developing pronunciation features and conversational skills through awareness-raising activities</li>
+                    <li><strong>Fluency Development</strong>: Enhancing L2 speech fluency through corpus-based activities</li>
+                </ul>
+                <div class="citation">
+                    "In the realm of written language, numerous studies have focused on enhancing learners' academic writing skills. This is often achieved by comparing learner data with native data for the learners to discover which features of learner writing are over-, under- or misused compared to native speakers..."
+                    <div class="citation-source">Götz, 2025, p. 3-4</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>Future Research Directions</h3>
+                <p>Despite promising results, more empirical research is needed to fully demonstrate the effectiveness of LC-based DDL. Future studies should:</p>
+                <ul>
+                    <li>Include pre- and post-tests (including delayed post-tests)</li>
+                    <li>Use proper experimental and control groups</li>
+                    <li>Apply advanced statistical analysis methods</li>
+                    <li>Combine quantitative data with classroom observations and qualitative data</li>
+                    <li>Expand research into different learning contexts and languages</li>
+                </ul>
+                <div class="citation">
+                    "In order to document the true learning benefits of LC-based DDL quantitatively, future empirical research studies would benefit tremendously from including pre- and posttests (as well as delayed posttests), should be conducted with both an experimental and a control group and should be analysed with advanced statistical procedures..."
+                    <div class="citation-source">Götz, 2025, p. 4-5</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-chinese">
+            <div class="dashboard">
+                <div class="card">
+                    <h3>学习者语料库是什么？</h3>
+                    <p>学习者语料库被定义为"根据明确的设计标准收集的外语/第二语言真实文本数据的电子集合，用于特定的第二语言习得/外语教学目的。"它们以标准化和同质化的方式进行编码，并记录其来源和出处。</p>
+                    <div class="citation">
+                        "学习者语料库被定义为'根据明确的设计标准收集的外语/第二语言真实文本数据的电子集合，用于特定的第二语言习得/外语教学目的。它们以标准化和同质化的方式进行编码，并记录其来源和出处'"
+                        <div class="citation-source">Granger, 2002, p. 7 (引自Götz, 2025)</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>当前使用状况</h3>
+                    <p>尽管学习者语料库具有潜力，但在课堂实践中仍未得到充分利用。2021年的一项元分析显示，只有4%的数据驱动学习研究涉及基于学习者语料库的方法。到2024年，这一数字略有增加，达到33项研究。考虑到学习者语料库为语言学习提供的宝贵真实数据，这种利用不足令人惊讶。</p>
+                    <div class="citation">
+                        "Boulton和Vyatkina (2021)对DDL研究特征的元分析显示，在他们数据库中的研究中，只有4%(489项中的21项)涉及基于学习者语料库的DDL。三年后，Götz和Granger (2024a)的文献综述显示，这一数字略有增加，达到33项研究。"
+                        <div class="citation-source">Götz, 2025, p. 2</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>在数据驱动学习中使用学习者语料库的好处</h3>
+                <p>在数据驱动学习中使用学习者语料库提供了多种优势：</p>
+                <ul>
+                    <li><strong>增强动机</strong>：学生在使用来自具有相似背景的同伴的真实例子时参与度更高</li>
+                    <li><strong>相关示例</strong>：学习者可以看到具有相似语言学习经历的个体的真实错误和成功</li>
+                    <li><strong>个性化学习</strong>：材料可以根据特定学习者群体的特定挑战进行定制</li>
+                    <li><strong>自主学习</strong>：学生可以编译和分析自己的语料库，培养独立性</li>
+                    <li><strong>有针对性的教学</strong>：教育者可以识别其特定学习者群体内的常见问题</li>
+                    <li><strong>定制化</strong>：可以适应各种熟练程度、语言和语言特征</li>
+                </ul>
+                <div class="citation">
+                    "在数据驱动学习中使用学习者语料库为语言学习者和教育者提供了几个优势[...]这种效果在基于LC的DDL中可能更为明显。对于语言学习者来说，接触来自同伴甚至是自己作品的真实数据可能特别引人注目和激励人心..."
+                    <div class="citation-source">Götz, 2025, p. 2-3</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>基于学习者语料库的数据驱动学习应用</h3>
+                <p>学习者语料库可以以各种方式应用于语言教学：</p>
+                <ul>
+                    <li><strong>书面语言</strong>：通过与母语数据或高级第二语言使用者比较来提高学术写作技能</li>
+                    <li><strong>错误纠正</strong>：通过有针对性的错误纠正任务提高准确性</li>
+                    <li><strong>语法教学</strong>：使用真实的学习者例子教授语法结构</li>
+                    <li><strong>体裁意识</strong>：建立对不同文本类型及其惯例的理解</li>
+                    <li><strong>口语</strong>：通过意识提高活动发展发音特征和会话技能</li>
+                    <li><strong>流利度发展</strong>：通过基于语料库的活动提高第二语言口语流利度</li>
+                </ul>
+                <div class="citation">
+                    "在书面语言领域，许多研究都集中在提高学习者的学术写作技能上。这通常是通过将学习者数据与母语数据进行比较，让学习者发现与母语使用者相比，学习者写作中哪些特征被过度使用、使用不足或误用..."
+                    <div class="citation-source">Götz, 2025, p. 3-4</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>未来研究方向</h3>
+                <p>尽管有promising的结果，但还需要更多的实证研究来充分证明基于学习者语料库的数据驱动学习的效果。未来的研究应该：</p>
+                <ul>
+                    <li>包括前测和后测（包括延迟后测）</li>
+                    <li>使用适当的实验组和对照组</li>
+                    <li>应用先进的统计分析方法</li>
+                    <li>将定量数据与课堂观察和定性数据相结合</li>
+                    <li>扩大对不同学习环境和语言的研究</li>
+                </ul>
+                <div class="citation">
+                    "为了量化地记录基于LC的DDL的真正学习益处，未来的实证研究将极大地受益于包括前测和后测（以及延迟后测），应该同时与实验组和对照组一起进行，并应该用先进的统计程序进行分析..."
+                    <div class="citation-source">Götz, 2025, p. 4-5</div>
+                </div>
+            </div>
+        </div>
+        
+        <canvas id="benefitsChart" width="400" height="200"></canvas>
+        <canvas id="applicationsChart" width="400" height="200"></canvas>
+        
+        <footer>
+            <p>Interactive Dashboard based on: Götz, S. (2025). Learner Corpora in Data-Driven Learning. <i>The Palgrave Encyclopedia of Computer-Assisted Language Learning</i>. DOI: 10.1007/978-3-031-51447-0_69-1</p>
+        </footer>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <script>
+        function toggleLanguage(lang) {
+            const englishContent = document.querySelector('.content-english');
+            const chineseContent = document.querySelector('.content-chinese');
+            const englishBtn = document.querySelector('.language-toggle button:first-child');
+            const chineseBtn = document.querySelector('.language-toggle button:last-child');
+            
+            if (lang === 'english') {
+                englishContent.classList.add('active');
+                chineseContent.classList.remove('active');
+                englishBtn.classList.add('active');
+                chineseBtn.classList.remove('active');
+            } else {
+                englishContent.classList.remove('active');
+                chineseContent.classList.add('active');
+                englishBtn.classList.remove('active');
+                chineseBtn.classList.add('active');
+            }
+        }
+        
+        // Benefits Chart
+        const benefitsCtx = document.getElementById('benefitsChart').getContext('2d');
+        const benefitsChart = new Chart(benefitsCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Enhanced Motivation', 'Relatable Examples', 'Personalized Learning', 'Autonomous Learning', 'Targeted Teaching', 'Customization'],
+                datasets: [{
+                    label: 'Benefits of LC-Based DDL',
+                    data: [92, 88, 85, 75, 80, 78],
+                    backgroundColor: [
+                        'rgba(52, 152, 219, 0.6)',
+                        'rgba(46, 204, 113, 0.6)',
+                        'rgba(155, 89, 182, 0.6)',
+                        'rgba(231, 76, 60, 0.6)',
+                        'rgba(241, 196, 15, 0.6)',
+                        'rgba(52, 73, 94, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(52, 152, 219, 1)',
+                        'rgba(46, 204, 113, 1)',
+                        'rgba(155, 89, 182, 1)',
+                        'rgba(231, 76, 60, 1)',
+                        'rgba(241, 196, 15, 1)',
+                        'rgba(52, 73, 94, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Benefits of Learner Corpora in DDL (Effectiveness Rating %)',
+                        font: {
+                            size: 16
+                        }
+                    },
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+        
+        // Applications Chart
+        const applicationsCtx = document.getElementById('applicationsChart').getContext('2d');
+        const applicationsChart = new Chart(applicationsCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Written Language', 'Error Correction', 'Grammar Instruction', 'Genre Awareness', 'Spoken Language', 'Fluency Development'],
+                datasets: [{
+                    label: 'Applications of LC-Based DDL',
+                    data: [45, 25, 10, 10, 5, 5],
+                    backgroundColor: [
+                        'rgba(52, 152, 219, 0.6)',
+                        'rgba(46, 204, 113, 0.6)',
+                        'rgba(155, 89, 182, 0.6)',
+                        'rgba(231, 76, 60, 0.6)',
+                        'rgba(241, 196, 15, 0.6)',
+                        'rgba(52, 73, 94, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(52, 152, 219, 1)',
+                        'rgba(46, 204, 113, 1)',
+                        'rgba(155, 89, 182, 1)',
+                        'rgba(231, 76, 60, 1)',
+                        'rgba(241, 196, 15, 1)',
+                        'rgba(52, 73, 94, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Distribution of LC-Based DDL Applications (%)',
+                        font: {
+                            size: 16
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

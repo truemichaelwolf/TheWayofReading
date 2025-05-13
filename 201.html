@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Types of Corpora in Data-Driven Learning</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #4a86e8;
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .language-toggle {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .toggle-btn {
+            padding: 8px 16px;
+            background-color: #4a86e8;
+            border: none;
+            color: white;
+            cursor: pointer;
+            margin: 0 5px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        .toggle-btn.active {
+            background-color: #2a5db0;
+            transform: scale(1.05);
+        }
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .tab-container {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .tab {
+            padding: 10px 20px;
+            background-color: #ddd;
+            cursor: pointer;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+            transition: background-color 0.3s;
+        }
+        .tab.active {
+            background-color: #4a86e8;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background-color: white;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            flex: 1;
+            min-width: 300px;
+        }
+        .quote {
+            background-color: #f8f9fa;
+            border-left: 4px solid #4a86e8;
+            padding: 10px 20px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        .definition {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .chart-container {
+            flex: 1;
+            min-width: 350px;
+            height: 400px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        h1, h2, h3 {
+            color: #2a5db0;
+        }
+        .category-btn {
+            display: inline-block;
+            margin: 5px;
+            padding: 10px 15px;
+            background-color: #e8f0fe;
+            border: 1px solid #4a86e8;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .category-btn:hover, .category-btn.active {
+            background-color: #4a86e8;
+            color: white;
+        }
+        .info-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .info-box {
+            display: none;
+            padding: 15px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: 10px;
+            width: 100%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #4a86e8;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .example {
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .language-content {
+            display: none;
+        }
+        .language-content.active {
+            display: block;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            .chart-container {
+                min-height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Types of Corpora in Data-Driven Learning</h1>
+            <p>Based on research by Pascual Pérez-Paredes and Carlos Ordoñana-Guillamón (2025)</p>
+        </div>
+
+        <div class="language-toggle">
+            <button class="toggle-btn active" onclick="toggleLanguage('en')">English</button>
+            <button class="toggle-btn" onclick="toggleLanguage('zh')">中文</button>
+        </div>
+
+        <!-- English Content -->
+        <div id="en-content" class="language-content active">
+            <div class="definition">
+                <h3>What is a Corpus?</h3>
+                <p>A corpus is defined as "a large and principled sample of texts designed to represent a target domain of language use (e.g., a language, dialect, or register)" (Egbert et al., 2022, p. 7).</p>
+                <p>Data-driven learning (DDL) promotes inductive learning by fostering the autonomous exploration of authentic linguistic data, positioning the learner as "a sort of researcher who discovers linguistic patterns in attested uses of language" (Pérez-Paredes & Ordoñana-Guillamón, 2025).</p>
+            </div>
+
+            <div class="tab-container">
+                <div class="tabs">
+                    <div class="tab active" onclick="openTab('size-en')">By Size</div>
+                    <div class="tab" onclick="openTab('nature-en')">By Nature</div>
+                    <div class="tab" onclick="openTab('theme-en')">By Thematic Cohesion</div>
+                    <div class="tab" onclick="openTab('examples-en')">Examples & Applications</div>
+                </div>
+
+                <div id="size-en" class="tab-content active">
+                    <h2>Corpus Classification by Size</h2>
+                    <div class="info-container">
+                        <div class="card">
+                            <h3>Macro-corpora</h3>
+                            <p>Macro-corpora aim for general, genre-balanced representativeness of a particular linguistic domain. These are typically large collections built within research projects.</p>
+                            <div class="quote">
+                                "Large and very large corpora are usually built, compiled and annotated within the framework of research projects in linguistics and applied linguistics, often in collaboration with commercial entities and public institutions." (Pérez-Paredes & Ordoñana-Guillamón, 2025)
+                            </div>
+                            <p><strong>Examples:</strong> British National Corpus (BNC), Corpus of Contemporary American English (COCA), iWeb Corpus, TenTen corpus family</p>
+                            <p><strong>Advantages:</strong> Opportunities to explore genre variation and local grammar of target lexicogrammatical items; often available online and annotated</p>
+                        </div>
+                        <div class="card">
+                            <h3>Micro-corpora</h3>
+                            <p>Micro-corpora refer to smaller collections of texts that are often the result of a needs analysis and adapted to specific classroom contexts.</p>
+                            <div class="quote">
+                                "Micro-corpora are needs-driven and, especially in the cases of ad hoc and DIY corpora, tend to be usable only in the contexts they were designed for." (Pérez-Paredes & Ordoñana-Guillamón, 2025)
+                            </div>
+                            <p><strong>Types include:</strong></p>
+                            <ul>
+                                <li>Ad hoc corpora - compiled to address a target language point</li>
+                                <li>Pedagogic/pedagogically-oriented corpora - collected based on needs analysis</li>
+                                <li>Personal/student-led/DIY corpora - helps with discourse analysis-based instruction</li>
+                            </ul>
+                            <p><strong>Advantages:</strong> Increased learner motivation, helps with hypothesis verification, allows comparison between learner and expert linguistic production</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="nature-en" class="tab-content">
+                    <h2>Corpus Classification by Nature</h2>
+                    <div class="info-container">
+                        <div class="card">
+                            <h3>Written Corpora</h3>
+                            <p>Written corpora include different genres and styles, allowing users to focus on stylistic and discursive features across written genres.</p>
+                            <div class="quote">
+                                "Written corpora are by a wide margin the most commonly available type of corpora due to how easy they are to find, compile and annotate for further analyses." (Pérez-Paredes & Ordoñana-Guillamón, 2025)
+                            </div>
+                            <p><strong>Common uses:</strong> Analysis of grammar, vocabulary, and writing styles</p>
+                            <p><strong>Examples:</strong> British National Corpus (BNC), Corpus of Contemporary American English (COCA), British Academic Written English corpus (BAWE)</p>
+                        </div>
+                        <div class="card">
+                            <h3>Spoken Corpora</h3>
+                            <p>Spoken corpora allow observation of naturally occurring spoken language, potentially covering linguistic factors like intonation, gestures, and discursive structure.</p>
+                            <div class="quote">
+                                "Spoken corpora tend to be smaller than written corpora, although examples of relatively large spoken corpora can still be found in, for instance, the spoken BNC, the Trinity Lancaster Corpus (TLC), or in the Michigan Corpus of Academic Spoken English (MICASE)." (Pérez-Paredes & Ordoñana-Guillamón, 2025)
+                            </div>
+                            <p><strong>Types:</strong> Conversational corpora, academic spoken corpora, monologic corpora, media-driven corpora</p>
+                            <p><strong>Applications:</strong> Phraseology instruction, pedagogical decisions for different proficiency levels</p>
+                        </div>
+                        <div class="card">
+                            <h3>Multimodal Corpora</h3>
+                            <p>Multimodal corpora combine audio, visual, and language data, allowing exploration of lexicogrammatical instances with other semiotic elements.</p>
+                            <div class="quote">
+                                "The implementation of multimodal corpora into DDL practices is still in its very early stages, leaving its potential largely unexplored." (Pérez-Paredes & Ordoñana-Guillamón, 2025)
+                            </div>
+                            <p><strong>Tools:</strong> Anvil, Elan, YouGlish</p>
+                            <p><strong>Potential:</strong> More attractive and user-friendly for younger learners</p>
+                        </div>
+                        <div class="card">
+                            <h3>Parallel Corpora</h3>
+                            <p>Parallel corpora include texts in at least two different languages, synchronized to phrase or sentence level for direct comparison.</p>
+                            <div class="quote">
+                                "Parallel corpora have many uses in foreign language and DDL instruction, especially when lessons are focused on translation and phraseology." (Pérez-Paredes & Ordoñana-Guillamón, 2025)
+                            </div>
+                            <p><strong>Examples:</strong> English-Norwegian Parallel Corpus (ENPC), English-Swedish Parallel Corpus (ESPC), CLUVI, EPTIC</p>
+                            <p><strong>Applications:</strong> Error correction, translation instruction, development of translation strategies</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="theme-en" class="tab-content">
+                    <h2>Corpus Classification by Thematic Cohesion</h2>
+                    <p>Thematic cohesion refers to the guiding principles behind the design of a corpus - the deliberate criteria that determine what texts are included.</p>
+                    <div class="quote">
+                        "The dimension of thematic cohesion would thus refer to the guiding principles behind design of a given corpus." (Pérez-Paredes & Ordoñana-Guillamón, 2025)
+                    </div>
+
+                    <div class="info-container">
+                        <div class="card">
+                            <h3>General Corpora</h3>
+                            <p>General corpora aim to represent a language broadly, covering a wide range of genres, registers, and domains.</p>
+                            <p><strong>Examples:</strong> BNC (British English focus), COCA (American English focus)</p>
+                            <p><strong>Applications:</strong> Help lower-proficiency learners improve vocabulary skills, provide broad linguistic patterns</p>
+                        </div>
+                        <div class="card">
+                            <h3>Specialized Corpora</h3>
+                            <p>Specialized corpora focus on specific domains, disciplines, or genres to target particular language features.</p>
+                            <div class="quote">
+                                "Charles (2015) has suggested putting together genre- and discipline-specific corpora (e.g. for science and engineering students) to target specific vocabulary which would otherwise get diluted within a larger 'general' corpus." (Pérez-Paredes & Ordoñana-Guillamón, 2025)
+                            </div>
+                            <p><strong>Examples:</strong> British Academic Written English (BAWE) corpus (academic texts), British Law Report Corpus (BLaRC) (UK judicial decisions)</p>
+                            <p><strong>Applications:</strong> Teaching technical vocabulary in specific fields like nursing, pharmacology, or law</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="examples-en" class="tab-content">
+                    <h2>Examples and Applications</h2>
+                    
+                    <div class="example">
+                        <h3>Example of Corpus Conceptualization</h3>
+                        <table>
+                            <tr>
+                                <th>Category</th>
+                                <th>SACODEYL English</th>
+                            </tr>
+                            <tr>
+                                <td>Corpus size</td>
+                                <td>51,500 words (Microcorpus)</td>
+                            </tr>
+                            <tr>
+                                <td>Corpus nature</td>
+                                <td>Spoken corpus (Interviews with teenagers - L1 English)</td>
+                            </tr>
+                            <tr>
+                                <td>Corpus thematic cohesion</td>
+                                <td>Pedagogic corpus (Topic-driven interviews on holidays, hobbies, school, etc.)</td>
+                            </tr>
+                            <tr>
+                                <td>Multimedia available</td>
+                                <td>No</td>
+                            </tr>
+                            <tr>
+                                <td>Annotation available and format</td>
+                                <td>Yes. Pedagogic annotation. Corpus annotated using XML</td>
+                            </tr>
+                        </table>
+                        <p><i>Source: Pérez-Paredes & Ordoñana-Guillamón (2025)</i></p>
+                    </div>
+
+                    <div class="info-container">
+                        <div class="card">
+                            <h3>Educational Applications of DDL with Corpora</h3>
+                            <ul>
+                                <li><strong>Vocabulary acquisition:</strong> Using concordance lines to identify patterns, collocations, and meanings</li>
+                                <li><strong>Grammar analysis:</strong> Observing grammatical structures in authentic contexts</li>
+                                <li><strong>Writing skills:</strong> Analyzing genre-specific features and phraseology</li>
+                                <li><strong>Translation:</strong> Comparing language use across languages with parallel corpora</li>
+                                <li><strong>Error correction:</strong> Using learner corpora to address common mistakes</li>
+                                <li><strong>Technical vocabulary:</strong> Focusing on specialized language for specific domains</li>
+                            </ul>
+                            <div class="quote">
+                                "The combination of corpora and DDL creates a dynamic and learner-focused learning environment that encourages students to take an active role in their language acquisition." (Pérez-Paredes & Ordoñana-Guillamón, 2025)
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <h3>Benefits of DDL with Different Corpus Types</h3>
+                            <ul>
+                                <li><strong>Macro-corpora:</strong> Provide rich contexts and variety of language uses</li>
+                                <li><strong>Micro-corpora:</strong> More targeted and relevant to specific learner needs</li>
+                                <li><strong>Written corpora:</strong> Easier to analyze and extract patterns</li>
+                                <li><strong>Spoken corpora:</strong> Expose learners to authentic oral language features</li>
+                                <li><strong>Multimodal corpora:</strong> Engage learners with visual and audio elements</li>
+                                <li><strong>Parallel corpora:</strong> Support translation skills and cross-linguistic awareness</li>
+                            </ul>
+                            <div class="quote">
+                                "DDL is flexible and adaptable to various learner needs and teaching goals, but it is essential that language teachers understand how and why a particular corpus was put together." (Pérez-Paredes & Ordoñana-Guillamón, 2025)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3>Three-Dimensional Framework of Corpora Types</h3>
+                <div style="display: flex; flex-direction: column; height: 100%;">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <p>Click on the categories below to explore:</p>
+                        <button class="category-btn active" onclick="showInfo('framework-en')">Overview</button>
+                        <button class="category-btn" onclick="showInfo('size-info-en')">Size</button>
+                        <button class="category-btn" onclick="showInfo('nature-info-en')">Nature</button>
+                        <button class="category-btn" onclick="showInfo('theme-info-en')">Thematic Cohesion</button>
+                    </div>
+                    
+                    <div id="framework-en" class="info-box" style="display: block;">
+                        <h3>Three-Dimensional Framework</h3>
+                        <p>Corpora can be classified according to three interrelated dimensions:</p>
+                        <ol>
+                            <li><strong>Size:</strong> From micro-corpora to macro-corpora</li>
+                            <li><strong>Nature:</strong> Written, spoken, multimodal, or parallel</li>
+                            <li><strong>Thematic Cohesion:</strong> From general to specialized</li>
+                        </ol>
+                        <div class="quote">
+                            "Thus, the BAWE corpus can be classified as a macro-written-academic corpus, while the Louvain International Database of Spoken English Interlanguage (LINDSEI) can be categorised as a micro-spoken-learner corpus." (Pérez-Paredes & Ordoñana-Guillamón, 2025)
+                        </div>
+                    </div>
+                    
+                    <div id="size-info-en" class="info-box">
+                        <h3>Size Dimension</h3>
+                        <p><strong>Macro-corpora:</strong> Large collections (millions to billions of words) that aim for general representativeness</p>
+                        <p><strong>Micro-corpora:</strong> Smaller collections designed for specific purposes or contexts</p>
+                        <p>The appropriate size depends on the intended use and available resources. While larger corpora may offer more comprehensive language coverage, smaller corpora can be more targeted to specific learning needs.</p>
+                    </div>
+                    
+                    <div id="nature-info-en" class="info-box">
+                        <h3>Nature Dimension</h3>
+                        <p><strong>Written corpora:</strong> Focus on written genres and styles</p>
+                        <p><strong>Spoken corpora:</strong> Capture naturally occurring spoken language</p>
+                        <p><strong>Multimodal corpora:</strong> Combine text with audio/visual elements</p>
+                        <p><strong>Parallel corpora:</strong> Include texts in multiple languages for comparison</p>
+                        <p>Each type offers unique insights into language use across different modes of communication.</p>
+                    </div>
+                    
+                    <div id="theme-info-en" class="info-box">
+                        <h3>Thematic Cohesion Dimension</h3>
+                        <p><strong>General corpora:</strong> Broad coverage across domains and genres</p>
+                        <p><strong>Specialized corpora:</strong> Focus on specific domains, disciplines or genres</p>
+                        <p>The thematic focus determines what linguistic patterns and features will be prominent in the corpus.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chinese Content -->
+        <div id="zh-content" class="language-content">
+            <div class="definition">
+                <h3>什么是语料库？</h3>
+                <p>语料库被定义为"一个大型且有原则的文本样本，旨在代表特定语言使用领域（例如，语言、方言或语域）"（Egbert等，2022年，第7页）。</p>
+                <p>数据驱动学习（DDL）通过促进对真实语言数据的自主探索来促进归纳学习，将学习者定位为"一种研究者，他在经证实的语言使用中发现语言模式"（Pérez-Paredes & Ordoñana-Guillamón，2025年）。</p>
+            </div>
+
+            <div class="tab-container">
+                <div class="tabs">
+                    <div class="tab active" onclick="openTab('size-zh')">按规模分类</div>
+                    <div class="tab" onclick="openTab('nature-zh')">按性质分类</div>
+                    <div class="tab" onclick="openTab('theme-zh')">按主题凝聚力分类</div>
+                    <div class="tab" onclick="openTab('examples-zh')">示例与应用</div>
+                </div>
+
+                <div id="size-zh" class="tab-content active">
+                    <h2>按规模分类的语料库</h2>
+                    <div class="info-container">
+                        <div class="card">
+                            <h3>宏语料库</h3>
+                            <p>宏语料库旨在对特定语言领域进行一般性、体裁平衡的代表性。这些通常是在语言学和应用语言学研究项目中构建的大型集合。</p>
+                            <div class="quote">
+                                "大型和超大型语料库通常是在语言学和应用语言学研究项目的框架内构建、编译和注释的，通常与商业实体和公共机构合作。"（Pérez-Paredes & Ordoñana-Guillamón，2025年）
+                            </div>
+                            <p><strong>示例：</strong>英国国家语料库（BNC），当代美国英语语料库（COCA），iWeb语料库，TenTen语料库系列</p>
+                            <p><strong>优势：</strong>提供探索体裁变化和目标词汇语法项的局部语法的机会；通常在线可用且有注释</p>
+                        </div>
+                        <div class="card">
+                            <h3>微语料库</h3>
+                            <p>微语料库指的是较小的文本集合，这些文本通常是需求分析的结果，并适应特定课堂环境。</p>
+                            <div class="quote">
+                                "微语料库是需求驱动的，特别是在临时语料库和DIY语料库的情况下，往往只能在为其设计的环境中使用。"（Pérez-Paredes & Ordoñana-Guillamón，2025年）
+                            </div>
+                            <p><strong>类型包括：</strong></p>
+                            <ul>
+                                <li>临时语料库 - 为解决目标语言点而编制</li>
+                                <li>教学/面向教学的语料库 - 基于需求分析收集</li>
+                                <li>个人/学生主导/DIY语料库 - 有助于基于话语分析的教学</li>
+                            </ul>
+                            <p><strong>优势：</strong>提高学习者动机，帮助假设验证，允许比较学习者和专家的语言产出</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="nature-zh" class="tab-content">
+                    <h2>按性质分类的语料库</h2>
+                    <div class="info-container">
+                        <div class="card">
+                            <h3>书面语料库</h3>
+                            <p>书面语料库包括不同的体裁和风格，允许用户关注跨书面体裁的文体和话语特征。</p>
+                            <div class="quote">
+                                "书面语料库是目前最常见的语料库类型，因为它们很容易找到、编译和注释以进行进一步分析。"（Pérez-Paredes & Ordoñana-Guillamón，2025年）
+                            </div>
+                            <p><strong>常见用途：</strong>语法、词汇和写作风格的分析</p>
+                            <p><strong>示例：</strong>英国国家语料库（BNC），当代美国英语语料库（COCA），英国学术书面英语语料库（BAWE）</p>
+                        </div>
+                        <div class="card">
+                            <h3>口语语料库</h3>
+                            <p>口语语料库允许观察自然发生的口语，可能涵盖语调、手势和话语结构等语言因素。</p>
+                            <div class="quote">
+                                "口语语料库往往比书面语料库小，尽管在口语BNC、三一兰卡斯特语料库（TLC）或密歇根学术口语英语语料库（MICASE）等方面仍然可以找到相对较大的口语语料库的例子。"（Pérez-Paredes & Ordoñana-Guillamón，2025年）
+                            </div>
+                            <p><strong>类型：</strong>会话语料库、学术口语语料库、独白语料库、媒体驱动的语料库</p>
+                            <p><strong>应用：</strong>词汇教学，针对不同熟练程度的教学决策</p>
+                        </div>
+                        <div class="card">
+                            <h3>多模态语料库</h3>
+                            <p>多模态语料库结合了音频、视觉和语言数据，允许探索词汇语法实例与其他符号元素的交互。</p>
+                            <div class="quote">
+                                "多模态语料库在DDL实践中的实施仍处于早期阶段，其潜力在很大程度上尚未被探索。"（Pérez-Paredes & Ordoñana-Guillamón，2025年）
+                            </div>
+                            <p><strong>工具：</strong>Anvil、Elan、YouGlish</p>
+                            <p><strong>潜力：</strong>对年轻学习者更具吸引力和用户友好性</p>
+                        </div>
+                        <div class="card">
+                            <h3>平行语料库</h3>
+                            <p>平行语料库包括至少两种不同语言的文本，同步到短语或句子级别以进行直接比较。</p>
+                            <div class="quote">
+                                "平行语料库在外语和DDL教学中有很多用途，特别是当课程侧重于翻译和词汇学时。"（Pérez-Paredes & Ordoñana-Guillamón，2025年）
+                            </div>
+                            <p><strong>示例：</strong>英语-挪威平行语料库（ENPC），英语-瑞典平行语料库（ESPC），CLUVI，EPTIC</p>
+                            <p><strong>应用：</strong>错误纠正，翻译教学，翻译策略的发展</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="theme-zh" class="tab-content">
+                    <h2>按主题凝聚力分类的语料库</h2>
+                    <p>主题凝聚力指的是语料库设计背后的指导原则——确定包含哪些文本的刻意标准。</p>
+                    <div class="quote">
+                        "主题凝聚力维度因此指的是给定语料库设计背后的指导原则。"（Pérez-Paredes & Ordoñana-Guillamón，2025年）
+                    </div>
+
+                    <div class="info-container">
+                        <div class="card">
+                            <h3>通用语料库</h3>
+                            <p>通用语料库旨在广泛代表一种语言，涵盖各种体裁、语域和领域。</p>
+                            <p><strong>示例：</strong>BNC（英国英语为重点），COCA（美国英语为重点）</p>
+                            <p><strong>应用：</strong>帮助较低熟练度的学习者提高词汇技能，提供广泛的语言模式</p>
+                        </div>
+                        <div class="card">
+                            <h3>专业语料库</h3>
+                            <p>专业语料库专注于特定领域、学科或体裁，以针对特定语言特征。</p>
+                            <div class="quote">
+                                "Charles（2015）建议为科学和工程学生等创建特定体裁和学科的语料库，以针对特定词汇，这些词汇在更大的'通用'语料库中可能会被稀释。"（Pérez-Paredes & Ordoñana-Guillamón，2025年）
+                            </div>
+                            <p><strong>示例：</strong>英国学术书面英语（BAWE）语料库（学术文本），英国法律报告语料库（BLaRC）（英国司法判决）</p>
+                            <p><strong>应用：</strong>在护理、药理学或法律等特定领域教授技术词汇</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="examples-zh" class="tab-content">
+                    <h2>示例和应用</h2>
+                    
+                    <div class="example">
+                        <h3>语料库概念化示例</h3>
+                        <table>
+                            <tr>
+                                <th>类别</th>
+                                <th>SACODEYL英语语料库</th>
+                            </tr>
+                            <tr>
+                                <td>语料库规模</td>
+                                <td>51,500词（微语料库）</td>
+                            </tr>
+                            <tr>
+                                <td>语料库性质</td>
+                                <td>口语语料库（与母语为英语的青少年的访谈）</td>
+                            </tr>
+                            <tr>
+                                <td>语料库主题凝聚力</td>
+                                <td>教学语料库（以主题为导向的访谈，如假期、爱好、学校等）</td>
+                            </tr>
+                            <tr>
+                                <td>多媒体可用性</td>
+                                <td>否</td>
+                            </tr>
+                            <tr>
+                                <td>注释可用性和格式</td>
+                                <td>是。教学注释。使用XML注释的语料库</td>
+                            </tr>
+                        </table>
+                        <p><i>来源：Pérez-Paredes & Ordoñana-Guillamón（2025年）</i></p>
+                    </div>
+
+                    <div class="info-container">
+                        <div class="card">
+                            <h3>使用语料库进行DDL的教育应用</h3>
+                            <ul>
+                                <li><strong>词汇获取：</strong>使用一致线索来识别模式、搭配和含义</li>
+                                <li><strong>语法分析：</strong>在真实环境中观察语法结构</li>
+                                <li><strong>写作技能：</strong>分析特定体裁的特征和词汇学</li>
+                                <li><strong>翻译：</strong>使用平行语料库比较跨语言的语言使用</li>
+                                <li><strong>错误纠正：</strong>使用学习者语料库解决常见错误</li>
+                                <li><strong>技术词汇：</strong>专注于特定领域的专业语言</li>
+                            </ul>
+                            <div class="quote">
+                                "语料库和DDL的结合创造了一个动态的、以学习者为中心的学习环境，鼓励学生在语言习得中扮演积极角色。"（Pérez-Paredes & Ordoñana-Guillamón，2025年）
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <h3>使用不同类型语料库进行DDL的益处</h3>
+                            <ul>
+                                <li><strong>宏语料库：</strong>提供丰富的语境和各种语言用法</li>
+                                <li><strong>微语料库：</strong>更有针对性，更贴合特定学习者需求</li>
+                                <li><strong>书面语料库：</strong>更容易分析和提取模式</li>
+                                <li><strong>口语语料库：</strong>让学习者接触真实的口语特征</li>
+                                <li><strong>多模态语料库：</strong>通过视觉和音频元素吸引学习者</li>
+                                <li><strong>平行语料库：</strong>支持翻译技能和跨语言意识</li>
+                            </ul>
+                            <div class="quote">
+                                "DDL对各种学习者需求和教学目标具有灵活性和适应性，但语言教师了解特定语料库如何以及为何被组建起来是至关重要的。"（Pérez-Paredes & Ordoñana-Guillamón，2025年）
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3>语料库类型的三维框架</h3>
+                <div style="display: flex; flex-direction: column; height: 100%;">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <p>点击下面的类别进行探索：</p>
+                        <button class="category-btn active" onclick="showInfo('framework-zh')">概览</button>
+                        <button class="category-btn" onclick="showInfo('size-info-zh')">规模</button>
+                        <button class="category-btn" onclick="showInfo('nature-info-zh')">性质</button>
+                        <button class="category-btn" onclick="showInfo('theme-info-zh')">主题凝聚力</button>
+                    </div>
+                    
+                    <div id="framework-zh" class="info-box" style="display: block;">
+                        <h3>三维框架</h3>
+                        <p>语料库可以根据三个相互关联的维度进行分类：</p>
+                        <ol>
+                            <li><strong>规模：</strong>从微语料库到宏语料库</li>
+                            <li><strong>性质：</strong>书面、口语、多模态或平行</li>
+                            <li><strong>主题凝聚力：</strong>从通用到专业</li>
+                        </ol>
+                        <div class="quote">
+                            "因此，BAWE语料库可以被归类为宏-书面-学术语料库，而口语英语学习者国际数据库（LINDSEI）可以被归类为微-口语-学习者语料库。"（Pérez-Paredes & Ordoñana-Guillamón，2025年）
+                        </div>
+                    </div>
+                    
+                    <div id="size-info-zh" class="info-box">
+                        <h3>规模维度</h3>
+                        <p><strong>宏语料库：</strong>大型集合（数百万到数十亿词），旨在实现一般代表性</p>
+                        <p><strong>微语料库：</strong>为特定目的或环境设计的较小集合</p>
+                        <p>适当的规模取决于预期用途和可用资源。虽然较大的语料库可能提供更全面的语言覆盖，但较小的语料库可能更有针对性地满足特定学习需求。</p>
+                    </div>
+                    
+                    <div id="nature-info-zh" class="info-box">
+                        <h3>性质维度</h3>
+                        <p><strong>书面语料库：</strong>关注书面体裁和风格</p>
+                        <p><strong>口语语料库：</strong>捕捉自然发生的口语</p>
+                        <p><strong>多模态语料库：</strong>将文本与音频/视觉元素结合</p>
+                        <p><strong>平行语料库：</strong>包括多种语言的文本以进行比较</p>
+                        <p>每种类型都提供了跨不同交流模式的语言使用的独特见解。</p>
+                    </div>
+                    
+                    <div id="theme-info-zh" class="info-box">
+                        <h3>主题凝聚力维度</h3>
+                        <p><strong>通用语料库：</strong>跨领域和体裁的广泛覆盖</p>
+                        <p><strong>专业语料库：</strong>专注于特定领域、学科或体裁</p>
+                        <p>主题焦点决定了语料库中将突出哪些语言模式和特征。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Based on: Pérez-Paredes, P. & Ordoñana-Guillamón, C. (2025). Types of Corpora in Data-Driven Learning. In: McCallum, L., Tafazoli, D. (eds) The Palgrave Encyclopedia of Computer-Assisted Language Learning.</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleLanguage(lang) {
+            const contents = document.querySelectorAll('.language-content');
+            const buttons = document.querySelectorAll('.toggle-btn');
+            
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            document.getElementById(lang + '-content').classList.add('active');
+            event.target.classList.add('active');
+            
+            // Reset active tabs for the newly selected language
+            if (lang === 'en') {
+                openTab('size-en');
+            } else if (lang === 'zh') {
+                openTab('size-zh');
+            }
+        }
+        
+        function openTab(tabId) {
+            const lang = tabId.split('-')[1];
+            const tabContents = document.querySelectorAll(`[id$="-${lang}"].tab-content`);
+            const tabs = document.querySelectorAll(`.tab`);
+            
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(tabId).classList.add('active');
+            
+            // Find and activate the corresponding tab button
+            const activeTabIndex = Array.from(tabContents).findIndex(content => content.id === tabId);
+            if (activeTabIndex !== -1) {
+                const tabButtons = document.querySelectorAll(`.tabs .tab`);
+                const languageTabs = Array.from(tabButtons).filter(tab => {
+                    const tabLang = tab.textContent.includes('按') ? 'zh' : 'en';
+                    return tabLang === lang;
+                });
+                
+                if (languageTabs[activeTabIndex]) {
+                    languageTabs[activeTabIndex].classList.add('active');
+                }
+            }
+        }
+        
+        function showInfo(infoId) {
+            const infoBoxes = document.querySelectorAll('.info-box');
+            const buttons = document.querySelectorAll('.category-btn');
+            
+            infoBoxes.forEach(box => {
+                box.style.display = 'none';
+            });
+            
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            document.getElementById(infoId).style.display = 'block';
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

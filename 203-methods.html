@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multivariate Collexeme Analysis Methods</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-bg: #f5f7fa;
+            --dark-bg: #34495e;
+            --text-color: #333;
+            --light-text: #ecf0f1;
+            --border-color: #ddd;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-bg);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1, h2, h3, h4 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+        
+        header h1 {
+            color: var(--light-text);
+        }
+        
+        .language-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .language-btn {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .language-btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .language-btn.active {
+            background-color: var(--secondary-color);
+        }
+        
+        .lang-content {
+            display: none;
+        }
+        
+        .lang-content.active {
+            display: block;
+        }
+        
+        .panel {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .tab:hover {
+            color: var(--secondary-color);
+        }
+        
+        .tab.active {
+            border-bottom-color: var(--secondary-color);
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .data-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .data-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: var(--text-color);
+            font-size: 14px;
+        }
+        
+        .code-block {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--secondary-color);
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', Courier, monospace;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        
+        .quote {
+            font-style: italic;
+            padding: 15px;
+            border-left: 3px solid var(--secondary-color);
+            background-color: rgba(52, 152, 219, 0.1);
+            margin: 15px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .flow-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex-grow: 1;
+        }
+        
+        .flow-step:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            top: 40px;
+            left: 20px;
+            width: 2px;
+            height: 30px;
+            background-color: var(--border-color);
+        }
+        
+        .highlight {
+            background-color: #fffacd;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Multivariate Collexeme Analysis Methods</h1>
+            <p>A comprehensive overview of the methodology used in Jensen & Gries (2025)</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="language-toggle">
+            <button class="language-btn active" onclick="toggleLanguage('en')">English</button>
+            <button class="language-btn" onclick="toggleLanguage('zh')">中文</button>
+        </div>
+        
+        <!-- English Content -->
+        <div id="en-content" class="lang-content active">
+            <div class="panel">
+                <div class="quote">
+                    "Going much beyond previous work, this paper explores the possibility of expanding collostructional analysis into including even more features. More specifically, we apply a method that we call multivariate collexeme analysis."
+                </div>
+                
+                <p>This dashboard presents a detailed overview of the multivariate collexeme analysis methodology introduced by Jensen & Gries (2025). This innovative approach extends traditional collostructional analysis to include multiple contextual features simultaneously, providing a richer understanding of constructional differences.</p>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="openTab('overview-en')">Overview</div>
+                    <div class="tab" onclick="openTab('data-collection-en')">Data Collection</div>
+                    <div class="tab" onclick="openTab('annotation-en')">Data Annotation</div>
+                    <div class="tab" onclick="openTab('association-rules-en')">Association Rules</div>
+                    <div class="tab" onclick="openTab('implementation-en')">Implementation</div>
+                    <div class="tab" onclick="openTab('advantages-en')">Advantages</div>
+                </div>
+                
+                <div id="overview-en" class="tab-content active">
+                    <h2>Method Overview</h2>
+                    
+                    <p>The multivariate collexeme analysis method is designed to identify distinctive patterns across multiple dimensions that differentiate between two seemingly similar constructions:</p>
+                    
+                    <div class="two-column">
+                        <div class="data-card">
+                            <h3>GO (a)round and V</h3>
+                            <p>Examples:</p>
+                            <ul>
+                                <li>"They're going around and paying off all of these countries."</li>
+                                <li>"He's going around and spying on us."</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="data-card">
+                            <h3>GO (a)round Ving</h3>
+                            <p>Examples:</p>
+                            <ul>
+                                <li>"Well I don't go around assaulting people."</li>
+                                <li>"You shouldn't go around fighting strangers."</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <h3>Methodology Goals</h3>
+                    <p>The research aims to:</p>
+                    <ul>
+                        <li>Extend collostructional analysis beyond individual lexemes</li>
+                        <li>Include multiple contextual dimensions simultaneously</li>
+                        <li>Identify complex patterns of feature interactions</li>
+                        <li>Create comprehensive "collo-profiles" of constructions</li>
+                        <li>Demonstrate how context contributes to constructional knowledge</li>
+                    </ul>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Data Collection</h4>
+                            <p>Corpus queries to collect instances of both constructions from COCA</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Manual Annotation</h4>
+                            <p>Coding of 8 feature categories for each instance</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Association Rules Analysis</h4>
+                            <p>Application of data mining technique to identify distinctive feature patterns</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Rule Filtering &amp; Interpretation</h4>
+                            <p>Selection of significant rules and interpretation of feature interactions</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="data-collection-en" class="tab-content">
+                    <h2>Data Collection</h2>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value">COCA</div>
+                            <div class="stat-label">Corpus Source</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">248M</div>
+                            <div class="stat-label">Words in Corpus Portion</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">2010-2019</div>
+                            <div class="stat-label">Time Period</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">7</div>
+                            <div class="stat-label">Registers Included</div>
+                        </div>
+                    </div>
+                    
+                    <h3>Corpus Selection</h3>
+                    <p>The study used a 248,145,425-word portion of the Corpus of Contemporary American English (COCA) covering the time period 2010-2019. All COCA registers were represented: academic, fiction, magazines, movies, news, spoken, and TV.</p>
+                    
+                    <h3>Search Queries</h3>
+                    <p>Four search strings were used to retrieve instances of the constructions:</p>
+                    
+                    <div class="code-block">
+GO around _V?G: GO in any form followed by around followed by a verb in the ing-form
+GO round _V?G: GO in any form followed by round followed by a verb in the ing-form
+GO around and VERB: GO in any form followed by around and followed by a verb in any form
+GO round and VERB: GO in any form followed by round and followed by a verb in any form</div>
+                    
+                    <h3>Results</h3>
+                    <div class="two-column">
+                        <div class="data-card">
+                            <h4>GO (a)round Ving</h4>
+                            <div class="stat-value">443</div>
+                            <div class="stat-label">Instances Found</div>
+                        </div>
+                        
+                        <div class="data-card">
+                            <h4>GO (a)round and V</h4>
+                            <div class="stat-value">101</div>
+                            <div class="stat-label">Instances Found</div>
+                        </div>
+                    </div>
+                    
+                    <p>Note: The searches did not capture discontinuous instances of the constructions, as searches for such forms resulted in too many false positives.</p>
+                </div>
+                
+                <div id="annotation-en" class="tab-content">
+                    <h2>Data Annotation</h2>
+                    
+                    <p>All 544 instances were manually annotated for eight feature categories:</p>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature Category</th>
+                                <th>Description</th>
+                                <th>Examples</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Collexeme</td>
+                                <td>Lexemes in the Ving- and V-positions</td>
+                                <td>214 lexemes total (kill, tell, say, etc.)</td>
+                            </tr>
+                            <tr>
+                                <td>Colligation</td>
+                                <td>Grammatical categories co-occurring with the constructions</td>
+                                <td>Simple present, simple past, progressive aspect, modalized VP, etc.</td>
+                            </tr>
+                            <tr>
+                                <td>Modality</td>
+                                <td>Types of modality where applicable</td>
+                                <td>Epistemic, deontic, none</td>
+                            </tr>
+                            <tr>
+                                <td>Polarity</td>
+                                <td>Clause polarity categories</td>
+                                <td>Negative (with negator), affirmative (without negator)</td>
+                            </tr>
+                            <tr>
+                                <td>Semantic Prosody</td>
+                                <td>Emergent semantic categories among observed collexemes</td>
+                                <td>120 prosodies (VIOLENCE, ACCUSATION, etc.)</td>
+                            </tr>
+                            <tr>
+                                <td>Discourse Prosody</td>
+                                <td>Emergent attitudinal patterns among observed collexemes</td>
+                                <td>Positive, negative, neutral</td>
+                            </tr>
+                            <tr>
+                                <td>Register</td>
+                                <td>All registers from COCA subset</td>
+                                <td>Academic, fiction, magazines, movies, news, spoken, TV</td>
+                            </tr>
+                            <tr>
+                                <td>Speech Act</td>
+                                <td>Speech act functions of utterances containing the constructions</td>
+                                <td>Statements, questions, directives, commissives</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <h3>Annotation Example</h3>
+                    <div class="data-card">
+                        <h4>Example Sentence:</h4>
+                        <p>"I got news for you, you little psycho, you can't go around slaughtering everyone who pisses you off." (COCA 2019 TV The Gifted)</p>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Feature Category</th>
+                                    <th>Assigned Feature</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Collexeme</td>
+                                    <td>slaughter</td>
+                                </tr>
+                                <tr>
+                                    <td>Colligation</td>
+                                    <td>modalized VP</td>
+                                </tr>
+                                <tr>
+                                    <td>Discourse Prosody</td>
+                                    <td>negative</td>
+                                </tr>
+                                <tr>
+                                    <td>Modality</td>
+                                    <td>deontic</td>
+                                </tr>
+                                <tr>
+                                    <td>Polarity</td>
+                                    <td>negation</td>
+                                </tr>
+                                <tr>
+                                    <td>Register</td>
+                                    <td>TV</td>
+                                </tr>
+                                <tr>
+                                    <td>Semantic Prosody</td>
+                                    <td>VIOLENCE</td>
+                                </tr>
+                                <tr>
+                                    <td>Speech Act</td>
+                                    <td>directive</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div id="association-rules-en" class="tab-content">
+                    <h2>Association Rules Method</h2>
+                    
+                    <p>The core of the multivariate collexeme analysis is based on association rules, a data mining technique that identifies notable co-occurrences of levels of different variables.</p>
+                    
+                    <h3>Conceptual Explanation</h3>
+                    <p>Association rules work like recommendation systems: "if a person buys product X, they are likely to also buy product Y." Each rule consists of:</p>
+                    <ul>
+                        <li><strong>Left-hand side (LHS):</strong> A set of variable levels that form the condition</li>
+                        <li><strong>Right-hand side (RHS):</strong> A variable level that forms the consequence</li>
+                    </ul>
+                    
+                    <div class="code-block">If [features in LHS are present], then [feature in RHS is likely to be present]</div>
+                    
+                    <h3>Key Statistics</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value">Support</div>
+                            <div class="stat-label">Proportion of cases with both LHS and RHS</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">Confidence</div>
+                            <div class="stat-label">Proportion of cases with LHS that also have RHS</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">Lift</div>
+                            <div class="stat-label">Ratio of observed support to expected support</div>
+                        </div>
+                    </div>
+                    
+                    <h3>Example Rule</h3>
+                    <div class="data-card">
+                        <h4>Rule Format:</h4>
+                        <p>If colligation is modalized VP and modality is deontic and polarity is affirmative, then construction is GO (a)round and V</p>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Component</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>LHS</td>
+                                    <td>colligation = modalized VP, modality = deontic, polarity = affirmative</td>
+                                </tr>
+                                <tr>
+                                    <td>RHS</td>
+                                    <td>construction = GO (a)round and V</td>
+                                </tr>
+                                <tr>
+                                    <td>Frequency</td>
+                                    <td>6</td>
+                                </tr>
+                                <tr>
+                                    <td>Support</td>
+                                    <td>0.011</td>
+                                </tr>
+                                <tr>
+                                    <td>Confidence</td>
+                                    <td>0.545</td>
+                                </tr>
+                                <tr>
+                                    <td>Lift</td>
+                                    <td>2.938</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h3>Parameter Settings</h3>
+                    <ul>
+                        <li><strong>Minimum Support:</strong> 0.01 (rule must apply to at least 1% of data)</li>
+                        <li><strong>Minimum Confidence:</strong> 0.5 (rule must be correct at least 50% of the time)</li>
+                        <li><strong>Focus:</strong> Only rules with construction in RHS were retained</li>
+                        <li><strong>Redundancy Elimination:</strong> Rules with more general versions were removed</li>
+                    </ul>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value">12,927</div>
+                            <div class="stat-label">Initial Rules Generated</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">2,221</div>
+                            <div class="stat-label">Rules with Construction in RHS</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">142</div>
+                            <div class="stat-label">Final Non-redundant Rules</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="implementation-en" class="tab-content">
+                    <h2>Technical Implementation</h2>
+                    
+                    <h3>Software and Algorithm</h3>
+                    <p>The analysis was implemented using:</p>
+                    <ul>
+                        <li>R programming language</li>
+                        <li>arules package for association rules mining</li>
+                        <li>The apriori algorithm for rule discovery</li>
+                    </ul>
+                    
+                    <div class="code-block">
+# Implementation in R with arules package
+library(arules)
+
+# Set parameters
+parameter_settings <- list(
+  support = 0.01,
+  confidence = 0.5
+)
+
+# Apply apriori algorithm
+rules <- apriori(data, parameter = parameter_settings)
+
+# Filter rules with constructions in RHS
+construction_rules <- subset(rules, subset = rhs %in% "construction=GO (a)round and V" | 
+  rhs %in% "construction=GO (a)round Ving")
+
+# Remove redundant rules
+non_redundant_rules <- is.redundant(construction_rules)
+pruned_rules <- construction_rules[!non_redundant_rules]
+
+# Sort by lift
+sorted_rules <- sort(pruned_rules, by="lift")</div>
+                    
+                    <h3>Analysis Process</h3>
+                    <div class="flow-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Data Collection &amp; Annotation</h4>
+                            <p>544 instances across 8 feature categories</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Rule Generation with Apriori Algorithm</h4>
+                            <p>Initial generation of 12,927 rules</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Rule Filtering</h4>
+                            <p>Selection of 2,221 rules with constructions in the right-hand side</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Redundancy Elimination</h4>
+                            <p>Reduction to 142 non-redundant rules</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Sorting by Lift</h4>
+                            <p>Ranking of rules by importance</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h4>Interpretation &amp; Pattern Identification</h4>
+                            <p>Analysis of feature interactions and construction-specific patterns</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="advantages-en" class="tab-content">
+                    <h2>Advantages of Multivariate Approach</h2>
+                    
+                    <h3>Comparison with Traditional Analysis</h3>
+                    <p>A traditional distinctive collexeme analysis would have yielded only minimal information:</p>
+                    
+                    <div class="two-column">
+                        <div class="data-card">
+                            <h4>Traditional Analysis Results</h4>
+                            <p><strong>GO (a)round and V:</strong> Only identifies "introduce, check, round" as distinctive collexemes</p>
+                            <p><strong>GO (a)round Ving:</strong> Only identifies "kill, do, pretend" as distinctive collexemes</p>
+                        </div>
+                        
+                        <div class="data-card">
+                            <h4>Multivariate Analysis Advantage</h4>
+                            <p>Reveals complex patterns such as:</p>
+                            <ul>
+                                <li>GO (a)round and V associates with neutral discourse prosody in spoken register</li>
+                                <li>GO (a)round Ving associates with negative discourse prosody and unpleasant semantic prosodies in fiction/TV/movies</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <h3>Theoretical Implications</h3>
+                    <ul>
+                        <li>Supports viewing constructions as multidimensional entities</li>
+                        <li>Reinforces distinction between internal and external constructional properties</li>
+                        <li>Aligns with usage-based tenet that context is crucial to language systems</li>
+                        <li>Demonstrates that constructional differences extend beyond lexical preferences</li>
+                        <li>Provides empirical basis for constructional "collo-profiles"</li>
+                    </ul>
+                    
+                    <div class="quote">
+                        "It makes sense to assume that many constructions are essentially multidimensional entities, and application of multivariate methods, such as association rules, is thus a useful, if not even necessary, way of identifying how external properties interact and, in the case of comparing two or more constructions, the extent to which such interactions are distinctive."
+                    </div>
+                    
+                    <h3>Methodological Contributions</h3>
+                    <ul>
+                        <li>Introduces a new approach to collostructional analysis</li>
+                        <li>Demonstrates how to incorporate multiple contextual dimensions</li>
+                        <li>Provides framework for analyzing complex feature interactions</li>
+                        <li>Shows effectiveness even with relatively small datasets</li>
+                        <li>Can be extended to other constructional comparisons</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Chinese Content -->
+        <div id="zh-content" class="lang-content">
+            <div class="panel">
+                <div class="quote">
+                    "远远超出以往的工作，本文探索了将搭配结构分析扩展到包含更多特征的可能性。具体来说，我们应用了一种我们称为多变量搭配词分析的方法。"
+                </div>
+                
+                <p>本仪表板详细介绍了Jensen和Gries（2025）提出的多变量搭配词分析方法。这种创新方法扩展了传统的搭配结构分析，同时包含多个语境特征，为理解构式差异提供了更丰富的视角。</p>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="openTab('overview-zh')">概述</div>
+                    <div class="tab" onclick="openTab('data-collection-zh')">数据收集</div>
+                    <div class="tab" onclick="openTab('annotation-zh')">数据标注</div>
+                    <div class="tab" onclick="openTab('association-rules-zh')">关联规则</div>
+                    <div class="tab" onclick="openTab('implementation-zh')">技术实现</div>
+                    <div class="tab" onclick="openTab('advantages-zh')">优势</div>
+                </div>
+                
+                <div id="overview-zh" class="tab-content active">
+                    <h2>方法概述</h2>
+                    
+                    <p>多变量搭配词分析方法旨在识别多维度上的区别模式，以区分两种表面上相似的构式：</p>
+                    
+                    <div class="two-column">
+                        <div class="data-card">
+                            <h3>GO (a)round and V</h3>
+                            <p>例子：</p>
+                            <ul>
+                                <li>"They're going around and paying off all of these countries."（他们到处付钱给这些国家）</li>
+                                <li>"He's going around and spying on us."（他到处监视我们）</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="data-card">
+                            <h3>GO (a)round Ving</h3>
+                            <p>例子：</p>
+                            <ul>
+                                <li>"Well I don't go around assaulting people."（我不会到处攻击人）</li>
+                                <li>"You shouldn't go around fighting strangers."（你不应该到处与陌生人打架）</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <h3>方法目标</h3>
+                    <p>该研究旨在：</p>
+                    <ul>
+                        <li>将搭配结构分析扩展到单个词汇之外</li>
+                        <li>同时包含多个语境维度</li>
+                        <li>识别特征相互作用的复杂模式</li>
+                        <li>创建构式的综合"搭配概况"</li>
+                        <li>展示语境如何贡献于构式知识</li>
+                    </ul>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>数据收集</h4>
+                            <p>使用语料库查询从COCA收集两种构式的实例</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>手动标注</h4>
+                            <p>为每个实例编码8个特征类别</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>关联规则分析</h4>
+                            <p>应用数据挖掘技术识别区别性特征模式</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>规则过滤与解释</h4>
+                            <p>选择重要规则并解释特征相互作用</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="data-collection-zh" class="tab-content">
+                    <h2>数据收集</h2>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value">COCA</div>
+                            <div class="stat-label">语料库来源</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">2.48亿</div>
+                            <div class="stat-label">语料库词数</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">2010-2019</div>
+                            <div class="stat-label">时间段</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">7</div>
+                            <div class="stat-label">包含的语域</div>
+                        </div>
+                    </div>
+                    
+                    <h3>语料库选择</h3>
+                    <p>研究使用了当代美国英语语料库（COCA）中覆盖2010-2019年时期的248,145,425个词的部分。包括了COCA的所有语域：学术、小说、杂志、电影、新闻、口语和电视。</p>
+                    
+                    <h3>搜索查询</h3>
+                    <p>使用了四个搜索字符串来检索构式实例：</p>
+                    
+                    <div class="code-block">
+GO around _V?G: 任何形式的GO后跟around再跟ing形式的动词
+GO round _V?G: 任何形式的GO后跟round再跟ing形式的动词
+GO around and VERB: 任何形式的GO后跟around and再跟任何形式的动词
+GO round and VERB: 任何形式的GO后跟round and再跟任何形式的动词</div>
+                    
+                    <h3>结果</h3>
+                    <div class="two-column">
+                        <div class="data-card">
+                            <h4>GO (a)round Ving</h4>
+                            <div class="stat-value">443</div>
+                            <div class="stat-label">找到的实例</div>
+                        </div>
+                        
+                        <div class="data-card">
+                            <h4>GO (a)round and V</h4>
+                            <div class="stat-value">101</div>
+                            <div class="stat-label">找到的实例</div>
+                        </div>
+                    </div>
+                    
+                    <p>注意：搜索未捕获构式的不连续实例，因为搜索此类形式会产生过多的假阳性结果。</p>
+                </div>
+                
+                <div id="annotation-zh" class="tab-content">
+                    <h2>数据标注</h2>
+                    
+                    <p>所有544个实例都在八个特征类别中进行了手动标注：</p>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>特征类别</th>
+                                <th>描述</th>
+                                <th>示例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>搭配词</td>
+                                <td>Ving和V位置上的词汇</td>
+                                <td>共214个词汇(kill, tell, say等)</td>
+                            </tr>
+                            <tr>
+                                <td>词类搭配</td>
+                                <td>与构式共现的语法范畴</td>
+                                <td>一般现在时、一般过去时、进行时体、情态化动词短语等</td>
+                            </tr>
+                            <tr>
+                                <td>情态</td>
+                                <td>适用的情态类型</td>
+                                <td>认识情态、道义情态、无</td>
+                            </tr>
+                            <tr>
+                                <td>极性</td>
+                                <td>子句极性类别</td>
+                                <td>否定（有否定词）、肯定（无否定词）</td>
+                            </tr>
+                            <tr>
+                                <td>语义韵律</td>
+                                <td>观察到的搭配词中的语义类别</td>
+                                <td>120种韵律（暴力、指责等）</td>
+                            </tr>
+                            <tr>
+                                <td>话语韵律</td>
+                                <td>观察到的搭配词中的态度模式</td>
+                                <td>积极、消极、中性</td>
+                            </tr>
+                            <tr>
+                                <td>语域</td>
+                                <td>COCA子集中的所有语域</td>
+                                <td>学术、小说、杂志、电影、新闻、口语、电视</td>
+                            </tr>
+                            <tr>
+                                <td>言语行为</td>
+                                <td>包含构式的话语的言语行为功能</td>
+                                <td>陈述、提问、指令、承诺</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <h3>标注示例</h3>
+                    <div class="data-card">
+                        <h4>示例句子：</h4>
+                        <p>"I got news for you, you little psycho, you can't go around slaughtering everyone who pisses you off."（告诉你一个消息，你这个小疯子，你不能到处屠杀那些惹你生气的人。）(COCA 2019 TV The Gifted)</p>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>特征类别</th>
+                                    <th>分配的特征</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>搭配词</td>
+                                    <td>slaughter（屠杀）</td>
+                                </tr>
+                                <tr>
+                                    <td>词类搭配</td>
+                                    <td>情态化动词短语</td>
+                                </tr>
+                                <tr>
+                                    <td>话语韵律</td>
+                                    <td>负面</td>
+                                </tr>
+                                <tr>
+                                    <td>情态</td>
+                                    <td>道义情态</td>
+                                </tr>
+                                <tr>
+                                    <td>极性</td>
+                                    <td>否定</td>
+                                </tr>
+                                <tr>
+                                    <td>语域</td>
+                                    <td>电视</td>
+                                </tr>
+                                <tr>
+                                    <td>语义韵律</td>
+                                    <td>暴力</td>
+                                </tr>
+                                <tr>
+                                    <td>言语行为</td>
+                                    <td>指令</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div id="association-rules-zh" class="tab-content">
+                    <h2>关联规则方法</h2>
+                    
+                    <p>多变量搭配词分析的核心基于关联规则，这是一种数据挖掘技术，用于识别不同变量级别之间的显著共现。</p>
+                    
+                    <h3>概念解释</h3>
+                    <p>关联规则的工作原理类似于推荐系统："如果一个人购买产品X，他们也可能购买产品Y"。每条规则包括：</p>
+                    <ul>
+                        <li><strong>左侧(LHS)：</strong>形成条件的一组变量级别</li>
+                        <li><strong>右侧(RHS)：</strong>形成结果的变量级别</li>
+                    </ul>
+                    
+                    <div class="code-block">如果[存在LHS中的特征]，那么[RHS中的特征很可能存在]</div>
+                    
+                    <h3>关键统计数据</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value">支持度</div>
+                            <div class="stat-label">同时具有LHS和RHS的案例比例</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">置信度</div>
+                            <div class="stat-label">具有LHS的案例中也具有RHS的比例</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">提升度</div>
+                            <div class="stat-label">观察到的支持度与预期支持度的比率</div>
+                        </div>
+                    </div>
+                    
+                    <h3>规则示例</h3>
+                    <div class="data-card">
+                        <h4>规则格式：</h4>
+                        <p>如果词类搭配是情态化动词短语且情态是道义情态且极性是肯定的，那么构式是GO (a)round and V</p>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>组成部分</th>
+                                    <th>值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>左侧(LHS)</td>
+                                    <td>词类搭配 = 情态化动词短语，情态 = 道义情态，极性 = 肯定</td>
+                                </tr>
+                                <tr>
+                                    <td>右侧(RHS)</td>
+                                    <td>构式 = GO (a)round and V</td>
+                                </tr>
+                                <tr>
+                                    <td>频率</td>
+                                    <td>6</td>
+                                </tr>
+                                <tr>
+                                    <td>支持度</td>
+                                    <td>0.011</td>
+                                </tr>
+                                <tr>
+                                    <td>置信度</td>
+                                    <td>0.545</td>
+                                </tr>
+                                <tr>
+                                    <td>提升度</td>
+                                    <td>2.938</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h3>参数设置</h3>
+                    <ul>
+                        <li><strong>最小支持度：</strong> 0.01（规则必须适用于至少1%的数据）</li>
+                        <li><strong>最小置信度：</strong> 0.5（规则必须至少在50%的时间内正确）</li>
+                        <li><strong>焦点：</strong> 仅保留右侧包含构式的规则</li>
+                        <li><strong>冗余消除：</strong> 删除有更一般版本的规则</li>
+                    </ul>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value">12,927</div>
+                            <div class="stat-label">初始生成的规则</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">2,221</div>
+                            <div class="stat-label">右侧包含构式的规则</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">142</div>
+                            <div class="stat-label">最终非冗余规则</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="implementation-zh" class="tab-content">
+                    <h2>技术实现</h2>
+                    
+                    <h3>软件和算法</h3>
+                    <p>分析使用了以下工具实现：</p>
+                    <ul>
+                        <li>R编程语言</li>
+                        <li>用于关联规则挖掘的arules包</li>
+                        <li>用于规则发现的apriori算法</li>
+                    </ul>
+                    
+                    <div class="code-block">
+# 使用arules包在R中实现
+library(arules)
+
+# 设置参数
+parameter_settings <- list(
+  support = 0.01,
+  confidence = 0.5
+)
+
+# 应用apriori算法
+rules <- apriori(data, parameter = parameter_settings)
+
+# 过滤右侧包含构式的规则
+construction_rules <- subset(rules, subset = rhs %in% "construction=GO (a)round and V" | 
+  rhs %in% "construction=GO (a)round Ving")
+
+# 移除冗余规则
+non_redundant_rules <- is.redundant(construction_rules)
+pruned_rules <- construction_rules[!non_redundant_rules]
+
+# 按提升度排序
+sorted_rules <- sort(pruned_rules, by="lift")</div>
+                    
+                    <h3>分析过程</h3>
+                    <div class="flow-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>数据收集与标注</h4>
+                            <p>544个实例，跨8个特征类别</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>使用Apriori算法生成规则</h4>
+                            <p>初始生成12,927条规则</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>规则过滤</h4>
+                            <p>选择2,221条右侧包含构式的规则</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>冗余消除</h4>
+                            <p>减少到142条非冗余规则</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>按提升度排序</h4>
+                            <p>按重要性排列规则</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h4>解释与模式识别</h4>
+                            <p>分析特征相互作用和构式特定模式</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="advantages-zh" class="tab-content">
+                    <h2>多变量方法的优势</h2>
+                    
+                    <h3>与传统分析的比较</h3>
+                    <p>传统的区别性搭配词分析只能提供最少的信息：</p>
+                    
+                    <div class="two-column">
+                        <div class="data-card">
+                            <h4>传统分析结果</h4>
+                            <p><strong>GO (a)round and V：</strong>仅识别"introduce, check, round"作为区别性搭配词</p>
+                            <p><strong>GO (a)round Ving：</strong>仅识别"kill, do, pretend"作为区别性搭配词</p>
+                        </div>
+                        
+                        <div class="data-card">
+                            <h4>多变量分析优势</h4>
+                            <p>揭示了复杂模式，例如：</p>
+                            <ul>
+                                <li>GO (a)round and V与口语语域中的中性话语韵律相关联</li>
+                                <li>GO (a)round Ving与小说/电视/电影中的负面话语韵律和不愉快的语义韵律相关联</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <h3>理论意义</h3>
+                    <ul>
+                        <li>支持将构式视为多维实体</li>
+                        <li>强化了构式内部属性和外部属性之间的区别</li>
+                        <li>符合基于使用的原则，即语境对语言系统至关重要</li>
+                        <li>证明构式差异超越了词汇偏好</li>
+                        <li>为构式"搭配概况"提供了实证基础</li>
+                    </ul>
+                    
+                    <div class="quote">
+                        "假设许多构式本质上是多维实体是有意义的，因此，应用多变量方法（如关联规则）是识别外部属性如何相互作用的有用甚至必要的方式，在比较两个或多个构式的情况下，这种相互作用在多大程度上具有区别性。"
+                    </div>
+                    
+                    <h3>方法论贡献</h3>
+                    <ul>
+                        <li>引入了搭配结构分析的新方法</li>
+                        <li>展示了如何整合多个语境维度</li>
+                        <li>提供了分析复杂特征相互作用的框架</li>
+                        <li>显示了即使在相对较小的数据集上也能有效</li>
+                        <li>可以扩展到其他构式比较</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>© 2025 Multivariate Collexeme Analysis Dashboard | Based on Jensen & Gries (2025)</p>
+        </div>
+    </footer>
+    
+    <script>
+        function toggleLanguage(lang) {
+            const contents = document.querySelectorAll('.lang-content');
+            const buttons = document.querySelectorAll('.language-btn');
+            
+            // Hide all content
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Deactivate all buttons
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show content for selected language
+            document.getElementById(lang + '-content').classList.add('active');
+            
+            // Activate corresponding button
+            document.querySelector('.language-btn[onclick*="' + lang + '"]').classList.add('active');
+        }
+        
+        function openTab(tabId) {
+            // Get the base tab ID without language suffix
+            const baseLang = document.querySelector('.lang-content.active').id.split('-')[0];
+            
+            // Get all tab contents within the active language content
+            const tabContents = document.querySelectorAll('#' + baseLang + '-content .tab-content');
+            const tabs = document.querySelectorAll('#' + baseLang + '-content .tab');
+            
+            // Hide all tabs
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Deactivate all tab buttons
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+            
+            // Activate corresponding tab button
+            document.querySelector('.tab[onclick*="' + tabId + '"]').classList.add('active');
+        }
+    </script>
+</body>
+</html>
