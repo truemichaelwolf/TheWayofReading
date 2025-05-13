@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discourse Community Interactive Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            background-color: #1e3a8a;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+        }
+        
+        .header p {
+            margin: 10px 0 0;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .language-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+        
+        .language-btn {
+            padding: 8px 16px;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .language-btn:hover {
+            background-color: #2563eb;
+        }
+        
+        .language-btn.active {
+            background-color: #1e40af;
+            font-weight: bold;
+        }
+        
+        .content-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-title {
+            color: #1e3a8a;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .tab-container {
+            margin-top: 20px;
+        }
+        
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            background-color: #e5e7eb;
+            border: none;
+            border-radius: 4px 4px 0 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .tab:hover {
+            background-color: #d1d5db;
+        }
+        
+        .tab.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background-color: #f9fafb;
+            border-radius: 0 0 4px 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .definition-box {
+            border-left: 4px solid #3b82f6;
+            padding: 10px 20px;
+            background-color: #eff6ff;
+            margin-bottom: 20px;
+        }
+        
+        ul {
+            padding-left: 20px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+        }
+        
+        .quote {
+            font-style: italic;
+            border-left: 3px solid #6b7280;
+            padding-left: 20px;
+            margin: 20px 0;
+            color: #4b5563;
+        }
+        
+        .pie-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+        }
+        
+        .pie-chart {
+            width: 300px;
+            height: 300px;
+            position: relative;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        
+        .pie-slice {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .pie-slice:hover {
+            transform: scale(1.05);
+        }
+        
+        .pie-slice-1 {
+            clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%, 50% 100%);
+            background-color: #3b82f6;
+        }
+        
+        .pie-slice-2 {
+            clip-path: polygon(50% 50%, 0% 0%, 50% 0%);
+            background-color: #10b981;
+        }
+        
+        .pie-slice-3 {
+            clip-path: polygon(50% 50%, 0% 0%, 0% 100%, 50% 100%);
+            background-color: #f59e0b;
+        }
+        
+        .pie-label {
+            position: absolute;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+            pointer-events: none;
+        }
+        
+        .pie-label-1 {
+            top: 40%;
+            right: 15%;
+        }
+        
+        .pie-label-2 {
+            top: 15%;
+            left: 30%;
+        }
+        
+        .pie-label-3 {
+            top: 65%;
+            left: 20%;
+        }
+        
+        .pie-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 12px;
+            line-height: 1.3;
+            z-index: 10;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+        }
+        
+        .criteria-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .criteria-card {
+            background-color: #f9fafb;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border-top: 3px solid #3b82f6;
+            transition: transform 0.3s;
+        }
+        
+        .criteria-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .criteria-number {
+            display: inline-block;
+            background-color: #3b82f6;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .criteria-title {
+            display: inline-block;
+            font-weight: bold;
+            color: #1e3a8a;
+            margin-bottom: 10px;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: #3b82f6;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        
+        .timeline-container {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+        }
+        
+        .timeline-container::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -13px;
+            background-color: white;
+            border: 4px solid #3b82f6;
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .left {
+            left: 0;
+        }
+        
+        .right {
+            left: 50%;
+        }
+        
+        .left::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            right: 30px;
+            border: medium solid #f9fafb;
+            border-width: 10px 0 10px 10px;
+            border-color: transparent transparent transparent #f9fafb;
+        }
+        
+        .right::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            left: 30px;
+            border: medium solid #f9fafb;
+            border-width: 10px 10px 10px 0;
+            border-color: transparent #f9fafb transparent transparent;
+        }
+        
+        .right::after {
+            left: -13px;
+        }
+        
+        .timeline-content {
+            padding: 20px 30px;
+            background-color: #f9fafb;
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .timeline-date {
+            font-weight: bold;
+            color: #1e3a8a;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media screen and (max-width: 600px) {
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-container {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-container::before {
+                left: 60px;
+                border: medium solid #f9fafb;
+                border-width: 10px 10px 10px 0;
+                border-color: transparent #f9fafb transparent transparent;
+            }
+            
+            .left::after, .right::after {
+                left: 18px;
+            }
+            
+            .right {
+                left: 0%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Discourse Community Interactive Dashboard</h1>
+            <p>Based on John Swales' Reflections on the Concept of Discourse Community</p>
+            <p>话语社区互动仪表板：基于约翰·斯威尔斯对话语社区概念的思考</p>
+        </div>
+        
+        <div class="language-toggle">
+            <button class="language-btn active" onclick="toggleLanguage('en')">English</button>
+            <button class="language-btn" onclick="toggleLanguage('zh')">中文</button>
+        </div>
+        
+        <div class="content-section">
+            <h2 class="section-title lang-en">Overview of Discourse Community</h2>
+            <h2 class="section-title lang-zh hidden">话语社区概述</h2>
+            
+            <div class="definition-box lang-en">
+                <p>A discourse community is a group of people who share a set of discourses, understood as basic values and assumptions, and ways of communicating about their goals. The concept emerged in contrast to the longer-standing sociolinguistic concept of speech community.</p>
+            </div>
+            
+            <div class="definition-box lang-zh hidden">
+                <p>话语社区是指一群共享一系列话语的人，他们理解彼此的基本价值观和假设，并有共同的沟通方式来讨论他们的目标。这一概念与长期存在的社会语言学中的"语言社区"概念形成对比。</p>
+            </div>
+            
+            <div class="quote lang-en">
+                <p>"The term 'discourse community' is useful for describing a space that was unacknowledged before because we did not have a term for it. The term realigns the traditional unities—writer, audience, text—into a new configuration. What was before largely scene, unnoticed background, becomes foreground." — James Porter (1992: 84)</p>
+            </div>
+            
+            <div class="quote lang-zh hidden">
+                <p>"'话语社区'这一术语之所以有用，是因为它描述了一个以前未被承认的空间，因为我们没有术语来表达它。这一术语将传统的统一体——作者、受众、文本——重新排列成一种新的配置。以前主要作为场景、未被注意的背景，现在成为了前景。" — 詹姆斯·波特 (1992: 84)</p>
+            </div>
+            
+            <div class="tab-container">
+                <div class="tabs">
+                    <button class="tab active" onclick="openTab(event, 'history')">History</button>
+                    <button class="tab" onclick="openTab(event, 'types')">Types</button>
+                    <button class="tab" onclick="openTab(event, 'criteria')">Criteria</button>
+                    <button class="tab" onclick="openTab(event, 'timeline')">Timeline</button>
+                </div>
+                
+                <!-- History Tab -->
+                <div id="history" class="tab-content active">
+                    <div class="lang-en">
+                        <h3>Personal History with the Concept</h3>
+                        <p>John Swales first heard the term "discourse community" in 1986 from Lillian Bridwell-Bowles during a talk at the University of Michigan. He immediately recognized it as the concept he had been looking for to provide socio-rhetorical context for his exploration of academic genres.</p>
+                        <p>By 1990, when <i>Genre Analysis</i> was published, discourse community had become part of a trio of interlocking concepts alongside genre and language-learning task.</p>
+                        <p>In 1998, Swales published <i>Other Floors, Other Voices: A Textography of a Small University Building</i>, examining whether three different groups in a university building constituted discourse communities:</p>
+                        <ul>
+                            <li>The Computer Center - Had many characteristics but lacked community cohesion</li>
+                            <li>The Herbarium (plant collection) - Formed a distinct discourse community</li>
+                            <li>The English Language Institute - Had many elements of a discourse community but with internal divisions</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="lang-zh hidden">
+                        <h3>与概念的个人历史</h3>
+                        <p>约翰·斯威尔斯于1986年首次从莉莲·布里德威尔-鲍尔斯在密歇根大学的演讲中听到"话语社区"这一术语。他立即认识到这正是他一直在寻找的概念，可以为他对学术体裁的探索提供社会修辞背景。</p>
+                        <p>到1990年《体裁分析》出版时，话语社区已成为与体裁和语言学习任务并列的三个相互关联概念之一。</p>
+                        <p>1998年，斯威尔斯出版了《其他楼层，其他声音：一座小型大学建筑的文本地理学》，考察了一座大学建筑中的三个不同群体是否构成话语社区：</p>
+                        <ul>
+                            <li>计算机中心 - 具有许多特征但缺乏社区凝聚力</li>
+                            <li>标本馆（植物收藏）- 形成了明显的话语社区</li>
+                            <li>英语语言学院 - 具有话语社区的许多要素，但内部存在分歧</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Types Tab -->
+                <div id="types" class="tab-content">
+                    <div class="lang-en">
+                        <h3>Three Types of Discourse Communities</h3>
+                        <p>Swales identifies three main types of discourse communities:</p>
+                        
+                        <div class="pie-container">
+                            <div class="pie-chart">
+                                <div class="pie-slice pie-slice-1" onclick="showTypeDetails('local')"></div>
+                                <div class="pie-slice pie-slice-2" onclick="showTypeDetails('focal')"></div>
+                                <div class="pie-slice pie-slice-3" onclick="showTypeDetails('folocal')"></div>
+                                <div class="pie-label pie-label-1">Local</div>
+                                <div class="pie-label pie-label-2">Focal</div>
+                                <div class="pie-label pie-label-3">Folocal</div>
+                                <div class="pie-center">Click segments for details</div>
+                            </div>
+                        </div>
+                        
+                        <div id="local-details">
+                            <h4>1. Local Discourse Communities</h4>
+                            <p>People who all work at the same place (like a university department) or at the same occupation in the same area. These communities develop specialized terminologies and abbreviations to communicate efficiently.</p>
+                            <p><strong>Example:</strong> University department staff who understand internal processes, codes, location of supplies, and building access.</p>
+                        </div>
+                        
+                        <div id="focal-details" style="display: none;">
+                            <h4>2. Focal Discourse Communities</h4>
+                            <p>Associations that reach across regions or internationally, connected by a shared interest or profession rather than physical location. Members can be diverse in nationality, age, and background.</p>
+                            <p><strong>Examples:</strong></p>
+                            <ul>
+                                <li>Professional associations (GERAS, BAAL)</li>
+                                <li>Hobby groups (Southeast Michigan Birders)</li>
+                            </ul>
+                        </div>
+                        
+                        <div id="folocal-details" style="display: none;">
+                            <h4>3. "Folocal" Discourse Communities</h4>
+                            <p>Hybrid communities with characteristics of both local and focal DCs. Members have dual allegiances and face both internal and external pressures.</p>
+                            <p><strong>Example:</strong> Academic faculty in research universities who balance:</p>
+                            <ul>
+                                <li>Local responsibilities (teaching, administration)</li>
+                                <li>Focal connections (conferences, publishing in international journals)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="lang-zh hidden">
+                        <h3>话语社区的三种类型</h3>
+                        <p>斯威尔斯确定了三种主要的话语社区类型：</p>
+                        
+                        <div class="pie-container">
+                            <div class="pie-chart">
+                                <div class="pie-slice pie-slice-1" onclick="showTypeDetails('local')"></div>
+                                <div class="pie-slice pie-slice-2" onclick="showTypeDetails('focal')"></div>
+                                <div class="pie-slice pie-slice-3" onclick="showTypeDetails('folocal')"></div>
+                                <div class="pie-label pie-label-1">本地</div>
+                                <div class="pie-label pie-label-2">焦点</div>
+                                <div class="pie-label pie-label-3">焦本地</div>
+                                <div class="pie-center">点击扇区查看详情</div>
+                            </div>
+                        </div>
+                        
+                        <div id="local-details-zh">
+                            <h4>1. 本地话语社区</h4>
+                            <p>在同一地点工作的人（如大学部门）或在同一地区从事同一职业的人。这些社区发展出专门的术语和缩写，以便高效沟通。</p>
+                            <p><strong>示例：</strong>了解内部流程、代码、物资位置和建筑物通行的大学部门工作人员。</p>
+                        </div>
+                        
+                        <div id="focal-details-zh" style="display: none;">
+                            <h4>2. 焦点话语社区</h4>
+                            <p>跨地区或国际范围的协会，通过共同的兴趣或职业而非物理位置连接。成员在国籍、年龄和背景方面可能多种多样。</p>
+                            <p><strong>示例：</strong></p>
+                            <ul>
+                                <li>专业协会（GERAS, BAAL）</li>
+                                <li>爱好团体（东南密歇根观鸟者）</li>
+                            </ul>
+                        </div>
+                        
+                        <div id="folocal-details-zh" style="display: none;">
+                            <h4>3. "焦本地"话语社区</h4>
+                            <p>同时具有本地和焦点话语社区特征的混合社区。成员具有双重忠诚，面临内部和外部压力。</p>
+                            <p><strong>示例：</strong>研究型大学的学术教师需要平衡：</p>
+                            <ul>
+                                <li>本地责任（教学、行政管理）</li>
+                                <li>焦点联系（会议、在国际期刊上发表）</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Criteria Tab -->
+                <div id="criteria" class="tab-content">
+                    <div class="lang-en">
+                        <h3>Eight Criteria for Discourse Communities (Original 6 + 2 New)</h3>
+                        <p>Swales initially defined six criteria in <i>Genre Analysis</i> (1990), and later added two more. Here are the updated criteria:</p>
+                        
+                        <div class="criteria-grid">
+                            <div class="criteria-card">
+                                <span class="criteria-number">1</span>
+                                <span class="criteria-title">Goals</span>
+                                <p>A DC has a potentially discoverable set of goals, which may be explicitly stated or implicitly understood.</p>
+                            </div>
+                            
+                            <div class="criteria-card">
+                                <span class="criteria-number">2</span>
+                                <span class="criteria-title">Intercommunication</span>
+                                <p>A DC has mechanisms for members to communicate with each other, including digital channels like emails, blogs, and tweets.</p>
+                            </div>
+                            
+                            <div class="criteria-card">
+                                <span class="criteria-number">3</span>
+                                <span class="criteria-title">Participatory Mechanisms</span>
+                                <p>A DC uses its mechanisms to manage operations and promote recruitment, change, growth, and development.</p>
+                            </div>
+                            
+                            <div class="criteria-card">
+                                <span class="criteria-number">4</span>
+                                <span class="criteria-title">Genres</span>
+                                <p>A DC utilizes an evolving selection of genres to further its goals and instantiate its participatory mechanisms.</p>
+                            </div>
+                            
+                            <div class="criteria-card">
+                                <span class="criteria-number">5</span>
+                                <span class="criteria-title">Specific Lexis</span>
+                                <p>A DC has acquired and continues to refine specific terminology, including abbreviations and shorthands.</p>
+                            </div>
+                            
+                            <div class="criteria-card">
+                                <span class="criteria-number">6</span>
+                                <span class="criteria-title">Hierarchy</span>
+                                <p>A DC has an explicit or implicit hierarchy that manages entry into and advancement within the community.</p>
+                            </div>
+                            
+                            <div class="criteria-card">
+                                <span class="criteria-number">7</span>
+                                <span class="criteria-title">Silential Relations</span>
+                                <p>A DC develops a sense of things that do not need to be said or explained in detail.</p>
+                            </div>
+                            
+                            <div class="criteria-card">
+                                <span class="criteria-number">8</span>
+                                <span class="criteria-title">Expectations</span>
+                                <p>A DC develops horizons of expectation, rhythms of activity, a sense of history, and value systems.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="lang-zh hidden">
+                        <h3>话语社区的八项标准（原有6项 + 2项新增）</h3>
+                        <p>斯威尔斯最初在《体裁分析》（1990）中定义了六项标准，后来又增加了两项。以下是更新后的标准：</p>
+                        
+                        <div class="criteria-grid">
+                            <div class="criteria-card">
+                                <span class="criteria-number">1</span>
+                                <span class="criteria-title">目标</span>
+                                <p>话语社区有一套可发现的目标，这些目标可能是明确陈述的或隐含理解的。</p>
+                            </div>
+                            
+                            <div class="criteria-card">
+                                <span class="criteria-number">2</span>
+                                <span class="criteria-title">交流机制</span>
+                                <p>话语社区有成员相互交流的机制，包括电子邮件、博客和推文等数字渠道。</p>
+                            </div>
+                            
+                            <div class="criteria-card">
+                                <span class="criteria-number">3</span>
+                                <span class="criteria-title">参与机制</span>
+                                <p>话语社区利用其机制来管理运作并促进招募、变革、成长和发展。</p>
+                            </div>
+                            
+                            <div class="criteria-card">
+                                <span class="criteria-number">4</span>
+                                <span class="criteria-title">体裁</span>
+                                <p>话语社区利用不断发展的体裁选择来推进其目标并实例化其参与机制。</p>
+                            </div>
+                            
+                            <div class="criteria-card">
+                                <span class="criteria-number">5</span>
+                                <span class="criteria-title">特定词汇</span>
+                                <p>话语社区已获得并继续完善特定术语，包括缩写和简写。</p>
+                            </div>
+                            
+                            <div class="criteria-card">
+                                <span class="criteria-number">6</span>
+                                <span class="criteria-title">层级结构</span>
+                                <p>话语社区有明确或隐含的层级结构，管理进入社区和在社区内的晋升。</p>
+                            </div>
+                            
+                            <div class="criteria-card">
+                                <span class="criteria-number">7</span>
+                                <span class="criteria-title">沉默关系</span>
+                                <p>话语社区发展出对不需要详细说明或解释的事物的感知。</p>
+                            </div>
+                            
+                            <div class="criteria-card">
+                                <span class="criteria-number">8</span>
+                                <span class="criteria-title">期望</span>
+                                <p>话语社区发展出期望的视野、活动节奏、历史感和价值体系。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Timeline Tab -->
+                <div id="timeline" class="tab-content">
+                    <div class="lang-en">
+                        <h3>Timeline of Discourse Community Concept Development</h3>
+                        <div class="timeline">
+                            <div class="timeline-container left">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">1982</span>
+                                    <p>Martin Nystrand at the University of Wisconsin-Madison first coins the term "discourse community"</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container right">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">1986</span>
+                                    <p>John Swales hears the term "discourse community" from Lillian Bridwell-Bowles during a talk at the University of Michigan</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container left">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">1990</span>
+                                    <p>Swales publishes <i>Genre Analysis</i> with the original six criteria for discourse communities</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container right">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">1991</span>
+                                    <p>Lave and Wenger introduce the related concept of "Community of Practice"</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container left">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">1998</span>
+                                    <p>Swales publishes <i>Other Floors, Other Voices</i>, examining discourse communities in practice within a university building</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container right">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">2011</span>
+                                    <p>Wardle and Downs include Swales' discourse community criteria in their composition textbook <i>Writing about Writing</i></p>
+                                </div>
+                            </div>
+                            <div class="timeline-container left">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">2016</span>
+                                    <p>Swales publishes "Reflections on the concept of discourse community" in ASp journal, revisiting and updating his criteria</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="lang-zh hidden">
+                        <h3>话语社区概念发展时间线</h3>
+                        <div class="timeline">
+                            <div class="timeline-container left">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">1982年</span>
+                                    <p>威斯康星大学麦迪逊分校的马丁·奈斯特兰德首次创造"话语社区"一词</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container right">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">1986年</span>
+                                    <p>约翰·斯威尔斯在密歇根大学的演讲中从莉莲·布里德威尔-鲍尔斯那里听到"话语社区"一词</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container left">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">1990年</span>
+                                    <p>斯威尔斯出版《体裁分析》，提出话语社区的原始六项标准</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container right">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">1991年</span>
+                                    <p>莱夫和温格引入相关概念"实践社区"</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container left">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">1998年</span>
+                                    <p>斯威尔斯出版《其他楼层，其他声音》，考察大学建筑内话语社区的实践</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container right">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">2011年</span>
+                                    <p>沃德尔和唐斯在他们的写作教材《关于写作的写作》中收录斯威尔斯的话语社区标准</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container left">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">2016年</span>
+                                    <p>斯威尔斯在ASp期刊上发表《话语社区概念的思考》，重新审视并更新他的标准</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-section">
+            <h2 class="section-title lang-en">Supporting Evidence from Swales' Paper</h2>
+            <h2 class="section-title lang-zh hidden">斯威尔斯论文中的支持证据</h2>
+            
+            <div class="lang-en">
+                <div class="definition-box">
+                    <p>Key quotes from John Swales' "Reflections on the concept of discourse community" (2016)</p>
+                </div>
+                
+                <div class="quote">
+                    <p>"I first heard the term 'discourse community' early in 1986, fairly soon after I had moved to the United States; it was used in a talk at the University of Michigan given by Lillian Bridwell-Bowles. I cannot remember much of the talk at today's distance, but I do remember how I immediately recognized that the concept of discourse community was precisely the concept I had been looking for since it would provide socio-rhetorical context for my ongoing exploration of (mainly) academic genres." (p. 8)</p>
+                </div>
+                
+                <div class="quote">
+                    <p>"By the time Genre Analysis was eventually published in 1990, discourse community (DC) had become a member of a trio of interlocking concepts, the other two being genre and language-learning task." (p. 8)</p>
+                </div>
+                
+                <div class="quote">
+                    <p>"The basic idea of a rhetorical discourse community arose in contrast to the longer-standing sociolinguistic concept of speech community. The latter was premised on a homogeneous assemblage of people who share place, background, language variety and who largely share social, religious, and cultural values... In some contrast, the former is a largely heterogeneous, socio-rhetorical assemblage of people who broadly share occupational or recreational experiences, goals, and interests." (p. 10)</p>
+                </div>
+                
+                <div class="quote">
+                    <p>"A second set of problems is that the concept of discourse community as originally conceived was overly static. While this perhaps did not matter so much in 1990, in today's more unsettled and uncertain world, it looms larger as a problem; in particular, the concept did not firmly or directly address how people either join or leave DCs." (p. 11)</p>
+                </div>
+                
+                <div class="quote">
+                    <p>"The third and final main type of discourse community has characteristics of both local and focal DCs, which is why I have coined the fused term 'folocal' as a neologistic amalgam of the 'local' and 'focal'. These are hybrid communities whose members have a double—and sometimes split—allegiance, as they are confronted by internal and external challenges and pressures." (p. 13)</p>
+                </div>
+            </div>
+            
+            <div class="lang-zh hidden">
+                <div class="definition-box">
+                    <p>约翰·斯威尔斯《话语社区概念的思考》（2016）中的关键引述</p>
+                </div>
+                
+                <div class="quote">
+                    <p>"我于1986年初首次听到'话语社区'这一术语，那是在我搬到美国后不久；它是由莉莲·布里德威尔-鲍尔斯在密歇根大学的一次演讲中使用的。从现在的距离看，我不记得那次演讲的大部分内容，但我确实记得我立即认识到话语社区的概念正是我一直在寻找的概念，因为它将为我正在进行的（主要是）学术体裁探索提供社会修辞背景。" (第8页)</p>
+                </div>
+                
+                <div class="quote">
+                    <p>"到1990年《体裁分析》最终出版时，话语社区（DC）已成为三个相互关联概念中的一员，其他两个是体裁和语言学习任务。" (第8页)</p>
+                </div>
+                
+                <div class="quote">
+                    <p>"修辞话语社区的基本概念是与长期存在的社会语言学中的语言社区概念形成对比而产生的。后者以同质人群为前提，这些人共享地点、背景、语言变体，并在很大程度上共享社会、宗教和文化价值观...相比之下，前者在很大程度上是一个异质的、社会修辞的人群聚集，他们广泛共享职业或娱乐经验、目标和兴趣。" (第10页)</p>
+                </div>
+                
+                <div class="quote">
+                    <p>"第二组问题是，最初构想的话语社区概念过于静态。虽然这在1990年可能并不那么重要，但在今天更加动荡和不确定的世界中，它作为一个问题变得更加突出；特别是，这一概念没有坚定或直接解决人们如何加入或离开话语社区的问题。" (第11页)</p>
+                </div>
+                
+                <div class="quote">
+                    <p>"第三种也是最后一种主要类型的话语社区具有本地和焦点话语社区的特征，这就是为什么我创造了融合术语'焦本地'，作为'本地'和'焦点'的新词混合体。这些是混合社区，其成员具有双重——有时是分裂的——忠诚，因为他们面临内部和外部的挑战和压力。" (第13页)</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-section">
+            <h2 class="section-title lang-en">Original and Updated Criteria Comparison</h2>
+            <h2 class="section-title lang-zh hidden">原始和更新标准比较</h2>
+            
+            <div class="lang-en">
+                <p>In his 2016 paper, Swales revisits and updates his original six criteria from 1990, noting that they had become "ossified" despite changes in society and communication:</p>
+                
+                <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px;">
+                    <div style="flex: 1; min-width: 300px; background-color: #eff6ff; padding: 15px; border-radius: 8px;">
+                        <h3 style="color: #1e3a8a;">Original Criteria (1990)</h3>
+                        <ol>
+                            <li>A DC has a broadly agreed set of goals</li>
+                            <li>A DC has mechanisms of intercommunication among its members</li>
+                            <li>A DC uses its participatory mechanisms to provide information and feedback</li>
+                            <li>A DC utilizes and hence possesses one or more genres in the communicative furtherance of its aims</li>
+                            <li>In addition to owning genres, it has acquired some specific lexis</li>
+                            <li>A DC has a threshold of members with a suitable degree of relevant content and discoursal expertise</li>
+                        </ol>
+                    </div>
+                    
+                    <div style="flex: 1; min-width: 300px; background-color: #ecfdf5; padding: 15px; border-radius: 8px;">
+                        <h3 style="color: #047857;">Updated Criteria (2016)</h3>
+                        <ol>
+                            <li>A DC has a potentially discoverable set of goals (may be explicit, implicit, consensual, or contested)</li>
+                            <li>A DC has mechanisms of intercommunication, with emphasis on new digital channels</li>
+                            <li>A DC uses its mechanisms to manage operations, promote growth, and initiate actions (not just provide information)</li>
+                            <li>A DC utilizes an evolving selection of genres (not necessarily "owned" by the community)</li>
+                            <li>A DC has acquired and continues to refine specific terminology</li>
+                            <li>A DC has a hierarchy/structure that manages entry and advancement</li>
+                            <li>A DC develops a sense of "silential relations" (things that don't need to be said)</li>
+                            <li>A DC develops horizons of expectation, rhythms of activity, history, and value systems</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="quote">
+                    <p>"It is doubtful, then, in present formulations that the concept is a robust social construct. A historian might argue that it does not account for economic and political forces; a sociologist might say that it fails to acknowledge the effects of broader social structures; an educationist might claim that it downplays acquisitional trajectories, as well as the roles of individual agency; and an anthropologist could argue that it ignores powerful aspects of cultural history. But I would counter-argue that this probably does not matter as long as our focus is on rhetorical principles of organization, on discoursal expectations, on significative linguistic tokens, and on intriguing textual extracts." (p. 17)</p>
+                </div>
+            </div>
+            
+            <div class="lang-zh hidden">
+                <p>在2016年的论文中，斯威尔斯重新审视并更新了他1990年提出的原始六项标准，指出尽管社会和交流方式发生了变化，这些标准已变得"僵化"：</p>
+                
+                <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px;">
+                    <div style="flex: 1; min-width: 300px; background-color: #eff6ff; padding: 15px; border-radius: 8px;">
+                        <h3 style="color: #1e3a8a;">原始标准 (1990)</h3>
+                        <ol>
+                            <li>话语社区有一套广泛认可的目标</li>
+                            <li>话语社区有成员之间的交流机制</li>
+                            <li>话语社区使用其参与机制提供信息和反馈</li>
+                            <li>话语社区利用并因此拥有一个或多个体裁来促进其目标的实现</li>
+                            <li>除了拥有体裁外，它还获得了一些特定词汇</li>
+                            <li>话语社区有具备适当程度相关内容和话语专业知识的成员门槛</li>
+                        </ol>
+                    </div>
+                    
+                    <div style="flex: 1; min-width: 300px; background-color: #ecfdf5; padding: 15px; border-radius: 8px;">
+                        <h3 style="color: #047857;">更新标准 (2016)</h3>
+                        <ol>
+                            <li>话语社区有一套可发现的目标（可能是明确的、隐含的、共识的或有争议的）</li>
+                            <li>话语社区有交流机制，强调新的数字渠道</li>
+                            <li>话语社区使用其机制管理运作、促进成长并发起行动（不仅仅是提供信息）</li>
+                            <li>话语社区利用不断发展的体裁选择（不一定由社区"拥有"）</li>
+                            <li>话语社区已获得并继续完善特定术语</li>
+                            <li>话语社区有管理入门和晋升的层级/结构</li>
+                            <li>话语社区发展出"沉默关系"的感知（不需要说出的事物）</li>
+                            <li>话语社区发展出期望的视野、活动节奏、历史感和价值体系</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="quote">
+                    <p>"那么，在当前的表述中，这一概念是否是一个强有力的社会构建是值得怀疑的。历史学家可能会争辩说，它没有考虑到经济和政治力量；社会学家可能会说，它未能承认更广泛的社会结构的影响；教育学家可能会声称，它淡化了获取轨迹以及个人能动性的角色；而人类学家可能会争辩说，它忽略了文化历史的强大方面。但我会反驳说，只要我们的焦点放在组织的修辞原则、话语期望、意义语言标记和引人入胜的文本摘录上，这可能并不重要。" (第17页)</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-section">
+            <h2 class="section-title lang-en">Applications and Significance</h2>
+            <h2 class="section-title lang-zh hidden">应用和意义</h2>
+            
+            <div class="lang-en">
+                <p>The concept of discourse community has had significant impact in several fields:</p>
+                
+                <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px;">
+                    <div style="flex: 1; min-width: 300px; background-color: #f9fafb; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                        <h3 style="color: #1e3a8a;">Academic Writing Instruction</h3>
+                        <p>The concept has been widely adopted in composition studies and writing pedagogy, especially in the United States. As Swales notes in his paper, his six criteria have become part of many writing textbooks, most notably in Wardle and Downs' <i>Writing about Writing</i> (2011).</p>
+                    </div>
+                    
+                    <div style="flex: 1; min-width: 300px; background-color: #f9fafb; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                        <h3 style="color: #1e3a8a;">English for Specific Purposes (ESP)</h3>
+                        <p>The concept provides a theoretical framework for understanding the specialized language and communication practices in different professional fields, helping to design more targeted language instruction.</p>
+                    </div>
+                    
+                    <div style="flex: 1; min-width: 300px; background-color: #f9fafb; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                        <h3 style="color: #1e3a8a;">Genre Analysis</h3>
+                        <p>Understanding discourse communities is essential for analyzing how genres (text types) function within specific groups, as genres develop to serve the community's communicative needs.</p>
+                    </div>
+                </div>
+                
+                <div class="quote">
+                    <p>"It is precisely this foregrounding realignment that makes the DC concept useful for languages for specific and academic purposes, and for EAP and other practitioners as they work to give students the oracy and literacy skills to survive and flourish in their diverse educational environments." (p. 17)</p>
+                </div>
+            </div>
+            
+            <div class="lang-zh hidden">
+                <p>话语社区的概念在几个领域产生了重大影响：</p>
+                
+                <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px;">
+                    <div style="flex: 1; min-width: 300px; background-color: #f9fafb; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                        <h3 style="color: #1e3a8a;">学术写作教学</h3>
+                        <p>这一概念已被写作研究和写作教学广泛采用，尤其是在美国。正如斯威尔斯在他的论文中指出的，他的六项标准已成为许多写作教材的一部分，最著名的是沃德尔和唐斯的《关于写作的写作》(2011)。</p>
+                    </div>
+                    
+                    <div style="flex: 1; min-width: 300px; background-color: #f9fafb; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                        <h3 style="color: #1e3a8a;">专门用途英语 (ESP)</h3>
+                        <p>该概念为理解不同专业领域的专业语言和交流实践提供了理论框架，有助于设计更有针对性的语言教学。</p>
+                    </div>
+                    
+                    <div style="flex: 1; min-width: 300px; background-color: #f9fafb; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                        <h3 style="color: #1e3a8a;">体裁分析</h3>
+                        <p>理解话语社区对于分析体裁（文本类型）在特定群体中如何发挥作用至关重要，因为体裁的发展是为了满足社区的交流需求。</p>
+                    </div>
+                </div>
+                
+                <div class="quote">
+                    <p>"正是这种前景重新排列使得话语社区概念对于特定和学术目的语言以及EAP和其他从业者非常有用，因为他们致力于给予学生口头和书面技能，使他们能够在多样化的教育环境中生存和发展。" (第17页)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function toggleLanguage(lang) {
+            const enElements = document.querySelectorAll('.lang-en');
+            const zhElements = document.querySelectorAll('.lang-zh');
+            const enBtn = document.querySelector('button[onclick="toggleLanguage(\'en\')"]');
+            const zhBtn = document.querySelector('button[onclick="toggleLanguage(\'zh\')"]');
+            
+            if (lang === 'en') {
+                enElements.forEach(el => el.classList.remove('hidden'));
+                zhElements.forEach(el => el.classList.add('hidden'));
+                enBtn.classList.add('active');
+                zhBtn.classList.remove('active');
+            } else {
+                enElements.forEach(el => el.classList.add('hidden'));
+                zhElements.forEach(el => el.classList.remove('hidden'));
+                enBtn.classList.remove('active');
+                zhBtn.classList.add('active');
+            }
+        }
+        
+        function openTab(evt, tabName) {
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+        
+        function showTypeDetails(type) {
+            // English version
+            document.getElementById('local-details').style.display = 'none';
+            document.getElementById('focal-details').style.display = 'none';
+            document.getElementById('folocal-details').style.display = 'none';
+            
+            // Chinese version
+            if (document.getElementById('local-details-zh')) {
+                document.getElementById('local-details-zh').style.display = 'none';
+                document.getElementById('focal-details-zh').style.display = 'none';
+                document.getElementById('folocal-details-zh').style.display = 'none';
+            }
+            
+            if (type === 'local') {
+                document.getElementById('local-details').style.display = 'block';
+                if (document.getElementById('local-details-zh')) {
+                    document.getElementById('local-details-zh').style.display = 'block';
+                }
+            } else if (type === 'focal') {
+                document.getElementById('focal-details').style.display = 'block';
+                if (document.getElementById('focal-details-zh')) {
+                    document.getElementById('focal-details-zh').style.display = 'block';
+                }
+            } else if (type === 'folocal') {
+                document.getElementById('folocal-details').style.display = 'block';
+                if (document.getElementById('folocal-details-zh')) {
+                    document.getElementById('folocal-details-zh').style.display = 'block';
+                }
+            }
+        }
+        
+        // Initialize the first tab as active
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('history').classList.add('active');
+        });
+    </script>
+</body>
+</html>
+                    <div class="lang-en">
+                        <h3>Timeline of Discourse Community Concept Development</h3>
+                        <div class="timeline">
+                            <div class="timeline-container left">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">1991</span>
+                                    <p>Lave and Wenger introduce the related concept of "Community of Practice"</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container left">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">1998</span>
+                                    <p>Swales publishes <i>Other Floors, Other Voices</i>, examining discourse communities in practice within a university building</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container right">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">2011</span>
+                                    <p>Wardle and Downs include Swales' discourse community criteria in their composition textbook <i>Writing about Writing</i></p>
+                                </div>
+                            </div>
+                            <div class="timeline-container left">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">2016</span>
+                                    <p>Swales publishes "Reflections on the concept of discourse community" in ASp journal, revisiting and updating his criteria</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="lang-zh hidden">
+                        <h3>话语社区概念发展时间线</h3>
+                        <div class="timeline">
+                            <div class="timeline-container left">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">1982年</span>
+                                    <p>威斯康星大学麦迪逊分校的马丁·奈斯特兰德首次创造"话语社区"一词</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container right">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">1986年</span>
+                                    <p>约翰·斯威尔斯在密歇根大学的演讲中从莉莲·布里德威尔-鲍尔斯那里听到"话语社区"一词</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container left">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">1990年</span>
+                                    <p>斯威尔斯出版《体裁分析》，提出话语社区的原始六项标准</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container right">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">1991年</span>
+                                    <p>莱夫和温格引入相关概念"实践社区"</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container left">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">1998年</span>
+                                    <p>斯威尔斯出版《其他楼层，其他声音》，考察大学建筑内话语社区的实践</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container right">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">2011年</span>
+                                    <p>沃德尔和唐斯在他们的写作教材《关于写作的写作》中收录斯威尔斯的话语社区标准</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container left">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">2016年</span>
+                                    <p>斯威尔斯在ASp期刊上发表《话语社区概念的思考》，重新审视并更新他的标准</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-section">
+            <h2 class="section-title lang-en">Supporting Evidence from Swales' Paper</h2>
+            <h2 class="section-title lang-zh hidden">斯威尔斯论文中的支持证据</h2>
+            
+            <div class="lang-en">
+                <div class="definition-box">
+                    <p>Key quotes from John Swales' "Reflections on the concept of discourse community" (2016)</p>
+                </div>
+                
+                <div class="quote">
+                    <p>"I first heard the term 'discourse community' early in 1986, fairly soon after I had moved to the United States; it was used in a talk at the University of Michigan given by Lillian Bridwell-Bowles. I cannot remember much of the talk at today's distance, but I do remember how I immediately recognized that the concept of discourse community was precisely the concept I had been looking for since it would provide socio-rhetorical context for my ongoing exploration of (mainly) academic genres." (p. 8)</p>
+                </div>
+                
+                <div class="quote">
+                    <p>"By the time Genre Analysis was eventually published in 1990, discourse community (DC) had become a member of a trio of interlocking concepts, the other two being genre and language-learning task." (p. 8)</p>
+                </div>
+                
+                <div class="quote">
+                    <p>"The basic idea of a rhetorical discourse community arose in contrast to the longer-standing sociolinguistic concept of speech community. The latter was premised on a homogeneous assemblage of people who share place, background, language variety and who largely share social, religious, and cultural values... In some contrast, the former is a largely heterogeneous, socio-rhetorical assemblage of people who broadly share occupational or recreational experiences, goals, and interests." (p. 10)</p>
+                </div>
+                
+                <div class="quote">
+                    <p>"A second set of problems is that the concept of discourse community as originally conceived was overly static. While this perhaps did not matter so much in 1990, in today's more unsettled and uncertain world, it looms larger as a problem; in particular, the concept did not firmly or directly address how people either join or leave DCs." (p. 11)</p>
+                </div>
+                
+                <div class="quote">
+                    <p>"The third and final main type of discourse community has characteristics of both local and focal DCs, which is why I have coined the fused term 'folocal' as a neologistic amalgam of the 'local' and 'focal'. These are hybrid communities whose members have a double—and sometimes split—allegiance, as they are confronted by internal and external challenges and pressures." (p. 13)</p>
+                </div>
+            </div>
+            
+            <div class="lang-zh hidden">
+                <div class="definition-box">
+                    <p>约翰·斯威尔斯《话语社区概念的思考》（2016）中的关键引述</p>
+                </div>
+                
+                <div class="quote">
+                    <p>"我于1986年初首次听到'话语社区'这一术语，那是在我搬到美国后不久；它是由莉莲·布里德威尔-鲍尔斯在密歇根大学的一次演讲中使用的。从现在的距离看，我不记得那次演讲的大部分内容，但我确实记得我立即认识到话语社区的概念正是我一直在寻找的概念，因为它将为我正在进行的（主要是）学术体裁探索提供社会修辞背景。" (第8页)</p>
+                </div>
+                
+                <div class="quote">
+                    <p>"到1990年《体裁分析》最终出版时，话语社区（DC）已成为三个相互关联概念中的一员，其他两个是体裁和语言学习任务。" (第8页)</p>
+                </div>
+                
+                <div class="quote">
+                    <p>"修辞话语社区的基本概念是与长期存在的社会语言学中的语言社区概念形成对比而产生的。后者以同质人群为前提，这些人共享地点、背景、语言变体，并在很大程度上共享社会、宗教和文化价值观...相比之下，前者在很大程度上是一个异质的、社会修辞的人群聚集，他们广泛共享职业或娱乐经验、目标和兴趣。" (第10页)</p>
+                </div>
+                
+                <div class="quote">
+                    <p>"第二组问题是，最初构想的话语社区概念过于静态。虽然这在1990年可能并不那么重要，但在今天更加动荡和不确定的世界中，它作为一个问题变得更加突出；特别是，这一概念没有坚定或直接解决人们如何加入或离开话语社区的问题。" (第11页)</p>
+                </div>
+                
+                <div class="quote">
+                    <p>"第三种也是最后一种主要类型的话语社区具有本地和焦点话语社区的特征，这就是为什么我创造了融合术语'焦本地'，作为'本地'和'焦点'的新词混合体。这些是混合社区，其成员具有双重——有时是分裂的——忠诚，因为他们面临内部和外部的挑战和压力。" (第13页)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function toggleLanguage(lang) {
+            const enElements = document.querySelectorAll('.lang-en');
+            const zhElements = document.querySelectorAll('.lang-zh');
+            const enBtn = document.querySelector('button[onclick="toggleLanguage(\'en\')"]');
+            const zhBtn = document.querySelector('button[onclick="toggleLanguage(\'zh\')"]');
+            
+            if (lang === 'en') {
+                enElements.forEach(el => el.classList.remove('hidden'));
+                zhElements.forEach(el => el.classList.add('hidden'));
+                enBtn.classList.add('active');
+                zhBtn.classList.remove('active');
+            } else {
+                enElements.forEach(el => el.classList.add('hidden'));
+                zhElements.forEach(el => el.classList.remove('hidden'));
+                enBtn.classList.remove('active');
+                zhBtn.classList.add('active');
+            }
+        }
+        
+        function openTab(evt, tabName) {
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+        
+        function showTypeDetails(type) {
+            // English version
+            document.getElementById('local-details').style.display = 'none';
+            document.getElementById('focal-details').style.display = 'none';
+            document.getElementById('folocal-details').style.display = 'none';
+            
+            // Chinese version
+            if (document.getElementById('local-details-zh')) {
+                document.getElementById('local-details-zh').style.display = 'none';
+                document.getElementById('focal-details-zh').style.display = 'none';
+                document.getElementById('folocal-details-zh').style.display = 'none';
+            }
+            
+            if (type === 'local') {
+                document.getElementById('local-details').style.display = 'block';
+                if (document.getElementById('local-details-zh')) {
+                    document.getElementById('local-details-zh').style.display = 'block';
+                }
+            } else if (type === 'focal') {
+                document.getElementById('focal-details').style.display = 'block';
+                if (document.getElementById('focal-details-zh')) {
+                    document.getElementById('focal-details-zh').style.display = 'block';
+                }
+            } else if (type === 'folocal') {
+                document.getElementById('folocal-details').style.display = 'block';
+                if (document.getElementById('folocal-details-zh')) {
+                    document.getElementById('folocal-details-zh').style.display = 'block';
+                }
+            }
+        }
+    </script>
+</body>
+</html>1982</span>
+                                    <p>Martin Nystrand at the University of Wisconsin-Madison first coins the term "discourse community"</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container right">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">1986</span>
+                                    <p>John Swales hears the term "discourse community" from Lillian Bridwell-Bowles during a talk at the University of Michigan</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container left">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">1990</span>
+                                    <p>Swales publishes <i>Genre Analysis</i> with the original six criteria for discourse communities</p>
+                                </div>
+                            </div>
+                            <div class="timeline-container right">
+                                <div class="timeline-content">
+                                    <span class="timeline-date">
