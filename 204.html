@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collostructional Analysis Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .language-selector {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .language-btn {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 6px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .language-btn.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .dashboard-section {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: #2e7d32;
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #2e7d32;
+            padding-bottom: 10px;
+        }
+        
+        .key-points {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .key-point {
+            flex: 1;
+            min-width: 250px;
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #388e3c;
+        }
+        
+        .methods-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .method-card {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .method-title {
+            font-size: 1.2rem;
+            color: #388e3c;
+            margin-top: 0;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        
+        .quote {
+            background-color: #f1f8e9;
+            border-left: 4px solid #689f38;
+            padding: 10px 15px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        
+        .quote-source {
+            font-size: 0.9rem;
+            text-align: right;
+            color: #666;
+        }
+        
+        .application {
+            background-color: #e8eaf6;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3f51b5;
+        }
+        
+        .application-title {
+            font-weight: bold;
+            color: #3f51b5;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: #4CAF50;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        
+        .timeline-container {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+        }
+        
+        .timeline-container.left {
+            left: 0;
+        }
+        
+        .timeline-container.right {
+            left: 50%;
+        }
+        
+        .timeline-content {
+            padding: 20px 30px;
+            background-color: white;
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-content h3 {
+            margin-top: 0;
+            color: #4CAF50;
+        }
+        
+        .english, .chinese {
+            display: none;
+        }
+        
+        .show {
+            display: block;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #666;
+        }
+        
+        @media screen and (max-width: 600px) {
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-container {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-container.right {
+                left: 0%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="language-selector">
+            <button class="language-btn active" onclick="switchLanguage('english')">English</button>
+            <button class="language-btn" onclick="switchLanguage('chinese')">中文</button>
+        </div>
+        
+        <header>
+            <h1 class="english show">Collostructional Analysis Dashboard</h1>
+            <h1 class="chinese">构式词汇分析仪表板</h1>
+        </header>
+        
+        <section class="dashboard-section">
+            <h2 class="section-title english show">Introduction</h2>
+            <h2 class="section-title chinese">简介</h2>
+            
+            <div class="english show">
+                <p>Collostructional analysis is a family of methods introduced in the early 2000s by Stefan Th. Gries and Anatol Stefanowitsch. It was designed to investigate the interaction between words and constructions in language. The term "collostruction" itself is a blend of "collocation" and "construction".</p>
+                
+                <div class="quote">
+                    <p>"Collostructional analysis was presented as an 'extension of collocational analysis'. While collocational analysis examines the interaction between words (e.g., how the verb SUGGEST interacts with other words to the left and/or to the right such as I, would, that, or strongly), collostructional analysis considers the interaction between words and constructions."</p>
+                    <p class="quote-source">- Gilquin & Gries (2025, p. 1)</p>
+                </div>
+                
+                <p>This approach brings together two frameworks: Corpus Linguistics and Construction Grammar. It is a usage-based approach in two senses:</p>
+                <ol>
+                    <li>It assumes that language systems gradually emerge from usage (as advocated in Construction Grammar)</li>
+                    <li>It is based on authentic language data from corpora</li>
+                </ol>
+            </div>
+            
+            <div class="chinese">
+                <p>构式词汇分析是由Stefan Th. Gries和Anatol Stefanowitsch在21世纪初引入的一系列方法。它旨在研究语言中词语与构式之间的互动关系。"构式词汇"（collostruction）一词本身就是"搭配"（collocation）和"构式"（construction）的混成词。</p>
+                
+                <div class="quote">
+                    <p>"构式词汇分析被呈现为'搭配分析的扩展'。搭配分析考察的是词语之间的互动（例如，动词SUGGEST如何与其左右的其他词语如I、would、that或strongly互动），而构式词汇分析则考察词语与构式之间的互动。"</p>
+                    <p class="quote-source">- Gilquin & Gries (2025, 第1页)</p>
+                </div>
+                
+                <p>这种方法将两个框架结合在一起：语料库语言学和构式语法。它是一种基于使用的方法，有两层含义：</p>
+                <ol>
+                    <li>它假设语言系统逐渐从使用中形成（正如构式语法所倡导的）</li>
+                    <li>它基于来自语料库的真实语言数据</li>
+                </ol>
+            </div>
+        </section>
+        
+        <section class="dashboard-section">
+            <h2 class="section-title english show">Key Points</h2>
+            <h2 class="section-title chinese">要点</h2>
+            
+            <div class="key-points english show">
+                <div class="key-point">
+                    <p>Collostructional analysis was developed in the early 2000s as a family of methods to measure the degree of interaction between words and constructions</p>
+                </div>
+                <div class="key-point">
+                    <p>The study of the collexemes attracted to a construction provides insights into the semantic, stylistic, functional, cultural, etc. features of the construction</p>
+                </div>
+                <div class="key-point">
+                    <p>Since its advent, collostructional analysis has been applied to a growing number of constructions, languages, and fields, and several changes and extensions have been proposed</p>
+                </div>
+            </div>
+            
+            <div class="key-points chinese">
+                <div class="key-point">
+                    <p>构式词汇分析是在21世纪初开发的一系列方法，用于测量词语与构式之间互动的程度</p>
+                </div>
+                <div class="key-point">
+                    <p>对构式所吸引的词元（collexemes）的研究提供了对构式的语义、风格、功能、文化等特征的见解</p>
+                </div>
+                <div class="key-point">
+                    <p>自问世以来，构式词汇分析已应用于越来越多的构式、语言和领域，并且已提出了几项变更和扩展</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="dashboard-section">
+            <h2 class="section-title english show">Methods of Collostructional Analysis</h2>
+            <h2 class="section-title chinese">构式词汇分析方法</h2>
+            
+            <div class="methods-container english show">
+                <div class="method-card">
+                    <h3 class="method-title">Collexeme Analysis</h3>
+                    <p>Investigates one slot in a particular construction.</p>
+                    <p><strong>Example:</strong> Analyzing the verb slot in the [SUGGEST Ving] construction to find which verbs (e.g., going, leaving, using) are strongly associated with this construction.</p>
+                    <p><strong>Another Example:</strong> Hartmann & Ungerer's (2024) analysis of [the mother of all X].</p>
+                </div>
+                
+                <div class="method-card">
+                    <h3 class="method-title">Distinctive Collexeme Analysis</h3>
+                    <p>Compares the collexemes of two constructions that fulfill similar functions.</p>
+                    <p><strong>Example:</strong> Wulff's (2007) comparison of the verb slot of [GO-and-V] and [GO-V], which revealed that these functionally similar constructions attract different verbs.</p>
+                    <p>When more than two constructions are compared, a <strong>multiple distinctive collexeme analysis</strong> can be used.</p>
+                </div>
+                
+                <div class="method-card">
+                    <h3 class="method-title">Covarying Collexeme Analysis</h3>
+                    <p>Considers the association between two slots within one construction.</p>
+                    <p><strong>Example:</strong> Analyzing the comparative filler phrases in the comparative correlative construction (e.g., "the sooner, the better") in Hoffmann et al. (2019).</p>
+                </div>
+            </div>
+            
+            <div class="methods-container chinese">
+                <div class="method-card">
+                    <h3 class="method-title">词元分析</h3>
+                    <p>研究特定构式中的一个位置。</p>
+                    <p><strong>示例：</strong> 分析[SUGGEST Ving]构式中的动词位置，以找出哪些动词（如going、leaving、using）与这个构式有强烈关联。</p>
+                    <p><strong>另一个示例：</strong> Hartmann & Ungerer（2024）对[the mother of all X]的分析。</p>
+                </div>
+                
+                <div class="method-card">
+                    <h3 class="method-title">区别性词元分析</h3>
+                    <p>比较两个具有相似功能的构式的词元。</p>
+                    <p><strong>示例：</strong> Wulff（2007）对[GO-and-V]和[GO-V]动词位置的比较，揭示了这些功能相似的构式吸引不同的动词。</p>
+                    <p>当比较两个以上的构式时，可以使用<strong>多重区别性词元分析</strong>。</p>
+                </div>
+                
+                <div class="method-card">
+                    <h3 class="method-title">协变词元分析</h3>
+                    <p>考虑一个构式内两个位置之间的关联。</p>
+                    <p><strong>示例：</strong> 分析Hoffmann等人（2019）研究中比较关联构式中的比较填充短语（如"the sooner, the better"）。</p>
+                </div>
+            </div>
+            
+            <div class="english show">
+                <div class="quote">
+                    <p>"The computation of collostructional analysis implies that we know the frequency of the construction(s) under study and the frequency – inside and outside the construction(s) – of the words occurring in the selected slot(s)."</p>
+                    <p class="quote-source">- Gilquin & Gries (2025, p. 2)</p>
+                </div>
+            </div>
+            
+            <div class="chinese">
+                <div class="quote">
+                    <p>"构式词汇分析的计算意味着我们知道所研究的构式的频率以及出现在所选位置的词语在构式内外的频率。"</p>
+                    <p class="quote-source">- Gilquin & Gries (2025, 第2页)</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="dashboard-section">
+            <h2 class="section-title english show">Applications of Collostructional Analysis</h2>
+            <h2 class="section-title chinese">构式词汇分析的应用</h2>
+            
+            <div class="english show">
+                <div class="application">
+                    <h3 class="application-title">Construction Grammar</h3>
+                    <p>Collostructional analysis has underlined the phraseological nature of constructions, since they often show strong preferences for certain words in a given slot. It has also improved our understanding of the meanings of constructions and emphasized semantic differences between constructions often considered equivalent.</p>
+                    <p><strong>Example:</strong> Wulff's (2007) study showed that the [GO-and-V] construction refers to the whole action, from beginning to end, whereas the [GO-V] construction "only denotes the initiation of an action and is inherently atelic".</p>
+                </div>
+                
+                <div class="application">
+                    <h3 class="application-title">Cross-linguistic Studies</h3>
+                    <p>While the first collostructional analyses were carried out on English language data, further studies have tackled other languages and compared constructions across languages.</p>
+                    <p><strong>Examples:</strong></p>
+                    <ul>
+                        <li>Hilpert (2006): Swedish future constructions</li>
+                        <li>Jensen (2012): The [V ihjel] ("V to death") construction in Danish</li>
+                        <li>Colleman (2009): The Dutch dative alternation</li>
+                        <li>Verroens (2024): French ingressive constructions</li>
+                    </ul>
+                </div>
+                
+                <div class="application">
+                    <h3 class="application-title">Diachronic Linguistics</h3>
+                    <p>The collostructional approach has been used to trace the historical evolution of constructions.</p>
+                    <p><strong>Example:</strong> Noël & Colleman's (2010) study of the "accusative and infinitive" and "nominative and infinitive" constructions in English and Dutch over a period of almost three centuries (1640–1920).</p>
+                </div>
+                
+                <div class="application">
+                    <h3 class="application-title">Second Language Acquisition</h3>
+                    <p>Comparing the collexemes of a construction in native and learner language highlights possible differences between the two varieties.</p>
+                    <p><strong>Example:</strong> Gilquin's (2012) distinctive collexeme analysis of [X MAKE Y Vinf] showed that while both learners and native speakers use copular verbs in the construction, learners favor be and become, whereas native speakers prefer more specific copulas such as seem, appear, sound, or look.</p>
+                </div>
+                
+                <div class="application">
+                    <h3 class="application-title">Contact Linguistics</h3>
+                    <p>Collostructional analysis has been applied to study language contact phenomena.</p>
+                    <p><strong>Example:</strong> Mukherjee & Gries (2009) compared the collexemes of the intransitive, monotransitive, and ditransitive constructions across Hong Kong, Indian, and Singapore English, revealing that the more advanced in its evolution a New English variety is, the more its collostructional preferences differ from those in British English.</p>
+                </div>
+            </div>
+            
+            <div class="chinese">
+                <div class="application">
+                    <h3 class="application-title">构式语法</h3>
+                    <p>构式词汇分析强调了构式的短语特性，因为它们在给定位置上通常对某些词有强烈的偏好。它还改进了我们对构式意义的理解，并强调了常被视为等价的构式之间的语义差异。</p>
+                    <p><strong>示例：</strong> Wulff（2007）的研究表明，[GO-and-V]构式指的是从头到尾的整个动作，而[GO-V]构式"仅表示动作的开始，本质上是非终结的"。</p>
+                </div>
+                
+                <div class="application">
+                    <h3 class="application-title">跨语言研究</h3>
+                    <p>虽然最初的构式词汇分析是在英语语言数据上进行的，但进一步的研究已涉及其他语言并比较了跨语言的构式。</p>
+                    <p><strong>示例：</strong></p>
+                    <ul>
+                        <li>Hilpert（2006）：瑞典语未来时构式</li>
+                        <li>Jensen（2012）：丹麦语[V ihjel]（"V至死"）构式</li>
+                        <li>Colleman（2009）：荷兰语与格交替</li>
+                        <li>Verroens（2024）：法语起始构式</li>
+                    </ul>
+                </div>
+                
+                <div class="application">
+                    <h3 class="application-title">历时语言学</h3>
+                    <p>构式词汇方法已被用于追踪构式的历史演变。</p>
+                    <p><strong>示例：</strong> Noël & Colleman（2010）对英语和荷兰语中"宾语与不定式"和"主语与不定式"构式在将近三个世纪（1640-1920）期间的研究。</p>
+                </div>
+                
+                <div class="application">
+                    <h3 class="application-title">第二语言习得</h3>
+                    <p>比较母语和学习者语言中构式的词元可以突显两种变体之间可能的差异。</p>
+                    <p><strong>示例：</strong> Gilquin（2012）对[X MAKE Y Vinf]的区别性词元分析表明，尽管学习者和母语使用者都在这个构式中使用系动词，但学习者偏爱be和become，而母语使用者则更喜欢更具体的系动词，如seem、appear、sound或look。</p>
+                </div>
+                
+                <div class="application">
+                    <h3 class="application-title">接触语言学</h3>
+                    <p>构式词汇分析已被应用于研究语言接触现象。</p>
+                    <p><strong>示例：</strong> Mukherjee & Gries（2009）比较了香港英语、印度英语和新加坡英语中不及物、单及物和双及物构式的词元，揭示了新英语变体在其演变中越先进，其构式词汇偏好与英国英语的差异就越大。</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="dashboard-section">
+            <h2 class="section-title english show">Computation and Analysis</h2>
+            <h2 class="section-title chinese">计算与分析</h2>
+            
+            <div class="english show">
+                <p>The computation of collostructional analysis involves several important steps and considerations:</p>
+                
+                <div class="method-card">
+                    <h3 class="method-title">Data Requirements</h3>
+                    <p>To perform collostructional analysis, researchers need:</p>
+                    <ul>
+                        <li>The frequency of the construction(s) under study</li>
+                        <li>The frequency of words occurring in the selected slot(s) - both inside and outside the construction(s)</li>
+                    </ul>
+                </div>
+                
+                <div class="method-card">
+                    <h3 class="method-title">Corpus Types</h3>
+                    <p><strong>Parsed corpora</strong> are particularly useful because they include information about syntactic structure, functions, and relationships that can help with the automatic retrieval of constructions.</p>
+                    <p><strong>Part-of-speech tagged corpora</strong> can also be used with more manual work, searching for sequences of words and/or parts of speech.</p>
+                </div>
+                
+                <div class="method-card">
+                    <h3 class="method-title">Statistical Analysis</h3>
+                    <p>The quantitative information makes it possible to compare observed and expected frequencies for each combination of construction and word, using distributional statistics.</p>
+                    <p>Words that are more frequent than expected in a construction are said to be <strong>attracted</strong> to the construction, whereas those that are less frequent than expected are <strong>repelled</strong>.</p>
+                </div>
+                
+                <div class="quote">
+                    <p>"Scripts are available that compute these statistics (Gries's (2004/2022) Coll.analysis 3/4 script and Flach's (2021) collostruction package) and provide different statistical measures of the strength of association or repulsion between a word and a construction."</p>
+                    <p class="quote-source">- Gilquin & Gries (2025, p. 3)</p>
+                </div>
+                
+                <h3 class="section-title">Analyzing the Output</h3>
+                <p>Typically, the output of a collostructional analysis is analyzed by grouping the collexemes around identifiable classes:</p>
+                
+                <div class="method-card">
+                    <h3 class="method-title">Semantic Analysis</h3>
+                    <p>The most common approach is to group collexemes into semantic classes.</p>
+                    <p><strong>Example:</strong> Wulff et al. (2007) found that, in the V1 slot of the into-causative construction, the collexemes in British English tend to express physical force (e.g., push) whereas those in American English more often involve verbal persuasion (e.g., talk).</p>
+                </div>
+                
+                <div class="method-card">
+                    <h3 class="method-title">Other Classification Types</h3>
+                    <p>Collexemes can also be grouped according to:</p>
+                    <ul>
+                        <li>Functional features</li>
+                        <li>Stylistic features</li>
+                        <li>Cultural features</li>
+                        <li>Register-based features</li>
+                    </ul>
+                </div>
+                
+                <div class="method-card">
+                    <h3 class="method-title">Automated Classification</h3>
+                    <p>While traditional semantic analysis is based on manual classification, attempts have been made to automate the process:</p>
+                    <ul>
+                        <li>Cluster analysis (Gries & Stefanowitsch, 2010)</li>
+                        <li>Network analysis (Gries & Ellis, 2015)</li>
+                    </ul>
+                    <p>A related important question is how to take polysemy into consideration.</p>
+                </div>
+            </div>
+            
+            <div class="chinese">
+                <p>构式词汇分析的计算涉及几个重要步骤和考虑因素：</p>
+                
+                <div class="method-card">
+                    <h3 class="method-title">数据要求</h3>
+                    <p>要进行构式词汇分析，研究人员需要：</p>
+                    <ul>
+                        <li>所研究构式的频率</li>
+                        <li>在所选位置出现的词语的频率 - 构式内外都要</li>
+                    </ul>
+                </div>
+                
+                <div class="method-card">
+                    <h3 class="method-title">语料库类型</h3>
+                    <p><strong>已解析语料库</strong>特别有用，因为它们包含有关句法结构、功能和关系的信息，可以帮助自动检索构式。</p>
+                    <p><strong>词性标注语料库</strong>也可以使用，但需要更多的手动工作，通过搜索词序列和/或词性。</p>
+                </div>
+                
+                <div class="method-card">
+                    <h3 class="method-title">统计分析</h3>
+                    <p>定量信息使得可以使用分布统计来比较每个构式和词语组合的观察频率和预期频率。</p>
+                    <p>在构式中频率高于预期的词语被称为被构式<strong>吸引</strong>，而频率低于预期的词语则被<strong>排斥</strong>。</p>
+                </div>
+                
+                <div class="quote">
+                    <p>"有可用的脚本来计算这些统计数据（Gries的（2004/2022）Coll.analysis 3/4脚本和Flach的（2021）collostruction包），并提供词语与构式之间关联或排斥强度的不同统计度量。"</p>
+                    <p class="quote-source">- Gilquin & Gries (2025, 第3页)</p>
+                </div>
+                
+                <h3 class="section-title">分析结果</h3>
+                <p>通常，构式词汇分析的结果是通过将词元分组到可识别的类别来分析：</p>
+                
+                <div class="method-card">
+                    <h3 class="method-title">语义分析</h3>
+                    <p>最常见的方法是将词元分组为语义类。</p>
+                    <p><strong>示例：</strong> Wulff等人（2007）发现，在into使役构式的V1位置，英国英语中的词元倾向于表达物理力量（如push），而美国英语中的词元则更多涉及言语说服（如talk）。</p>
+                </div>
+                
+                <div class="method-card">
+                    <h3 class="method-title">其他分类类型</h3>
+                    <p>词元也可以根据以下方面进行分组：</p>
+                    <ul>
+                        <li>功能特征</li>
+                        <li>风格特征</li>
+                        <li>文化特征</li>
+                        <li>基于语域的特征</li>
+                    </ul>
+                </div>
+                
+                <div class="method-card">
+                    <h3 class="method-title">自动化分类</h3>
+                    <p>虽然传统的语义分析基于手动分类，但也有尝试自动化这一过程：</p>
+                    <ul>
+                        <li>聚类分析（Gries & Stefanowitsch，2010）</li>
+                        <li>网络分析（Gries & Ellis，2015）</li>
+                    </ul>
+                    <p>一个相关的重要问题是如何考虑多义性。</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="dashboard-section">
+            <h2 class="section-title english show">New Developments</h2>
+            <h2 class="section-title chinese">新发展</h2>
+            
+            <div class="english show">
+                <p>Over the years, changes to and extensions of the three traditional methods have been proposed:</p>
+                
+                <div class="timeline">
+                    <div class="timeline-container left">
+                        <div class="timeline-content">
+                            <h3>Conceptual Changes</h3>
+                            <p>Distinctive collexeme analyses have been extended to compare not just two constructions but one construction in different settings:</p>
+                            <ul>
+                                <li>Comparing constructions across varieties of English (Wulff et al., 2007; Mukherjee & Gries, 2009)</li>
+                                <li>Comparing constructions in native versus learner English (Gilquin, 2012)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="timeline-container right">
+                        <div class="timeline-content">
+                            <h3>Methodological Questions</h3>
+                            <p>Discussions about which distributional statistic(s) to use for quantifying attraction/repulsion:</p>
+                            <ul>
+                                <li>Most studies have used the (negative of the logged) p-value of a Fisher-Yates exact test</li>
+                                <li>Suggestions to use statistics that measure frequency and both directions of association independently</li>
+                                <li>Adding dimensions like dispersion to the mix</li>
+                                <li>Reporting a tuple of collostructional statistics rather than a single value</li>
+                            </ul>
+                            <div class="quote">
+                                <p>"Gries (2019) demonstrates how this kind of approach can shed new light (in the form of 'more precision') on old results."</p>
+                                <p class="quote-source">- Gilquin & Gries (2025, p. 5)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-container left">
+                        <div class="timeline-content">
+                            <h3>Robustness Measurements</h3>
+                            <p>Introduction of measures of robustness or uncertainty:</p>
+                            <ul>
+                                <li>Traditional collostructional methods usually only provide point estimates for collostructional strengths</li>
+                                <li>Gries (2022, 2023) reports on applications of bootstrapped confidence intervals</li>
+                                <li>These suggest that clear-cut rankings may be fuzzier than previously assumed</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="timeline-container right">
+                        <div class="timeline-content">
+                            <h3>Multi-dimensional Approaches</h3>
+                            <p>Increasing the dimensionality of co-occurrence data:</p>
+                            <ul>
+                                <li>Stefanowitsch & Flach (2020): "Distinctive co-varying collexeme analysis" to explore associations between two slots in two related constructions</li>
+                                <li>Hampe & Gries (2018): Exploration of mini constructions based on additional dimensions</li>
+                                <li>Olguín Martínez & Gries (2024): Multivariate collexeme analysis with a five-dimensional study of counterfactual constructions</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="quote">
+                    <p>"In sum, while collostructional methods are, at their core, quite simple and have been around for a while, there are several new developments that promise to increase their precision, the rigor, and the comprehensiveness."</p>
+                    <p class="quote-source">- Gilquin & Gries (2025, p. 5)</p>
+                </div>
+            </div>
+            
+            <div class="chinese">
+                <p>多年来，对三种传统方法的变更和扩展已被提出：</p>
+                
+                <div class="timeline">
+                    <div class="timeline-container left">
+                        <div class="timeline-content">
+                            <h3>概念变化</h3>
+                            <p>区别性词元分析已扩展到不仅比较两个构式，还比较不同环境中的同一构式：</p>
+                            <ul>
+                                <li>比较不同英语变体中的构式（Wulff等，2007；Mukherjee & Gries，2009）</li>
+                                <li>比较母语与学习者英语中的构式（Gilquin，2012）</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="timeline-container right">
+                        <div class="timeline-content">
+                            <h3>方法论问题</h3>
+                            <p>关于使用哪种分布统计方法来量化吸引/排斥的讨论：</p>
+                            <ul>
+                                <li>大多数研究使用Fisher-Yates精确检验的p值（负对数）</li>
+                                <li>建议使用能够独立测量频率和双向关联的统计方法</li>
+                                <li>在混合中添加分散度等维度</li>
+                                <li>报告一组构式词汇统计数据，而不是单一值</li>
+                            </ul>
+                            <div class="quote">
+                                <p>"Gries（2019）展示了这种方法如何能够以'更精确'的形式为旧结果提供新见解。"</p>
+                                <p class="quote-source">- Gilquin & Gries (2025, 第5页)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-container left">
+                        <div class="timeline-content">
+                            <h3>稳健性测量</h3>
+                            <p>引入稳健性或不确定性度量：</p>
+                            <ul>
+                                <li>传统构式词汇方法通常只为构式词汇强度提供点估计</li>
+                                <li>Gries（2022，2023）报告了自举置信区间的应用</li>
+                                <li>这表明之前认为的明确排名可能比想象的更模糊</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="timeline-container right">
+                        <div class="timeline-content">
+                            <h3>多维方法</h3>
+                            <p>增加共现数据的维度：</p>
+                            <ul>
+                                <li>Stefanowitsch & Flach（2020）："区别性协变词元分析"，探索两个相关构式中两个位置之间的关联</li>
+                                <li>Hampe & Gries（2018）：基于额外维度探索迷你构式</li>
+                                <li>Olguín Martínez & Gries（2024）：多变量词元分析，对反事实构式进行五维研究</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="quote">
+                    <p>"总之，虽然构式词汇方法在核心上相当简单，并且已经存在了一段时间，但有几项新发展有望提高它们的精确性、严谨性和全面性。"</p>
+                    <p class="quote-source">- Gilquin & Gries (2025, 第5页)</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="dashboard-section">
+            <h2 class="section-title english show">Conclusion and Future Directions</h2>
+            <h2 class="section-title chinese">结论与未来方向</h2>
+            
+            <div class="english show">
+                <p>Collostructional analysis has established itself as one of the most popular approaches in Construction Grammar and has contributed to the empirical turn of this framework.</p>
+                
+                <div class="quote">
+                    <p>"As evidence for collostructional preferences accumulates, it has become clear that collexemes are central to the description of constructions – so much so that Herbst (2018, p. 18) has suggested transforming Goldberg's (2006, p. 18) credo 'it's constructions all the way down' into 'it's collexemes (or items) all the way down'."</p>
+                    <p class="quote-source">- Gilquin & Gries (2025, p. 6)</p>
+                </div>
+                
+                <h3>Future Implications</h3>
+                <div class="key-points">
+                    <div class="key-point">
+                        <p>Herbst (2018) has argued that the description of constructions should include a "collo-profile," with examples of items typically occurring in the open slots of the constructions.</p>
+                    </div>
+                    <div class="key-point">
+                        <p>This information should be part of a "collostructicon," as a new kind of reference work supplanting dictionaries and grammar books.</p>
+                    </div>
+                    <div class="key-point">
+                        <p>Collostructional analysis has enhanced the value of the Construction Grammar framework and its validity as a usage-based model.</p>
+                    </div>
+                </div>
+                
+                <div class="quote">
+                    <p>"This article has provided an overview of collostructional analysis, showing how its methods can be used to investigate the interaction between words and constructions with a view to improving our understanding of constructions: their phraseological nature, their semantic or stylistic preferences, their cultural specificities, their variation according to registers or varieties, etc."</p>
+                    <p class="quote-source">- Gilquin & Gries (2025, p. 6)</p>
+                </div>
+            </div>
+            
+            <div class="chinese">
+                <p>构式词汇分析已确立为构式语法中最流行的方法之一，并为这一框架的实证转向做出了贡献。</p>
+                
+                <div class="quote">
+                    <p>"随着构式词汇偏好的证据积累，已经清楚词元对构式描述的中心地位 - 如此之重要，以至于Herbst（2018，第18页）建议将Goldberg（2006，第18页）的信条'一路向下都是构式'转变为'一路向下都是词元（或项目）'。"</p>
+                    <p class="quote-source">- Gilquin & Gries (2025, 第6页)</p>
+                </div>
+                
+                <h3>未来影响</h3>
+                <div class="key-points">
+                    <div class="key-point">
+                        <p>Herbst（2018）认为，构式的描述应该包括"词汇搭配概况"，列出典型出现在构式开放位置的项目示例。</p>
+                    </div>
+                    <div class="key-point">
+                        <p>这些信息应该成为"构式词汇典"的一部分，作为取代词典和语法书的新型参考工具。</p>
+                    </div>
+                    <div class="key-point">
+                        <p>构式词汇分析提高了构式语法框架的价值及其作为基于使用模型的有效性。</p>
+                    </div>
+                </div>
+                
+                <div class="quote">
+                    <p>"本文概述了构式词汇分析，展示了如何使用其方法来研究词语与构式之间的互动，以期改进我们对构式的理解：它们的短语特性、语义或风格偏好、文化特殊性、根据语域或变体的变化等。"</p>
+                    <p class="quote-source">- Gilquin & Gries (2025, 第6页)</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="dashboard-section">
+            <h2 class="section-title english show">References and Resources</h2>
+            <h2 class="section-title chinese">参考文献与资源</h2>
+            
+            <div class="english show">
+                <h3>Key References</h3>
+                <ul>
+                    <li>Gilquin, G. & Gries, S. Th. (2025). 'Collostructional analysis'. In H. Nesi & P. Milin (eds) International Encyclopedia of Language and Linguistics, 3rd Edition. Elsevier.</li>
+                    <li>Gries, S. Th. & Stefanowitsch, A. (2004a). 'Extending collostructional analysis. A corpus-based perspective on "alternations"'. International Journal of Corpus Linguistics, 9(1), 97-129.</li>
+                    <li>Gries, S. Th. & Stefanowitsch, A. (2004b). 'Covarying collexemes in the into-causative'. In Achard, M. & Kemmer, S. (eds.) Language, culture, and mind. Stanford: CSLI. 225-236.</li>
+                    <li>Stefanowitsch, A. & Gries, S. Th. (2003). 'Collostructions: Investigating the interaction of words and constructions'. International Journal of Corpus Linguistics, 8(2), 209-243.</li>
+                </ul>
+                
+                <h3>Software Resources</h3>
+                <ul>
+                    <li>Gries, S. Th. (2004/2022). Coll.analysis 3/4. A program for R.</li>
+                    <li>Flach, S. (2021). Collostructions: An R implementation for the family of collostructional methods. Package version v.0.2.0. <a href="#">https://sfla.ch/collostructions/</a></li>
+                </ul>
+            </div>
+            
+            <div class="chinese">
+                <h3>主要参考文献</h3>
+                <ul>
+                    <li>Gilquin, G. & Gries, S. Th. (2025). '构式词汇分析'. In H. Nesi & P. Milin (eds) 国际语言与语言学百科全书，第3版. Elsevier.</li>
+                    <li>Gries, S. Th. & Stefanowitsch, A. (2004a). '扩展构式词汇分析。"交替"的基于语料库的视角'. 国际语料库语言学期刊, 9(1), 97-129.</li>
+                    <li>Gries, S. Th. & Stefanowitsch, A. (2004b). 'into使役结构中的协变词元'. In Achard, M. & Kemmer, S. (eds.) 语言、文化与思维. Stanford: CSLI. 225-236.</li>
+                    <li>Stefanowitsch, A. & Gries, S. Th. (2003). '构式词汇：研究词语与构式的互动'. 国际语料库语言学期刊, 8(2), 209-243.</li>
+                </ul>
+                
+                <h3>软件资源</h3>
+                <ul>
+                    <li>Gries, S. Th. (2004/2022). Coll.analysis 3/4. R程序.</li>
+                    <li>Flach, S. (2021). Collostructions: 构式词汇方法系列的R实现. 包版本 v.0.2.0. <a href="#">https://sfla.ch/collostructions/</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="footer">
+            <div class="english show">
+                <p>© 2025 Interactive Dashboard based on Gilquin & Gries (2025) 'Collostructional analysis'</p>
+            </div>
+            <div class="chinese">
+                <p>© 2025 基于Gilquin & Gries (2025) '构式词汇分析'的交互式仪表板</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            window.switchLanguage = function(lang) {
+                const elements = document.querySelectorAll('.english, .chinese');
+                elements.forEach(el => el.classList.remove('show'));
+                
+                const selectedElements = document.querySelectorAll('.' + lang);
+                selectedElements.forEach(el => el.classList.add('show'));
+                
+                const buttons = document.querySelectorAll('.language-btn');
+                buttons.forEach(btn => btn.classList.remove('active'));
+                
+                document.querySelector('.language-btn[onclick="switchLanguage(\'' + lang + '\')"]').classList.add('active');
+            };
+        };
+    </script>
+</body>
+</html>
