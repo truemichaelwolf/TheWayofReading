@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L2 Writing Research Methods Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .lang-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .lang-toggle:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 40px;
+            margin-bottom: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            background: #667eea;
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 9px;
+            top: 20px;
+            width: 2px;
+            height: calc(100% + 10px);
+            background: linear-gradient(to bottom, #667eea, transparent);
+        }
+
+        .timeline-item:last-child::after {
+            display: none;
+        }
+
+        .quote-box {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-left: 5px solid #ff6b6b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            font-style: italic;
+            position: relative;
+        }
+
+        .quote-box::before {
+            content: '"';
+            font-size: 4rem;
+            color: rgba(255, 107, 107, 0.3);
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            font-family: Georgia, serif;
+        }
+
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .method-item {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .method-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 20px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 10px;
+            transition: width 2s ease-in-out;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .contribution-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .contribution-list li {
+            background: rgba(102, 126, 234, 0.1);
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .contribution-list li:hover {
+            background: rgba(102, 126, 234, 0.2);
+            transform: translateX(10px);
+        }
+
+        .author-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .author-info h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin: 3px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="lang-toggle" onclick="toggleLanguage()">中文</button>
+
+    <div class="container">
+        <!-- English Version -->
+        <div id="en-content">
+            <div class="header">
+                <h1>Research Methods in L2 Writing</h1>
+                <p>Interdisciplinary Approaches, Cutting-edge Methods, and Practical Applications</p>
+                <div style="margin-top: 20px;">
+                    <span class="tag">Peter Crosthwaite</span>
+                    <span class="tag">University of Queensland</span>
+                    <span class="tag">May 2025</span>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3><span class="icon">📊</span>Research Overview</h3>
+                    <div class="stats-container">
+                        <div class="stat-item">
+                            <span class="stat-number">173</span>
+                            <span>Total Reads</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">97</span>
+                            <span>Publications</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">1,607</span>
+                            <span>Citations</span>
+                        </div>
+                    </div>
+                    <div class="quote-box">
+                        "We are well and truly amid the 'Methodological Turn' in applied linguistics research, as evidenced by the wealth of papers, programmes and practices focusing on research methods."
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="icon">🔬</span>Key Research Areas</h3>
+                    <div class="method-grid">
+                        <div class="method-item">
+                            <strong>Interdisciplinary Approaches</strong>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 90%;"></div>
+                            </div>
+                        </div>
+                        <div class="method-item">
+                            <strong>Cutting-edge Methods</strong>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%;"></div>
+                            </div>
+                        </div>
+                        <div class="method-item">
+                            <strong>Practical Applications</strong>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 95%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="icon">🧠</span>Methodological Evolution</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>Traditional Approaches</h4>
+                            <p>Static analyses of written texts, move-step analyses, contrastive rhetoric</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Process-Oriented Methods</h4>
+                            <p>Think-aloud protocols, stimulated recall, interaction surveys</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>Cutting-Edge Technologies</h4>
+                            <p>Keystroke logging, eye-tracking, AI-assisted analysis, NLP tools</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="icon">🎯</span>Special Issue Contributions</h3>
+                    <ul class="contribution-list">
+                        <li><strong>Linguistic Complexity Analysis</strong> - Xiaofei Lu</li>
+                        <li><strong>Metadiscourse Analysis</strong> - Shuyi Sun & Feng Jiang</li>
+                        <li><strong>Multimodal Visualisation</strong> - Matt Kessler</li>
+                        <li><strong>ChatGPT Assessment</strong> - Mizumoto et al.</li>
+                        <li><strong>Discourse-based Interviews</strong> - Debra Friedman</li>
+                        <li><strong>Custom NLP Tools</strong> - Eguchi & Kyle</li>
+                        <li><strong>Structural Equation Modeling</strong> - Teng & Teng</li>
+                        <li><strong>Keystroke Logging</strong> - Tian & Cushing</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3><span class="icon">💡</span>Key Insights and Challenges</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <h4>Opportunities</h4>
+                        <ul style="padding-left: 20px;">
+                            <li>Integration of cognitive science and sociolinguistics</li>
+                            <li>Real-time insights through technology</li>
+                            <li>Enhanced practical applications</li>
+                            <li>Open science and reproducibility</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Challenges</h4>
+                        <ul style="padding-left: 20px;">
+                            <li>Complexity of new methodologies</li>
+                            <li>Need for new skill sets</li>
+                            <li>Replicability crisis</li>
+                            <li>Balancing innovation with practicality</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quote-box">
+                    "Understanding the methods and methodologies adopted in L2 writing studies is hugely important as they 'raise questions regarding what we believe writing is and about our interpretive practices'" - Hyland, 2016
+                </div>
+            </div>
+
+            <div class="author-info">
+                <h3>About the Author</h3>
+                <p><strong>Dr. Peter Crosthwaite</strong> is an Associate Professor in the School of Languages and Cultures at the University of Queensland, Australia. His research expertise includes corpus linguistics, second language writing, CALL, and English for Academic Purposes. He serves as editor-in-chief of the Australian Review of Applied Linguistics and is on editorial boards of leading Q1 journals.</p>
+            </div>
+        </div>
+
+        <!-- Chinese Version -->
+        <div id="zh-content" class="hidden">
+            <div class="header">
+                <h1>二语写作研究方法</h1>
+                <p>跨学科方法、前沿技术与实践应用</p>
+                <div style="margin-top: 20px;">
+                    <span class="tag">Peter Crosthwaite</span>
+                    <span class="tag">昆士兰大学</span>
+                    <span class="tag">2025年5月</span>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3><span class="icon">📊</span>研究概览</h3>
+                    <div class="stats-container">
+                        <div class="stat-item">
+                            <span class="stat-number">173</span>
+                            <span>总阅读量</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">97</span>
+                            <span>发表论文</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">1,607</span>
+                            <span>引用次数</span>
+                        </div>
+                    </div>
+                    <div class="quote-box">
+                        "我们正处于应用语言学研究的'方法论转向'之中，这一点从关注研究方法的大量论文、项目和实践中可见一斑。"
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="icon">🔬</span>核心研究领域</h3>
+                    <div class="method-grid">
+                        <div class="method-item">
+                            <strong>跨学科方法</strong>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 90%;"></div>
+                            </div>
+                        </div>
+                        <div class="method-item">
+                            <strong>前沿方法</strong>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%;"></div>
+                            </div>
+                        </div>
+                        <div class="method-item">
+                            <strong>实践应用</strong>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 95%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="icon">🧠</span>方法论发展历程</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4>传统方法</h4>
+                            <p>文本静态分析、语步分析、对比修辞学</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>过程导向方法</h4>
+                            <p>有声思维协议、刺激回忆、互动调查</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4>前沿技术</h4>
+                            <p>键盘记录、眼动追踪、AI辅助分析、自然语言处理工具</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="icon">🎯</span>特刊贡献</h3>
+                    <ul class="contribution-list">
+                        <li><strong>语言复杂性分析</strong> - 陆晓飞</li>
+                        <li><strong>元话语分析</strong> - 孙淑怡 & 蒋峰</li>
+                        <li><strong>多模态可视化</strong> - Matt Kessler</li>
+                        <li><strong>ChatGPT评估</strong> - Mizumoto等</li>
+                        <li><strong>基于话语的访谈</strong> - Debra Friedman</li>
+                        <li><strong>定制NLP工具</strong> - Eguchi & Kyle</li>
+                        <li><strong>结构方程建模</strong> - 滕丰 & 滕琳</li>
+                        <li><strong>键盘记录技术</strong> - 田宇 & Cushing</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3><span class="icon">💡</span>核心洞察与挑战</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <h4>机遇</h4>
+                        <ul style="padding-left: 20px;">
+                            <li>认知科学与社会语言学的整合</li>
+                            <li>通过技术获得实时洞察</li>
+                            <li>增强实践应用</li>
+                            <li>开放科学与可重复性</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>挑战</h4>
+                        <ul style="padding-left: 20px;">
+                            <li>新方法论的复杂性</li>
+                            <li>对新技能的需求</li>
+                            <li>可重复性危机</li>
+                            <li>平衡创新与实用性</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="quote-box">
+                    "理解二语写作研究中采用的方法和方法论极其重要，因为它们'引发了关于我们认为写作是什么以及我们的解释实践的问题'" - Hyland, 2016
+                </div>
+            </div>
+
+            <div class="author-info">
+                <h3>关于作者</h3>
+                <p><strong>Peter Crosthwaite博士</strong>是澳大利亚昆士兰大学语言与文化学院副教授。他的研究专长包括语料库语言学、二语写作、计算机辅助语言学习和学术英语。他担任《澳大利亚应用语言学评论》主编，并在多个Q1期刊编委会任职。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLanguage = 'en';
+
+        function toggleLanguage() {
+            const enContent = document.getElementById('en-content');
+            const zhContent = document.getElementById('zh-content');
+            const toggleButton = document.querySelector('.lang-toggle');
+
+            if (currentLanguage === 'en') {
+                enContent.classList.add('hidden');
+                zhContent.classList.remove('hidden');
+                zhContent.classList.add('fade-in');
+                toggleButton.textContent = 'English';
+                currentLanguage = 'zh';
+            } else {
+                zhContent.classList.add('hidden');
+                enContent.classList.remove('hidden');
+                enContent.classList.add('fade-in');
+                toggleButton.textContent = '中文';
+                currentLanguage = 'en';
+            }
+        }
+
+        // Initialize progress bars animation
+        window.addEventListener('load', function() {
+            const progressBars = document.querySelectorAll('.progress-fill');
+            progressBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 500);
+            });
+        });
+
+        // Add hover effects for interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
