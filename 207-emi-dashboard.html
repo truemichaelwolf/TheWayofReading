@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMI in European Higher Education Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #3b82f6;
+            --accent-color: #93c5fd;
+            --text-color: #1f2937;
+            --background-color: #f3f4f6;
+            --card-color: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 10px;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin: 20px 0;
+            font-size: 1.8rem;
+        }
+        
+        h3 {
+            color: var(--secondary-color);
+            margin: 15px 0;
+            font-size: 1.4rem;
+        }
+        
+        .subheading {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .info-section {
+            background-color: var(--card-color);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .info-card {
+            background-color: var(--card-color);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin: 10px 0;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+        }
+        
+        .two-col {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 20px;
+        }
+        
+        .discipline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .discipline-card {
+            background-color: var(--card-color);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .discipline-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .discipline-percentage {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        .data-source {
+            font-style: italic;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .quote {
+            padding: 15px;
+            border-left: 4px solid var(--secondary-color);
+            background-color: rgba(147, 197, 253, 0.1);
+            margin: 15px 0;
+        }
+        
+        .quote p {
+            font-style: italic;
+        }
+        
+        .quote-source {
+            text-align: right;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        
+        .key-findings {
+            background-color: rgba(59, 130, 246, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .key-findings ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        
+        .key-findings li {
+            position: relative;
+            padding: 10px 0;
+            padding-left: 25px;
+        }
+        
+        .key-findings li:before {
+            content: "✓";
+            color: var(--secondary-color);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+        
+        #lang-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        
+        #lang-toggle:hover {
+            transform: scale(1.1);
+            background-color: var(--secondary-color);
+        }
+        
+        .en {
+            display: block;
+        }
+        
+        .zh {
+            display: none;
+        }
+        
+        .lang-zh .en {
+            display: none;
+        }
+        
+        .lang-zh .zh {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .discipline-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            #lang-toggle {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Toggle Button -->
+    <button id="lang-toggle">
+        <span id="lang-text">中文</span>
+    </button>
+
+    <header>
+        <div class="container">
+            <h1 class="en">English-Medium Instruction (EMI) in European Higher Education</h1>
+            <h1 class="zh">欧洲高等教育中的英语教学媒介 (EMI)</h1>
+            <p class="subheading en">Measurement Validity and the State of Play in 2023/2024</p>
+            <p class="subheading zh">2023/2024学年的测量有效性和现状</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="info-section">
+            <h2 class="en">Overview & Key Findings</h2>
+            <h2 class="zh">概述与主要发现</h2>
+            
+            <p class="en">This dashboard presents data from a comprehensive study on English-medium instruction (EMI) in European higher education for the academic year 2023/2024, showing significant growth and changing patterns across Europe.</p>
+            <p class="zh">本仪表板展示了2023/2024学年欧洲高等教育中英语教学媒介(EMI)的综合研究数据，显示了整个欧洲显著的增长和变化模式。</p>
+            
+            <div class="quote">
+                <p class="en">"Notwithstanding the wide consensus that English-medium instruction (EMI) in European higher education has grown explosively since the turn of the century, there has been little research which addresses issues related to operationalizing EMI, nor has a pan-European update on EMI figures been given since 2013."</p>
+                <p class="zh">"尽管普遍认为自本世纪初以来，欧洲高等教育中的英语教学媒介(EMI)呈爆发式增长，但很少有研究解决与操作化EMI相关的问题，也没有自2013年以来对欧洲EMI数据进行全面更新。"</p>
+                <div class="quote-source en">- Wingrove et al., 2025</div>
+                <div class="quote-source zh">- Wingrove等，2025年</div>
+            </div>
+            
+            <div class="key-findings">
+                <h3 class="en">Key Findings:</h3>
+                <h3 class="zh">主要发现：</h3>
+                
+                <ul class="en">
+                    <li>A total of 24,043 English-taught programs (ETPs) were identified in 2023/2024, showing approximately three-fold growth over the past decade from 8,089 in 2013.</li>
+                    <li>EMI is now a pan-European phenomenon, no longer concentrated primarily in Northern Europe.</li>
+                    <li>EMI is practiced primarily at the master's level, with 17,325 master's programs compared to 6,718 bachelor's programs.</li>
+                    <li>The most popular disciplines are business and management (27.4%), engineering and technology (14.7%), and computer science and IT (10.6%).</li>
+                </ul>
+                
+                <ul class="zh">
+                    <li>2023/2024学年共识别出24,043个英语教学项目(ETPs)，比2013年的8,089个项目增长了约三倍。</li>
+                    <li>EMI如今已成为泛欧洲现象，不再主要集中在北欧地区。</li>
+                    <li>EMI主要在硕士阶段实施，硕士项目17,325个，本科项目6,718个。</li>
+                    <li>最受欢迎的学科是商业与管理(27.4%)、工程与技术(14.7%)以及计算机科学与IT(10.6%)。</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2 class="en">Growth of EMI in European Higher Education</h2>
+            <h2 class="zh">欧洲高等教育中EMI的增长</h2>
+            
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3 class="en">Total ETPs in 2023/2024</h3>
+                    <h3 class="zh">2023/2024年ETPs总数</h3>
+                    <div class="stat-number">24,043</div>
+                    <p class="en">The total number of English-taught programs across European higher education institutions.</p>
+                    <p class="zh">欧洲高等教育机构中英语教学项目的总数。</p>
+                </div>
+                <div class="info-card">
+                    <h3 class="en">Total ETPs in 2013</h3>
+                    <h3 class="zh">2013年ETPs总数</h3>
+                    <div class="stat-number">8,089</div>
+                    <p class="en">The previous number of ETPs reported in the last comprehensive study.</p>
+                    <p class="zh">上一次全面研究中报告的ETPs数量。</p>
+                </div>
+                <div class="info-card">
+                    <h3 class="en">Growth Rate</h3>
+                    <h3 class="zh">增长率</h3>
+                    <div class="stat-number">197.2%</div>
+                    <p class="en">Representing approximately three-fold growth over the decade, far outpacing the 7.7% increase in tertiary education enrollment.</p>
+                    <p class="zh">十年间增长约三倍，远超高等教育入学人数7.7%的增长。</p>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="growthChart"></canvas>
+            </div>
+            
+            <div class="quote">
+                <p class="en">"A total of 24,043 ETPs were identified in 2023/24, compared to 8,089 in 2013, showing approximately three-fold growth over the decade. Geographically, our modern data shows that EMI is practiced more widely in 2023/2024, no longer as concentrated in Northern Europe."</p>
+                <p class="zh">"2023/24年共识别出24,043个ETPs，而2013年为8,089个，显示十年间增长约三倍。从地理分布看，我们的现代数据显示，2023/2024年EMI的实施范围更广，不再像过去那样集中在北欧。"</p>
+                <div class="quote-source en">- Wingrove et al., 2025</div>
+                <div class="quote-source zh">- Wingrove等，2025年</div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2 class="en">EMI Adoption by Region</h2>
+            <h2 class="zh">按地区划分的EMI采用情况</h2>
+            
+            <p class="en">The percentage of higher education institutions (HEIs) offering at least one English-taught program has increased across Europe, with significant regional variations:</p>
+            <p class="zh">提供至少一个英语教学项目的高等教育机构(HEIs)百分比在整个欧洲都有所增长，但地区差异显著：</p>
+            
+            <div class="chart-container">
+                <canvas id="regionChart"></canvas>
+            </div>
+            
+            <div class="two-col">
+                <div>
+                    <h3 class="en">Regional Highlights:</h3>
+                    <h3 class="zh">地区亮点：</h3>
+                    
+                    <ul class="en">
+                        <li><strong>Nordic Countries:</strong> Consistently high with approximately 60% of HEIs offering EMI, showing signs of saturation.</li>
+                        <li><strong>Central West Europe:</strong> Growth from 44.5% to 54.4%, with countries like the Netherlands leading at 75%.</li>
+                        <li><strong>Central East Europe:</strong> Significant growth from 19.9% to 46.9%, transitioning from low-EMI to medium-EMI status.</li>
+                        <li><strong>South West Europe:</strong> Explosive growth from 17.2% to 50.1%, with Spain showing 3.5-fold growth.</li>
+                        <li><strong>South East Europe:</strong> Grew from 18.3% to 31.5%, remaining the region with the lowest EMI adoption.</li>
+                        <li><strong>Baltic Countries:</strong> Modest growth from 38.7% to 43.2%, with high concentration of programs per student.</li>
+                    </ul>
+                    
+                    <ul class="zh">
+                        <li><strong>北欧国家：</strong>持续保持高水平，约60%的高等教育机构提供EMI，显示饱和迹象。</li>
+                        <li><strong>中西欧：</strong>从44.5%增长到54.4%，荷兰等国领先，达到75%。</li>
+                        <li><strong>中东欧：</strong>显著增长，从19.9%增至46.9%，从低EMI状态转变为中等EMI状态。</li>
+                        <li><strong>西南欧：</strong>爆发性增长，从17.2%增至50.1%，西班牙增长3.5倍。</li>
+                        <li><strong>东南欧：</strong>从18.3%增长到31.5%，仍是EMI采用率最低的地区。</li>
+                        <li><strong>波罗的海国家：</strong>适度增长，从38.7%至43.2%，但每名学生的项目集中度高。</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="quote">
+                        <p class="en">"The north-south rift in EMI in European higher education appears to have evaporated. The divide, if any, is East-West, with the Baltic Countries and South East Europe behind the Europe average. However, the overall picture shows that EMI is now a pan-European phenomenon with approximately half of all HEIs offering EMI."</p>
+                        <p class="zh">"欧洲高等教育中EMI的南北差距似乎已经消失。如果有分歧，那是东西方的分歧，波罗的海国家和东南欧地区落后于欧洲平均水平。然而，整体情况显示，EMI现在已成为泛欧洲现象，约有一半的高等教育机构提供EMI。"</p>
+                        <div class="quote-source en">- Wingrove et al., 2025</div>
+                        <div class="quote-source zh">- Wingrove等，2025年</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2 class="en">EMI by Study Level</h2>
+            <h2 class="zh">按学习层次划分的EMI</h2>
+            
+            <div class="two-col">
+                <div class="info-card">
+                    <h3 class="en">Bachelor's Programs</h3>
+                    <h3 class="zh">本科项目</h3>
+                    <div class="stat-number">6,718</div>
+                    <p class="en">Total number of bachelor's level ETPs, with an average of 1.9 ETPs per 1,000 new entrants.</p>
+                    <p class="zh">本科级别ETPs的总数，平均每1,000名新生有1.9个ETPs。</p>
+                </div>
+                <div class="info-card">
+                    <h3 class="en">Master's Programs</h3>
+                    <h3 class="zh">硕士项目</h3>
+                    <div class="stat-number">17,325</div>
+                    <p class="en">Total number of master's level ETPs, with an average of 9.1 ETPs per 1,000 new entrants.</p>
+                    <p class="zh">硕士级别ETPs的总数，平均每1,000名新生有9.1个ETPs。</p>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="levelChart"></canvas>
+            </div>
+            
+            <div class="quote">
+                <p class="en">"EMI is primarily a master's level phenomenon. 1.9 BA ETPs are offered per 1000 new entrants at the bachelor's level compared to 9.2 MA ETPs per new entrants at the master's level. This is greater than a four-fold difference."</p>
+                <p class="zh">"EMI主要是硕士层面的现象。本科层面每1000名新生提供1.9个BA ETPs，而硕士层面每1000名新生提供9.2个MA ETPs。这是四倍以上的差异。"</p>
+                <div class="quote-source en">- Wingrove et al., 2025</div>
+                <div class="quote-source zh">- Wingrove等，2025年</div>
+            </div>
+            
+            <h3 class="en">Regional Variations in Study Level Distribution:</h3>
+            <h3 class="zh">学习层次分布的地区差异：</h3>
+            
+            <ul class="en">
+                <li><strong>Nordic Countries:</strong> Sweden leads with 1,011 master's ETPs but only 96 bachelor's ETPs.</li>
+                <li><strong>Netherlands:</strong> Offers 2,025 master's ETPs, more than entire regions like Central East Europe (1,708) or the Nordic Countries (1,976).</li>
+                <li><strong>Baltic Countries:</strong> Highest region-level average with 28.8 master's ETPs per 1,000 students.</li>
+                <li><strong>Turkey:</strong> More balanced between bachelor's (1,197) and master's (1,300) programs than most countries.</li>
+            </ul>
+            
+            <ul class="zh">
+                <li><strong>北欧国家：</strong>瑞典领先，提供1,011个硕士ETPs，但仅96个本科ETPs。</li>
+                <li><strong>荷兰：</strong>提供2,025个硕士ETPs，超过整个中东欧地区(1,708)或北欧国家(1,976)。</li>
+                <li><strong>波罗的海国家：</strong>地区级平均水平最高，每1,000名学生28.8个硕士ETPs。</li>
+                <li><strong>土耳其：</strong>本科(1,197)和硕士(1,300)项目比大多数国家更均衡。</li>
+            </ul>
+        </div>
+
+        <div class="info-section">
+            <h2 class="en">EMI by Academic Discipline</h2>
+            <h2 class="zh">按学科划分的EMI</h2>
+            
+            <p class="en">The distribution of ETPs across academic disciplines shows clear patterns of concentration in certain fields:</p>
+            <p class="zh">ETPs在学科领域的分布显示明显集中在某些领域：</p>
+            
+            <div class="chart-container">
+                <canvas id="disciplineChart"></canvas>
+            </div>
+            
+            <h3 class="en">Top 5 Disciplines:</h3>
+            <h3 class="zh">前5名学科：</h3>
+            
+            <div class="discipline-grid">
+                <div class="discipline-card">
+                    <h4 class="en">Business & Management</h4>
+                    <h4 class="zh">商业与管理</h4>
+                    <div class="discipline-percentage">27.4%</div>
+                    <p class="en">6,599 programs</p>
+                    <p class="zh">6,599个项目</p>
+                </div>
+                <div class="discipline-card">
+                    <h4 class="en">Engineering & Technology</h4>
+                    <h4 class="zh">工程与技术</h4>
+                    <div class="discipline-percentage">14.7%</div>
+                    <p class="en">3,529 programs</p>
+                    <p class="zh">3,529个项目</p>
+                </div>
+                <div class="discipline-card">
+                    <h4 class="en">Computer Science & IT</h4>
+                    <h4 class="zh">计算机科学与IT</h4>
+                    <div class="discipline-percentage">10.6%</div>
+                    <p class="en">2,537 programs</p>
+                    <p class="zh">2,537个项目</p>
+                </div>
+                <div class="discipline-card">
+                    <h4 class="en">Arts, Design & Architecture</h4>
+                    <h4 class="zh">艺术、设计与建筑</h4>
+                    <div class="discipline-percentage">8.1%</div>
+                    <p class="en">1,946 programs</p>
+                    <p class="zh">1,946个项目</p>
+                </div>
+                <div class="discipline-card">
+                    <h4 class="en">Humanities</h4>
+                    <h4 class="zh">人文学科</h4>
+                    <div class="discipline-percentage">7.5%</div>
+                    <p class="en">1,814 programs</p>
+                    <p class="zh">1,814个项目</p>
+                </div>
+            </div>
+            
+            <div class="quote">
+                <p class="en">"The most popular disciplinary category is 'business and management' comprising 27.4% of the total, followed by 'engineering and technology' (14.7%), 'computer science and IT' (10.6%) and in fourth and fifth place are 'art, design, and architecture' (8.1%) and 'humanities' (7.5%)."</p>
+                <p class="zh">"最受欢迎的学科类别是'商业与管理'，占总数的27.4%，其次是'工程与技术'(14.7%)、'计算机科学与IT'(10.6%)、'艺术、设计与建筑'(8.1%)和'人文学科'(7.5%)。"</p>
+                <div class="quote-source en">- Wingrove et al., 2025</div>
+                <div class="quote-source zh">- Wingrove等，2025年</div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2 class="en">Conclusions and Implications</h2>
+            <h2 class="zh">结论与影响</h2>
+            
+            <div class="two-col">
+                <div>
+                    <h3 class="en">Theoretical & Methodological Implications:</h3>
+                    <h3 class="zh">理论与方法论影响：</h3>
+                    
+                    <ul class="en">
+                        <li>The study applied a measurement validity framework to EMI, providing a more rigorous methodology for future research.</li>
+                        <li>Findings suggest that EMI typologies should distinguish between undergraduate and postgraduate EMI.</li>
+                        <li>The study highlights the need for standardization in EMI measurement to enable accurate comparisons.</li>
+                    </ul>
+                    
+                    <ul class="zh">
+                        <li>该研究应用了测量有效性框架于EMI，为未来研究提供了更严格的方法论。</li>
+                        <li>研究结果表明，EMI分类应该区分本科和研究生EMI。</li>
+                        <li>研究强调了EMI测量标准化的必要性，以实现准确比较。</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="en">Policy Implications:</h3>
+                    <h3 class="zh">政策影响：</h3>
+                    
+                    <ul class="en">
+                        <li>The rapid growth of EMI requires policies ensuring sustainable, effective, and ethical applications.</li>
+                        <li>Institutions must balance internationalization benefits against risks like domain loss in local languages.</li>
+                        <li>Policymakers should ensure EMI practices respect linguistic diversity and provide equitable access to education.</li>
+                    </ul>
+                    
+                    <ul class="zh">
+                        <li>EMI的快速增长需要确保可持续、有效和道德应用的政策。</li>
+                        <li>机构必须权衡国际化利益与本地语言领域丧失等风险。</li>
+                        <li>政策制定者应确保EMI实践尊重语言多样性，提供公平的教育机会。</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="quote">
+                <p class="en">"The rapid growth of EMI highlights the need for policies that ensure sustainable, effective, and ethical applications of EMI. While EMI has proven a powerful tool for internationalization and academic collaboration, its rapid growth raises ethical concerns, including the risk of domain loss in local languages and marginalizing non-English speaking staff and students."</p>
+                <p class="zh">"EMI的快速增长突显了需要确保EMI可持续、有效和道德应用的政策。虽然EMI已被证明是国际化和学术合作的强大工具，但其快速增长引发了道德问题，包括本地语言领域丧失的风险以及边缘化非英语母语的教职员工和学生。"</p>
+                <div class="quote-source en">- Wingrove et al., 2025</div>
+                <div class="quote-source zh">- Wingrove等，2025年</div>
+            </div>
+        </div>
+
+        <footer>
+            <p class="en">Interactive dashboard based on the research paper "English-medium instruction in European higher education: Measurement validity and the state of play in 2023/2024" by Peter Wingrove, Beatrice Zuaro, Dogan Yuksel, Marion Nao, and Anna Kristina Hultgren.</p>
+            <p class="zh">互动仪表板基于Peter Wingrove、Beatrice Zuaro、Dogan Yuksel、Marion Nao和Anna Kristina Hultgren的研究论文"欧洲高等教育中的英语教学媒介：2023/2024年的测量有效性和现状"。</p>
+            <p class="data-source en">Published in Applied Linguistics, 2025</p>
+            <p class="data-source zh">发表于《应用语言学》，2025年</p>
+        </footer>
+    </div>
+
+    <script>
+        // Toggle language
+        document.getElementById('lang-toggle').addEventListener('click', function() {
+            document.body.classList.toggle('lang-zh');
+            
+            const langText = document.getElementById('lang-text');
+            if (document.body.classList.contains('lang-zh')) {
+                langText.textContent = 'ENG';
+                initChineseCharts();
+            } else {
+                langText.textContent = '中文';
+                initEnglishCharts();
+            }
+        });
+        
+        // Initialize charts
+        function initEnglishCharts() {
+            // Growth Chart
+            new Chart(document.getElementById('growthChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['2013', '2023/2024'],
+                    datasets: [{
+                        label: 'Number of ETPs',
+                        data: [8089, 24043],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.6)',
+                            'rgba(30, 58, 138, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(30, 58, 138, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Growth in English-Taught Programs (ETPs)',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of ETPs'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Year'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Region Chart
+            new Chart(document.getElementById('regionChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Nordic Countries', 'Central West Europe', 'Central East Europe', 'South West Europe', 'South East Europe', 'Baltic Countries', 'EHEA Average'],
+                    datasets: [{
+                        label: '2013',
+                        data: [60.6, 44.5, 19.9, 17.2, 18.3, 38.7, 26.9],
+                        backgroundColor: 'rgba(59, 130, 246, 0.6)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1
+                    }, {
+                        label: '2023/2024',
+                        data: [61.9, 54.4, 46.9, 50.1, 31.5, 43.2, 48.0],
+                        backgroundColor: 'rgba(30, 58, 138, 0.6)',
+                        borderColor: 'rgba(30, 58, 138, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Percentage of HEIs offering EMI by Region',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Percentage (%)'
+                            },
+                            max: 100
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Region'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Level Chart
+            new Chart(document.getElementById('levelChart'), {
+                type: 'pie',
+                data: {
+                    labels: ['Bachelor\'s Programs', 'Master\'s Programs'],
+                    datasets: [{
+                        data: [6718, 17325],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.6)',
+                            'rgba(30, 58, 138, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(30, 58, 138, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Distribution of ETPs by Study Level',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            position: 'bottom'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((acc, val) => acc + val, 0);
+                                    const percentage = Math.round((value / total) * 100) + '%';
+                                    return `${label}: ${value} (${percentage})`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Discipline Chart
+            new Chart(document.getElementById('disciplineChart'), {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Business & Management', 
+                        'Engineering & Technology', 
+                        'Computer Science & IT', 
+                        'Arts, Design & Architecture', 
+                        'Humanities', 
+                        'Natural Sciences & Mathematics', 
+                        'Medicine & Health',
+                        'Social Sciences',
+                        'Environmental Studies',
+                        'Other disciplines'
+                    ],
+                    datasets: [{
+                        label: 'Percentage of ETPs',
+                        data: [27.4, 14.7, 10.6, 8.1, 7.5, 6.0, 5.1, 5.0, 3.9, 11.7],
+                        backgroundColor: [
+                            'rgba(30, 58, 138, 0.8)',
+                            'rgba(30, 58, 138, 0.75)',
+                            'rgba(30, 58, 138, 0.7)',
+                            'rgba(30, 58, 138, 0.65)',
+                            'rgba(30, 58, 138, 0.6)',
+                            'rgba(30, 58, 138, 0.55)',
+                            'rgba(30, 58, 138, 0.5)',
+                            'rgba(30, 58, 138, 0.45)',
+                            'rgba(30, 58, 138, 0.4)',
+                            'rgba(30, 58, 138, 0.35)'
+                        ],
+                        borderColor: 'rgba(30, 58, 138, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'ETPs by Academic Discipline (%)',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Percentage (%)'
+                            },
+                            max: 30
+                        }
+                    }
+                }
+            });
+        }
+        
+        function initChineseCharts() {
+            // Growth Chart - Chinese
+            new Chart(document.getElementById('growthChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['2013年', '2023/2024年'],
+                    datasets: [{
+                        label: 'ETPs数量',
+                        data: [8089, 24043],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.6)',
+                            'rgba(30, 58, 138, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(30, 58, 138, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '英语教学项目(ETPs)增长',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'ETPs数量'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: '年份'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Region Chart - Chinese
+            new Chart(document.getElementById('regionChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['北欧国家', '中西欧', '中东欧', '西南欧', '东南欧', '波罗的海国家', '欧洲平均'],
+                    datasets: [{
+                        label: '2013年',
+                        data: [60.6, 44.5, 19.9, 17.2, 18.3, 38.7, 26.9],
+                        backgroundColor: 'rgba(59, 130, 246, 0.6)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1
+                    }, {
+                        label: '2023/2024年',
+                        data: [61.9, 54.4, 46.9, 50.1, 31.5, 43.2, 48.0],
+                        backgroundColor: 'rgba(30, 58, 138, 0.6)',
+                        borderColor: 'rgba(30, 58, 138, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '按地区划分提供EMI的高等教育机构百分比',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '百分比 (%)'
+                            },
+                            max: 100
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: '地区'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Level Chart - Chinese
+            new Chart(document.getElementById('levelChart'), {
+                type: 'pie',
+                data: {
+                    labels: ['本科项目', '硕士项目'],
+                    datasets: [{
+                        data: [6718, 17325],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.6)',
+                            'rgba(30, 58, 138, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(30, 58, 138, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '按学习层次划分的ETPs分布',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            position: 'bottom'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((acc, val) => acc + val, 0);
+                                    const percentage = Math.round((value / total) * 100) + '%';
+                                    return `${label}: ${value} (${percentage})`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Discipline Chart - Chinese
+            new Chart(document.getElementById('disciplineChart'), {
+                type: 'bar',
+                data: {
+                    labels: [
+                        '商业与管理',
+                        '工程与技术',
+                        '计算机科学与IT',
+                        '艺术、设计与建筑',
+                        '人文学科',
+                        '自然科学与数学',
+                        '医学与健康',
+                        '社会科学',
+                        '环境研究',
+                        '其他学科'
+                    ],
+                    datasets: [{
+                        label: 'ETPs百分比',
+                        data: [27.4, 14.7, 10.6, 8.1, 7.5, 6.0, 5.1, 5.0, 3.9, 11.7],
+                        backgroundColor: [
+                            'rgba(30, 58, 138, 0.8)',
+                            'rgba(30, 58, 138, 0.75)',
+                            'rgba(30, 58, 138, 0.7)',
+                            'rgba(30, 58, 138, 0.65)',
+                            'rgba(30, 58, 138, 0.6)',
+                            'rgba(30, 58, 138, 0.55)',
+                            'rgba(30, 58, 138, 0.5)',
+                            'rgba(30, 58, 138, 0.45)',
+                            'rgba(30, 58, 138, 0.4)',
+                            'rgba(30, 58, 138, 0.35)'
+                        ],
+                        borderColor: 'rgba(30, 58, 138, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '按学科划分的ETPs比例 (%)',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '百分比 (%)'
+                            },
+                            max: 30
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Initialize English charts on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initEnglishCharts();
+        });
+    </script>
+</body>
+</html>

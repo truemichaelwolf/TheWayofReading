@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Methodology Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 50%, #9b59b6 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .language-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .language-toggle:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #2c3e50, #3498db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .methodology-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            background: rgba(255,255,255,0.9);
+            border: 2px solid #3498db;
+            color: #3498db;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover,
+        .nav-button.active {
+            background: #3498db;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .method-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-left: 5px solid #3498db;
+        }
+
+        .method-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .method-card h3 {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+        }
+
+        .method-icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            background: #3498db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .timeline {
+            position: relative;
+            margin: 30px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #3498db;
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin: 30px 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            width: 45%;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 55%;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 20px;
+            height: 20px;
+            background: #3498db;
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }
+
+        .timeline-item:nth-child(odd)::before {
+            right: -60px;
+        }
+
+        .timeline-item:nth-child(even)::before {
+            left: -60px;
+        }
+
+        .participants-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .participants-table th,
+        .participants-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .participants-table th {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+
+        .participants-table tr:nth-child(even) {
+            background: rgba(52, 152, 219, 0.05);
+        }
+
+        .participants-table tr:hover {
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .quote-box {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e3f2fd 100%);
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            font-style: italic;
+            color: #2c3e50;
+            position: relative;
+        }
+
+        .quote-box::before {
+            content: '"';
+            font-size: 4em;
+            color: #3498db;
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            opacity: 0.3;
+        }
+
+        .quote-attribution {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-top: 15px;
+            font-style: normal;
+            text-align: right;
+        }
+
+        .data-collection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .data-method {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .data-method:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .data-number {
+            font-size: 3em;
+            font-weight: bold;
+            color: #3498db;
+            margin: 15px 0;
+        }
+
+        .analysis-steps {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9ff;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+        }
+
+        .step-number {
+            background: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .ethics-box {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+            border: 2px solid #4caf50;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .ethics-icon {
+            font-size: 2em;
+            color: #4caf50;
+            margin-bottom: 15px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 20px;
+            }
+            
+            .timeline-item {
+                width: calc(100% - 60px);
+                left: 40px !important;
+            }
+            
+            .timeline-item::before {
+                left: -30px !important;
+            }
+            
+            .methodology-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-button {
+                width: 80%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="language-toggle" onclick="toggleLanguage()">
+        <span id="toggle-text">中文</span>
+    </button>
+
+    <div class="container">
+        <!-- English Content -->
+        <div id="english-content">
+            <div class="header">
+                <h1>Research Methodology Dashboard</h1>
+                <p>Comprehensive Analysis of Research Design and Data Collection Methods</p>
+                <p><strong>Study:</strong> Translanguaging and Trans-semiotizing in English-Medium Classrooms</p>
+            </div>
+
+            <div class="methodology-nav">
+                <button class="nav-button active" onclick="showSection('design', this)">Research Design</button>
+                <button class="nav-button" onclick="showSection('participants', this)">Participants</button>
+                <button class="nav-button" onclick="showSection('data-collection', this)">Data Collection</button>
+                <button class="nav-button" onclick="showSection('analysis', this)">Data Analysis</button>
+                <button class="nav-button" onclick="showSection('ethics', this)">Ethics & Quality</button>
+            </div>
+
+            <!-- Research Design Section -->
+            <div id="design" class="section active">
+                <div class="method-grid">
+                    <div class="method-card">
+                        <h3><span class="method-icon">📊</span>Research Approach</h3>
+                        <p><strong>Qualitative Case Study Design</strong></p>
+                        <p>A single case embedded design with two sub-units (educators and students) to explore complex phenomena in real-world context.</p>
+                        <div class="quote-box">
+                            "A case study design was adopted for its capacity to explore a complex phenomenon 'in depth and within its real-world context'"
+                            <div class="quote-attribution">- Yin, 2018; Creswell & Poth, 2017</div>
+                        </div>
+                    </div>
+
+                    <div class="method-card">
+                        <h3><span class="method-icon">🏫</span>Case Selection</h3>
+                        <p><strong>Private University in Dhaka, Bangladesh</strong></p>
+                        <p>Selected as a typical and representative case of Bangladeshi private higher education with EMI policy.</p>
+                        <div class="quote-box">
+                            "The focal university was chosen because it resembled other private universities in its EMI policy and practice and was an 'information-rich [case] for in-depth study'"
+                            <div class="quote-attribution">- Patton, 2015, p. 264</div>
+                        </div>
+                    </div>
+
+                    <div class="method-card">
+                        <h3><span class="method-icon">🎯</span>Research Questions</h3>
+                        <ol>
+                            <li>What ideologies do educators and students hold regarding English as the MOI?</li>
+                            <li>How do they perceive translanguaging in EMI classrooms?</li>
+                            <li>What are their actual language practices in drawing on English-only and translanguaging resources?</li>
+                        </ol>
+                    </div>
+
+                    <div class="method-card">
+                        <h3><span class="method-icon">🏢</span>Institutional Context</h3>
+                        <ul>
+                            <li><strong>Established:</strong> 1993</li>
+                            <li><strong>Students:</strong> 8,704 (undergraduate & postgraduate)</li>
+                            <li><strong>Faculty:</strong> 467 full-time members</li>
+                            <li><strong>International Experience:</strong> 50%+ faculty with overseas background</li>
+                            <li><strong>Curriculum:</strong> North American Liberal Arts Model</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Participants Section -->
+            <div id="participants" class="section">
+                <div class="method-grid">
+                    <div class="method-card">
+                        <h3><span class="method-icon">👥</span>Participant Overview</h3>
+                        <div class="data-number">16</div>
+                        <p>Total Participants</p>
+                        <p>6 Faculty Members + 10 Students</p>
+                    </div>
+
+                    <div class="method-card">
+                        <h3><span class="method-icon">📋</span>Selection Criteria</h3>
+                        <p><strong>For Educators:</strong></p>
+                        <ul>
+                            <li>Minimum 3 years teaching experience at focal university</li>
+                            <li>Considerable EMI experience</li>
+                            <li>Agreement to classroom observation and interviews</li>
+                        </ul>
+                        <p><strong>For Students:</strong></p>
+                        <ul>
+                            <li>Completed at least 2 semesters of EMI</li>
+                            <li>Intimate understanding of EMI practices</li>
+                            <li>Willingness to participate in interviews</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Faculty Participant Profiles</h3>
+                <table class="participants-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Discipline</th>
+                            <th>Qualification</th>
+                            <th>Position</th>
+                            <th>Background</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>T1</td>
+                            <td>Business Studies</td>
+                            <td>PhD</td>
+                            <td>Assistant Professor</td>
+                            <td>Foreign academic exposure</td>
+                        </tr>
+                        <tr>
+                            <td>T2</td>
+                            <td>Engineering</td>
+                            <td>PhD</td>
+                            <td>Assistant Professor</td>
+                            <td>Bangla mother tongue</td>
+                        </tr>
+                        <tr>
+                            <td>T3</td>
+                            <td>Life Sciences</td>
+                            <td>Masters</td>
+                            <td>Senior Lecturer</td>
+                            <td>Common ethnicity</td>
+                        </tr>
+                        <tr>
+                            <td>T4</td>
+                            <td>Engineering</td>
+                            <td>Masters</td>
+                            <td>Senior Lecturer</td>
+                            <td>Shared mother tongue</td>
+                        </tr>
+                        <tr>
+                            <td>T5</td>
+                            <td>Social Sciences</td>
+                            <td>PhD</td>
+                            <td>Assistant Professor</td>
+                            <td>All participants Bangladeshi</td>
+                        </tr>
+                        <tr>
+                            <td>T6</td>
+                            <td>Life Sciences</td>
+                            <td>Masters</td>
+                            <td>Senior Lecturer</td>
+                            <td>Middle-class backgrounds</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="quote-box">
+                    "All participating educators had foreign academic exposure and shared a common mother tongue and ethnicity, Bangla."
+                    <div class="quote-attribution">- Participants Section</div>
+                </div>
+            </div>
+
+            <!-- Data Collection Section -->
+            <div id="data-collection" class="section">
+                <div class="data-collection-grid">
+                    <div class="data-method">
+                        <h3>Semi-structured Interviews</h3>
+                        <div class="data-number">16</div>
+                        <p>Individual Interviews</p>
+                        <p><strong>Duration:</strong> 25-35 minutes each</p>
+                        <p><strong>Language:</strong> English</p>
+                        <p><strong>Focus:</strong> Perceptions of EMI policy and translanguaging views</p>
+                    </div>
+
+                    <div class="data-method">
+                        <h3>Classroom Observations</h3>
+                        <div class="data-number">12</div>
+                        <p>Lessons Observed</p>
+                        <p><strong>Duration:</strong> 80 minutes each</p>
+                        <p><strong>Type:</strong> Non-participant observation</p>
+                        <p><strong>Focus:</strong> Language practices and negotiation</p>
+                    </div>
+
+                    <div class="data-method">
+                        <h3>Stimulated Recall</h3>
+                        <div class="data-number">6</div>
+                        <p>Educator Interviews</p>
+                        <p><strong>Timing:</strong> Immediately after observations</p>
+                        <p><strong>Method:</strong> Audio clips + field notes</p>
+                        <p><strong>Focus:</strong> Reasoning behind language practices</p>
+                    </div>
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>Phase 1: Initial Interviews</h4>
+                        <p>Semi-structured interviews with all participants to collect baseline data on EMI perceptions and translanguaging attitudes.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Phase 2: Classroom Observations</h4>
+                        <p>Two consecutive 80-minute lessons per educator observed and recorded with detailed field notes.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Phase 3: Stimulated Recall</h4>
+                        <p>Immediate post-observation interviews using audio clips to explore reasoning behind observed practices.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>Phase 4: Data Triangulation</h4>
+                        <p>Multiple data sources combined for comprehensive understanding of language beliefs and practices.</p>
+                    </div>
+                </div>
+
+                <div class="quote-box">
+                    "Data were collected from multiple sources, including semi-structured interviews with educators and students, stimulated-recall interviews with educators, and classroom observations. The use of multiple data sources would allow triangulation of our findings"
+                    <div class="quote-attribution">- Data Collection Section</div>
+                </div>
+            </div>
+
+            <!-- Data Analysis Section -->
+            <div id="analysis" class="section">
+                <div class="analysis-steps">
+                    <h3>Thematic Analysis Process</h3>
+                    
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div>
+                            <h4>Transcription & Familiarization</h4>
+                            <p>Audio-recorded interviews transcribed by first author to familiarize with data. Member checks conducted for accuracy.</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div>
+                            <h4>Multiple Readings & Coding</h4>
+                            <p>Multiple readings of transcriptions, examination for important meanings, compilation according to research questions.</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div>
+                            <h4>Open Coding</h4>
+                            <p>Initial open coding confirmed through repeated reading and iterative comparisons of data.</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div>
+                            <h4>Theme Development</h4>
+                            <p>Validated codes categorized into broader meaning units (themes) through constant comparison and relationship mapping.</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div>
+                            <h4>Theme Refinement</h4>
+                            <p>Identified themes named, defined, and supported with relevant data extracts for reporting.</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">6</div>
+                        <div>
+                            <h4>Classroom Observation Analysis</h4>
+                            <p>Integration of lesson transcriptions with field notes to identify translanguaging episodes and language practices.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <h3>Analysis Framework</h3>
+                    <ul>
+                        <li><strong>García & Li (2014):</strong> Translanguaging conception</li>
+                        <li><strong>Creese & Blackledge (2010):</strong> Pedagogical translanguaging operationalization</li>
+                        <li><strong>Canagarajah (2018) & Lin (2019):</strong> Multimodal and trans-semiotic practices</li>
+                    </ul>
+                </div>
+
+                <div class="quote-box">
+                    "A thematic analysis was conducted on the interview data to identify language beliefs, perceptions and practices. Following recommendations made by Nowell et al. (2017), peer debriefing was employed during the process of developing initial codes and generating themes."
+                    <div class="quote-attribution">- Data Analysis Section</div>
+                </div>
+            </div>
+
+            <!-- Ethics & Quality Section -->
+            <div id="ethics" class="section">
+                <div class="ethics-box">
+                    <div class="ethics-icon">🛡️</div>
+                    <h3>Ethical Considerations</h3>
+                    <ul>
+                        <li><strong>Written Consent:</strong> All participants provided written consent to participate</li>
+                        <li><strong>Ethics Approval:</strong> Study approved by Human Subjects Ethics Subcommittee</li>
+                        <li><strong>Confidentiality:</strong> Participant identities protected through coding (T1-T6, S1-S10)</li>
+                        <li><strong>Voluntary Participation:</strong> Participants willing and agreeable to all procedures</li>
+                    </ul>
+                </div>
+
+                <div class="method-grid">
+                    <div class="method-card">
+                        <h3><span class="method-icon">✅</span>Quality Assurance</h3>
+                        <ul>
+                            <li><strong>Member Checking:</strong> Transcription accuracy verified</li>
+                            <li><strong>Peer Debriefing:</strong> Used during coding and theme generation</li>
+                            <li><strong>Data Triangulation:</strong> Multiple sources for comprehensive understanding</li>
+                            <li><strong>Reflexivity:</strong> Researchers' positionality acknowledged</li>
+                        </ul>
+                    </div>
+
+                    <div class="method-card">
+                        <h3><span class="method-icon">🔍</span>Researcher Positionality</h3>
+                        <p><strong>First Author:</strong> Emic perspective with experience in Bangladeshi EMI universities</p>
+                        <p><strong>Second Author:</strong> Etic perspective with extensive EMI research experience in China, Hong Kong, Singapore</p>
+                        <div class="quote-box">
+                            "This productive interweaving of our emic and etic perspectives deepened our inquiry and strengthened our interpretations of what we found."
+                            <div class="quote-attribution">- Positionality Section</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chinese Content -->
+        <div id="chinese-content" class="hidden">
+            <div class="header">
+                <h1>研究方法论仪表板</h1>
+                <p>研究设计与数据收集方法的综合分析</p>
+                <p><strong>研究：</strong>英语媒介教学课堂中的跨语实践与跨符号化</p>
+            </div>
+
+            <div class="methodology-nav">
+                <button class="nav-button active" onclick="showSection('design-cn', this)">研究设计</button>
+                <button class="nav-button" onclick="showSection('participants-cn', this)">参与者</button>
+                <button class="nav-button" onclick="showSection('data-collection-cn', this)">数据收集</button>
+                <button class="nav-button" onclick="showSection('analysis-cn', this)">数据分析</button>
+                <button class="nav-button" onclick="showSection('ethics-cn', this)">伦理与质量</button>
+            </div>
+
+            <!-- 研究设计部分 -->
+            <div id="design-cn" class="section active">
+                <div class="method-grid">
+                    <div class="method-card">
+                        <h3><span class="method-icon">📊</span>研究方法</h3>
+                        <p><strong>质性案例研究设计</strong></p>
+                        <p>采用单一案例嵌入式设计，包含两个子单元（教育者和学生），以探索真实世界情境中的复杂现象。</p>
+                        <div class="quote-box">
+                            "采用案例研究设计是因为其能够'深入探索真实世界情境中的复杂现象'"
+                            <div class="quote-attribution">- Yin, 2018; Creswell & Poth, 2017</div>
+                        </div>
+                    </div>
+
+                    <div class="method-card">
+                        <h3><span class="method-icon">🏫</span>案例选择</h3>
+                        <p><strong>孟加拉国达卡私立大学</strong></p>
+                        <p>选择作为孟加拉国私立高等教育EMI政策的典型代表案例。</p>
+                        <div class="quote-box">
+                            "选择该重点大学是因为它在EMI政策和实践方面与其他私立大学相似，是'深入研究的信息丰富案例'"
+                            <div class="quote-attribution">- Patton, 2015, p. 264</div>
+                        </div>
+                    </div>
+
+                    <div class="method-card">
+                        <h3><span class="method-icon">🎯</span>研究问题</h3>
+                        <ol>
+                            <li>教育者和学生对英语作为教学媒介持有什么意识形态？</li>
+                            <li>他们如何看待EMI课堂中的跨语实践？</li>
+                            <li>他们在使用纯英语和跨语资源方面的实际语言实践是什么？</li>
+                        </ol>
+                    </div>
+
+                    <div class="method-card">
+                        <h3><span class="method-icon">🏢</span>机构背景</h3>
+                        <ul>
+                            <li><strong>建立时间：</strong>1993年</li>
+                            <li><strong>学生数量：</strong>8,704名（本科生和研究生）</li>
+                            <li><strong>教职员工：</strong>467名全职教师</li>
+                            <li><strong>国际经验：</strong>50%以上教师具有海外背景</li>
+                            <li><strong>课程体系：</strong>北美文理学院模式</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 参与者部分 -->
+            <div id="participants-cn" class="section">
+                <div class="method-grid">
+                    <div class="method-card">
+                        <h3><span class="method-icon">👥</span>参与者概述</h3>
+                        <div class="data-number">16</div>
+                        <p>参与者总数</p>
+                        <p>6名教职员工 + 10名学生</p>
+                    </div>
+
+                    <div class="method-card">
+                        <h3><span class="method-icon">📋</span>选择标准</h3>
+                        <p><strong>教育者标准：</strong></p>
+                        <ul>
+                            <li>在重点大学至少3年教学经验</li>
+                            <li>丰富的EMI经验</li>
+                            <li>同意课堂观察和访谈</li>
+                        </ul>
+                        <p><strong>学生标准：</strong></p>
+                        <ul>
+                            <li>完成至少2个学期的EMI学习</li>
+                            <li>对EMI实践有深入了解</li>
+                            <li>愿意参与访谈</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>教师参与者档案</h3>
+                <table class="participants-table">
+                    <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>学科</th>
+                            <th>学历</th>
+                            <th>职位</th>
+                            <th>背景</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>T1</td>
+                            <td>商学</td>
+                            <td>博士</td>
+                            <td>助理教授</td>
+                            <td>海外学术经历</td>
+                        </tr>
+                        <tr>
+                            <td>T2</td>
+                            <td>工程学</td>
+                            <td>博士</td>
+                            <td>助理教授</td>
+                            <td>孟加拉语母语</td>
+                        </tr>
+                        <tr>
+                            <td>T3</td>
+                            <td>生命科学</td>
+                            <td>硕士</td>
+                            <td>高级讲师</td>
+                            <td>共同民族背景</td>
+                        </tr>
+                        <tr>
+                            <td>T4</td>
+                            <td>工程学</td>
+                            <td>硕士</td>
+                            <td>高级讲师</td>
+                            <td>共同母语</td>
+                        </tr>
+                        <tr>
+                            <td>T5</td>
+                            <td>社会科学</td>
+                            <td>博士</td>
+                            <td>助理教授</td>
+                            <td>所有参与者为孟加拉国人</td>
+                        </tr>
+                        <tr>
+                            <td>T6</td>
+                            <td>生命科学</td>
+                            <td>硕士</td>
+                            <td>高级讲师</td>
+                            <td>中产阶级背景</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="quote-box">
+                    "所有参与的教育者都有海外学术经历，共享相同的母语和民族背景——孟加拉语。"
+                    <div class="quote-attribution">- 参与者部分</div>
+                </div>
+            </div>
+
+            <!-- 数据收集部分 -->
+            <div id="data-collection-cn" class="section">
+                <div class="data-collection-grid">
+                    <div class="data-method">
+                        <h3>半结构化访谈</h3>
+                        <div class="data-number">16</div>
+                        <p>个人访谈</p>
+                        <p><strong>持续时间：</strong>每次25-35分钟</p>
+                        <p><strong>语言：</strong>英语</p>
+                        <p><strong>重点：</strong>对EMI政策和跨语观点的看法</p>
+                    </div>
+
+                    <div class="data-method">
+                        <h3>课堂观察</h3>
+                        <div class="data-number">12</div>
+                        <p>观察课程</p>
+                        <p><strong>持续时间：</strong>每次80分钟</p>
+                        <p><strong>类型：</strong>非参与式观察</p>
+                        <p><strong>重点：</strong>语言实践和协商</p>
+                    </div>
+
+                    <div class="data-method">
+                        <h3>刺激回忆</h3>
+                        <div class="data-number">6</div>
+                        <p>教育者访谈</p>
+                        <p><strong>时机：</strong>观察后立即进行</p>
+                        <p><strong>方法：</strong>音频片段 + 实地笔记</p>
+                        <p><strong>重点：</strong>语言实践背后的推理</p>
+                    </div>
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>第一阶段：初始访谈</h4>
+                        <p>与所有参与者进行半结构化访谈，收集关于EMI认知和跨语态度的基线数据。</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>第二阶段：课堂观察</h4>
+                        <p>每位教育者连续两节80分钟的课程被观察和记录，并做详细的实地笔记。</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>第三阶段：刺激回忆</h4>
+                        <p>观察后立即进行访谈，使用音频片段探索观察到的实践背后的推理。</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>第四阶段：数据三角验证</h4>
+                        <p>结合多个数据源，全面理解语言信念和实践。</p>
+                    </div>
+                </div>
+
+                <div class="quote-box">
+                    "数据从多个来源收集，包括与教育者和学生的半结构化访谈、与教育者的刺激回忆访谈以及课堂观察。使用多个数据源可以对我们的发现进行三角验证"
+                    <div class="quote-attribution">- 数据收集部分</div>
+                </div>
+            </div>
+
+            <!-- 数据分析部分 -->
+            <div id="analysis-cn" class="section">
+                <div class="analysis-steps">
+                    <h3>主题分析过程</h3>
+                    
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div>
+                            <h4>转录与熟悉</h4>
+                            <p>第一作者转录录音访谈以熟悉数据。进行成员检查以确保准确性。</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div>
+                            <h4>多次阅读与编码</h4>
+                            <p>多次阅读转录文本，检查重要含义，根据研究问题进行汇编。</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div>
+                            <h4>开放编码</h4>
+                            <p>通过重复阅读和数据的迭代比较确认初始开放编码。</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div>
+                            <h4>主题发展</h4>
+                            <p>通过持续比较和关系映射，将验证的代码分类为更广泛的意义单元（主题）。</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div>
+                            <h4>主题完善</h4>
+                            <p>识别的主题被命名、定义，并用相关数据摘录支持以供报告。</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">6</div>
+                        <div>
+                            <h4>课堂观察分析</h4>
+                            <p>将课程转录与实地笔记整合，识别跨语情节和语言实践。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="method-card">
+                    <h3>分析框架</h3>
+                    <ul>
+                        <li><strong>García & Li (2014):</strong> 跨语概念化</li>
+                        <li><strong>Creese & Blackledge (2010):</strong> 教学跨语操作化</li>
+                        <li><strong>Canagarajah (2018) & Lin (2019):</strong> 多模态和跨符号实践</li>
+                    </ul>
+                </div>
+
+                <div class="quote-box">
+                    "对访谈数据进行主题分析以识别语言信念、认知和实践。根据Nowell等人（2017）的建议，在开发初始代码和生成主题的过程中采用了同行汇报。"
+                    <div class="quote-attribution">- 数据分析部分</div>
+                </div>
+            </div>
+
+            <!-- 伦理与质量部分 -->
+            <div id="ethics-cn" class="section">
+                <div class="ethics-box">
+                    <div class="ethics-icon">🛡️</div>
+                    <h3>伦理考虑</h3>
+                    <ul>
+                        <li><strong>书面同意：</strong>所有参与者均提供了参与的书面同意</li>
+                        <li><strong>伦理批准：</strong>研究获得人类受试者伦理小组委员会批准</li>
+                        <li><strong>保密性：</strong>通过编码保护参与者身份（T1-T6, S1-S10）</li>
+                        <li><strong>自愿参与：</strong>参与者愿意并同意所有程序</li>
+                    </ul>
+                </div>
+
+                <div class="method-grid">
+                    <div class="method-card">
+                        <h3><span class="method-icon">✅</span>质量保证</h3>
+                        <ul>
+                            <li><strong>成员检查：</strong>验证转录准确性</li>
+                            <li><strong>同行汇报：</strong>在编码和主题生成过程中使用</li>
+                            <li><strong>数据三角验证：</strong>多个来源以获得全面理解</li>
+                            <li><strong>反思性：</strong>承认研究者的立场</li>
+                        </ul>
+                    </div>
+
+                    <div class="method-card">
+                        <h3><span class="method-icon">🔍</span>研究者立场</h3>
+                        <p><strong>第一作者：</strong>具有孟加拉国EMI大学经验的内部视角</p>
+                        <p><strong>第二作者：</strong>具有中国、香港、新加坡广泛EMI研究经验的外部视角</p>
+                        <div class="quote-box">
+                            "我们内部和外部视角的有效交织深化了我们的探究，并加强了我们对发现的解释。"
+                            <div class="quote-attribution">- 立场部分</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isEnglish = true;
+        let currentSection = 'design';
+
+        function toggleLanguage() {
+            const englishContent = document.getElementById('english-content');
+            const chineseContent = document.getElementById('chinese-content');
+            const toggleText = document.getElementById('toggle-text');
+
+            if (isEnglish) {
+                englishContent.classList.add('hidden');
+                chineseContent.classList.remove('hidden');
+                toggleText.textContent = 'English';
+                isEnglish = false;
+                // Show corresponding Chinese section
+                showSection(currentSection + '-cn', document.querySelector('.nav-button.active'));
+            } else {
+                chineseContent.classList.add('hidden');
+                englishContent.classList.remove('hidden');
+                toggleText.textContent = '中文';
+                isEnglish = true;
+                // Show corresponding English section
+                showSection(currentSection, document.querySelector('.nav-button.active'));
+            }
+        }
+
+        function showSection(sectionId, buttonElement) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.nav-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show selected section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+
+            // Add active class to clicked button
+            buttonElement.classList.add('active');
+
+            // Update current section for language toggle
+            currentSection = sectionId.replace('-cn', '');
+        }
+
+        // Add animation effects on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.method-card, .data-method, .timeline-item');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+
+            // Add hover effects to data numbers
+            const dataNumbers = document.querySelectorAll('.data-number');
+            dataNumbers.forEach(number => {
+                number.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.1) rotate(5deg)';
+                    this.style.transition = 'transform 0.3s ease';
+                });
+                
+                number.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1) rotate(0deg)';
+                });
+            });
+
+            // Add interactive effects to timeline items
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            timelineItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.02)';
+                    this.style.boxShadow = '0 12px 35px rgba(0,0,0,0.15)';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                    this.style.boxShadow = '0 8px 25px rgba(0,0,0,0.1)';
+                });
+            });
+
+            // Add click effects to step numbers
+            const stepNumbers = document.querySelectorAll('.step-number');
+            stepNumbers.forEach(step => {
+                step.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.9)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

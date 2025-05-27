@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction Logic Analysis Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .language-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .language-toggle:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #1e3c72, #667eea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logic-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .logic-flow::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, #667eea, #ff6b6b);
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+
+        .argument-step {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            position: relative;
+            transition: all 0.3s ease;
+            margin-left: 60px;
+            z-index: 2;
+        }
+
+        .argument-step:nth-child(even) {
+            margin-left: 0;
+            margin-right: 60px;
+        }
+
+        .argument-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .step-number {
+            position: absolute;
+            top: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.3em;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .argument-step:nth-child(odd) .step-number {
+            left: -85px;
+        }
+
+        .argument-step:nth-child(even) .step-number {
+            right: -85px;
+        }
+
+        .step-title {
+            font-size: 1.4em;
+            color: #1e3c72;
+            margin-bottom: 15px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .justification-icon {
+            width: 35px;
+            height: 35px;
+            margin-right: 15px;
+            background: linear-gradient(45deg, #ff6b6b, #ffa726);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .step-content {
+            margin-left: 10px;
+        }
+
+        .strategy-box {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+            border: 2px solid #4caf50;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .strategy-label {
+            font-weight: bold;
+            color: #2e7d32;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .legitimacy-box {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border: 2px solid #ff9800;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .legitimacy-label {
+            font-weight: bold;
+            color: #e65100;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .quote-box {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8f2ff 100%);
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            font-style: italic;
+            color: #2c3e50;
+            position: relative;
+        }
+
+        .quote-box::before {
+            content: '"';
+            font-size: 4em;
+            color: #667eea;
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            opacity: 0.3;
+        }
+
+        .quote-attribution {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-top: 15px;
+            font-style: normal;
+            text-align: right;
+        }
+
+        .theory-justification {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .theory-title {
+            font-size: 1.6em;
+            color: #1e3c72;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .theory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .theory-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-left: 5px solid #667eea;
+            position: relative;
+        }
+
+        .theory-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .theory-card-title {
+            font-size: 1.3em;
+            color: #1e3c72;
+            margin-bottom: 15px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .theory-icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 15px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .theory-choice-reason {
+            background: #f0f8ff;
+            border: 1px solid #667eea;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 15px 0;
+        }
+
+        .choice-label {
+            font-weight: bold;
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+
+        .gap-analysis {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border: 3px solid #ff6b6b;
+        }
+
+        .gap-title {
+            font-size: 1.6em;
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gap-icon {
+            width: 50px;
+            height: 50px;
+            margin-right: 15px;
+            background: linear-gradient(45deg, #ff6b6b, #ff8a80);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5em;
+        }
+
+        .legitimacy-factors {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .factor-card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .factor-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+
+        .factor-title {
+            font-weight: bold;
+            color: #d32f2f;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+        }
+
+        .factor-icon {
+            width: 25px;
+            height: 25px;
+            margin-right: 10px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .variable-analysis {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border: 3px solid #4caf50;
+        }
+
+        .variable-title {
+            font-size: 1.6em;
+            color: #2e7d32;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .variable-icon {
+            width: 50px;
+            height: 50px;
+            margin-right: 15px;
+            background: linear-gradient(45deg, #4caf50, #66bb6a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5em;
+        }
+
+        .variable-matrix {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .variable-item {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid #4caf50;
+            position: relative;
+        }
+
+        .variable-name {
+            font-weight: bold;
+            color: #2e7d32;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .rationale-box {
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 10px 0;
+        }
+
+        .measurement-box {
+            background: #fff3e0;
+            border: 1px solid #ff9800;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 10px 0;
+        }
+
+        .research-questions-box {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border: 3px solid #9c27b0;
+        }
+
+        .questions-title {
+            font-size: 1.6em;
+            color: #7b1fa2;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .questions-icon {
+            width: 50px;
+            height: 50px;
+            margin-right: 15px;
+            background: linear-gradient(45deg, #9c27b0, #ba68c8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5em;
+        }
+
+        .question-item {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 4px solid #9c27b0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .question-number {
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #9c27b0;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .logic-explanation {
+            background: #f3e5f5;
+            border: 1px solid #9c27b0;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 10px 0;
+        }
+
+        .content-section {
+            display: block;
+        }
+
+        .content-section.hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .logic-flow::before {
+                left: 30px;
+            }
+            
+            .argument-step {
+                margin-left: 50px;
+                margin-right: 0 !important;
+            }
+            
+            .argument-step .step-number {
+                left: -40px !important;
+                right: auto !important;
+            }
+            
+            .theory-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .legitimacy-factors {
+                grid-template-columns: 1fr;
+            }
+            
+            .variable-matrix {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="language-toggle" id="langToggle">中文</button>
+
+    <div class="container">
+        <!-- English Content -->
+        <div id="english-content" class="content-section">
+            <div class="header">
+                <h1>Introduction Logic Analysis</h1>
+                <p>Deconstructing the Argumentative Structure and Theoretical Justification</p>
+                <p><strong>Research:</strong> Translanguaging and Trans-semiotizing in English-Medium Classrooms</p>
+            </div>
+
+            <!-- Research Questions Logic -->
+            <div class="research-questions-box">
+                <div class="questions-title">
+                    <span class="questions-icon">🎯</span>
+                    Research Questions: Strategic Formulation
+                </div>
+                <div class="question-item">
+                    <div class="question-number">1</div>
+                    <strong>RQ1:</strong> What ideologies do educators and students hold regarding English as the MOI of the university?
+                    <div class="logic-explanation">
+                        <strong>🧠 Strategic Logic:</strong> Addresses the "beliefs" component of Spolsky's framework, establishing baseline attitudes that drive policy acceptance or resistance
+                    </div>
+                </div>
+                <div class="question-item">
+                    <div class="question-number">2</div>
+                    <strong>RQ2:</strong> How do educators and students perceive the role of translanguaging in the EMI classroom?
+                    <div class="logic-explanation">
+                        <strong>🧠 Strategic Logic:</strong> Bridges ideologies and practices by exploring attitudes toward multilingual pedagogy, revealing potential conflicts between policy and pedagogical beliefs
+                    </div>
+                </div>
+                <div class="question-item">
+                    <div class="question-number">3</div>
+                    <strong>RQ3:</strong> What are the actual language practices and choices of educators and students in drawing on English-only and translanguaging/transsemiotizing resources in the classroom?
+                    <div class="logic-explanation">
+                        <strong>🧠 Strategic Logic:</strong> Captures observable behaviors to identify policy-practice gaps and validate theoretical framework through empirical evidence
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chinese Content -->
+        <div id="chinese-content" class="content-section hidden">
+            <div class="header">
+                <h1>引言逻辑分析</h1>
+                <p>解构论证结构与理论证成</p>
+                <p><strong>研究：</strong>英语媒介教学课堂中的跨语实践与跨符号化</p>
+            </div>
+
+            <!-- 论证逻辑流程 -->
+            <div class="logic-flow">
+                <div class="argument-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">
+                        <span class="justification-icon">🌍</span>
+                        全球背景建立
+                    </div>
+                    <div class="step-content">
+                        <div class="strategy-box">
+                            <div class="strategy-label">🎯 策略：</div>
+                            <p>作者从宏观层面的全球趋势开始，建立即时相关性和紧迫性</p>
+                        </div>
+                        <div class="quote-box">
+                            "世界各地的大学由于英语的全球作用和地位而采用英语媒介教学(EMI)。"
+                            <div class="quote-attribution">- 开篇陈述</div>
+                        </div>
+                        <div class="legitimacy-box">
+                            <div class="legitimacy-label">✅ 合法性功能：</div>
+                            <p>将研究定位在全球重要的教育现象中，使研究立即与国际受众相关</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="argument-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">
+                        <span class="justification-icon">⚠️</span>
+                        问题识别
+                    </div>
+                    <div class="step-content">
+                        <div class="strategy-box">
+                            <div class="strategy-label">🎯 策略：</div>
+                            <p>揭示当前EMI政策中的关键疏忽，创造研究必要性</p>
+                        </div>
+                        <div class="quote-box">
+                            "然而，倡导EMI的政策往往忽视了其他语言、符号资源和交流模式的重要性。"
+                            <div class="quote-attribution">- 问题陈述</div>
+                        </div>
+                        <div class="legitimacy-box">
+                            <div class="legitimacy-label">✅ 合法性功能：</div>
+                            <p>在政策意图和教学现实之间创造明确差距，证明调查的必要性</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="argument-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">
+                        <span class="justification-icon">🔬</span>
+                        理论框架介绍
+                    </div>
+                    <div class="step-content">
+                        <div class="strategy-box">
+                            <div class="strategy-label">🎯 策略：</div>
+                            <p>引入能够解决已识别问题的复杂理论视角</p>
+                        </div>
+                        <div class="quote-box">
+                            "基于扩展的语言政策框架以及跨语和跨符号化视角，我们调查了..."
+                            <div class="quote-attribution">- 理论定位</div>
+                        </div>
+                        <div class="legitimacy-box">
+                            <div class="legitimacy-label">✅ 合法性功能：</div>
+                            <p>展示理论复杂性，将研究定位在既定的学术框架内</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="argument-step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">
+                        <span class="justification-icon">📊</span>
+                        多层次分析证成
+                    </div>
+                    <div class="step-content">
+                        <div class="strategy-box">
+                            <div class="strategy-label">🎯 策略：</div>
+                            <p>建立在不同层次（宏观、中观、微观）检查政策的必要性</p>
+                        </div>
+                        <div class="quote-box">
+                            "因此，研究不应仅仅揭示EMI政策背后的驱动力，还应探索这些政策在不同层次如何被解释和实施。"
+                            <div class="quote-attribution">- 多层次理论依据</div>
+                        </div>
+                        <div class="legitimacy-box">
+                            <div class="legitimacy-label">✅ 合法性功能：</div>
+                            <p>证成复杂分析方法的合理性，展示对政策实施动态的理解</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="argument-step">
+                    <div class="step-number">5</div>
+                    <div class="step-title">
+                        <span class="justification-icon">🎯</span>
+                        情境特异性
+                    </div>
+                    <div class="step-content">
+                        <div class="strategy-box">
+                            <div class="strategy-label">🎯 策略：</div>
+                            <p>将焦点缩小到孟加拉国作为代表性不足但重要的案例</p>
+                        </div>
+                        <div class="quote-box">
+                            "迄今为止，关于在孟加拉国中观层面创建的EMI政策如何在微观层面被解释和实施，仍然知之甚少，该国在语言政策国际学术研究中代表性不足。"
+                            <div class="quote-attribution">- 情境证成</div>
+                        </div>
+                        <div class="legitimacy-box">
+                            <div class="legitimacy-label">✅ 合法性功能：</div>
+                            <p>解决研究中的地理空白，同时突出孟加拉国情境的独特价值</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 理论选择证成 -->
+            <div class="theory-justification">
+                <div class="theory-title">🧠 理论框架证成</div>
+                <div class="theory-grid">
+                    <div class="theory-card">
+                        <div class="theory-card-title">
+                            <span class="theory-icon">📊</span>
+                            Spolsky三分模型
+                        </div>
+                        <p><strong>组成部分：</strong>语言意识形态、管理和实践</p>
+                        <div class="quote-box">
+                            "根据Spolsky（2004），语言政策包括'社区或社会的所有语言信念、实践和管理决策'"
+                            <div class="quote-attribution">- 理论基础</div>
+                        </div>
+                        <div class="theory-choice-reason">
+                            <div class="choice-label">🎯 选择此理论的原因：</div>
+                            <p>为多层次分析EMI和理解政策-实践差距提供全面框架，通过系统检查信念、管理和实际行为</p>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <div class="theory-card-title">
+                            <span class="theory-icon">🔄</span>
+                            跨语理论
+                        </div>
+                        <p><strong>核心概念：</strong>流畅使用完整语言储备</p>
+                        <div class="quote-box">
+                            "跨语是指'使用说话者的完整语言储备，不拘泥于对社会和政治定义的命名语言边界的谨慎遵守'"
+                            <div class="quote-attribution">- Otheguy等，2015</div>
+                        </div>
+                        <div class="theory-choice-reason">
+                            <div class="choice-label">🎯 选择此理论的原因：</div>
+                            <p>解决EMI课堂中多语实践的现实，挑战单语意识形态，为理解自然语言行为提供框架</p>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <div class="theory-card-title">
+                            <span class="theory-icon">🎭</span>
+                            跨符号化视角
+                        </div>
+                        <p><strong>扩展：</strong>从语言到多模态资源</p>
+                        <div class="quote-box">
+                            "跨符号视角通过分析其与各种符号资源（如手势和身体动作）的关系来扩展意义建构过程"
+                            <div class="quote-attribution">- Lin，2019</div>
+                        </div>
+                        <div class="theory-choice-reason">
+                            <div class="choice-label">🎯 选择此理论的原因：</div>
+                            <p>捕捉课堂交流中超越口语使用的全部复杂性，认识到实际教学和学习过程的多模态性质</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 研究空白分析 -->
+            <div class="gap-analysis">
+                <div class="gap-title">
+                    <span class="gap-icon">🎯</span>
+                    研究空白识别策略
+                </div>
+                <p>作者通过多种空白识别技术系统地构建研究必要性论证：</p>
+                
+                <div class="legitimacy-factors">
+                    <div class="factor-card">
+                        <div class="factor-title">
+                            <span class="factor-icon">🌍</span>
+                            地理空白
+                        </div>
+                        <p>孟加拉国在"语言政策国际学术研究中代表性不足" - 创造为全球知识库做出独特贡献的机会</p>
+                    </div>
+
+                    <div class="factor-card">
+                        <div class="factor-title">
+                            <span class="factor-icon">🔬</span>
+                            理论空白
+                        </div>
+                        <p>"尽管现有研究分别探索了跨语和EMI，但很少有研究从语言包容性视角调查高等教育EMI情境中的跨语" - 证成理论整合</p>
+                    </div>
+
+                    <div class="factor-card">
+                        <div class="factor-title">
+                            <span class="factor-icon">⚖️</span>
+                            政策-实践空白
+                        </div>
+                        <p>"尽管为实施EMI进行了重大干预，但总体政策目标、意识形态信念和实际语言实践之间存在不一致" - 创造实证必要性</p>
+                    </div>
+
+                    <div class="factor-card">
+                        <div class="factor-title">
+                            <span class="factor-icon">📊</span>
+                            方法论空白
+                        </div>
+                        <p>"只有少数研究检查了孟加拉国EMI情境中的微观层面语言实践，其发现是混合和不确定的" - 证成新调查</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 变量选择分析 -->
+            <div class="variable-analysis">
+                <div class="variable-title">
+                    <span class="variable-icon">🔍</span>
+                    变量选择逻辑
+                </div>
+                <div class="variable-matrix">
+                    <div class="variable-item">
+                        <div class="variable-name">语言意识形态</div>
+                        <div class="rationale-box">
+                            <strong>🎯 理论依据：</strong>"语言意识形态是赋予语言和语言使用的价值，即人们认为应该做什么"
+                        </div>
+                        <div class="measurement-box">
+                            <strong>📏 测量方法：</strong>通过半结构化访谈探索对EMI和跨语的信念，以捕捉信念系统
+                        </div>
+                    </div>
+
+                    <div class="variable-item">
+                        <div class="variable-name">语言实践</div>
+                        <div class="rationale-box">
+                            <strong>🎯 理论依据：</strong>"语言实践指个人可观察的语言行为和实际语言选择"
+                        </div>
+                        <div class="measurement-box">
+                            <strong>📏 测量方法：</strong>课堂观察和刺激回忆访谈，以捕捉实际行为与意图的对比
+                        </div>
+                    </div>
+
+                    <div class="variable-item">
+                        <div class="variable-name">跨语实例</div>
+                        <div class="rationale-box">
+                            <strong>🎯 理论依据：</strong>"跨语是语言政策学者描述语言情况的有价值概念"
+                        </div>
+                        <div class="measurement-box">
+                            <strong>📏 测量方法：</strong>分析课堂互动和语码转换模式，以识别多语实践
+                        </div>
+                    </div>
+
+                    <div class="variable-item">
+                        <div class="variable-name">跨符号化实践</div>
+                        <div class="rationale-box">
+                            <strong>🎯 理论依据：</strong>认识到"跨语不仅包括语言资源，还包括符号资源"
+                        </div>
+                        <div class="measurement-box">
+                            <strong>📏 测量方法：</strong>分析课堂环境中的手势、视觉辅助和多模态交流
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 研究问题逻辑 -->
+            <div class="research-questions-box">
+                <div class="questions-title">
+                    <span class="questions-icon">🎯</span>
+                    研究问题：战略性表述
+                </div>
+                <div class="question-item">
+                    <div class="question-number">1</div>
+                    <strong>研究问题1：</strong>教育者和学生对英语作为大学教学媒介持有什么意识形态？
+                    <div class="logic-explanation">
+                        <strong>🧠 战略逻辑：</strong>解决Spolsky框架的"信念"组成部分，建立驱动政策接受或抵制的基线态度
+                    </div>
+                </div>
+                <div class="question-item">
+                    <div class="question-number">2</div>
+                    <strong>研究问题2：</strong>教育者和学生如何看待跨语在EMI课堂中的作用？
+                    <div class="logic-explanation">
+                        <strong>🧠 战略逻辑：</strong>通过探索多语教学态度，连接意识形态和实践，揭示政策与教学信念之间的潜在冲突
+                    </div>
+                </div>
+                <div class="question-item">
+                    <div class="question-number">3</div>
+                    <strong>研究问题3：</strong>教育者和学生在使用纯英语和跨语/跨符号化资源方面的实际语言实践和选择是什么？
+                    <div class="logic-explanation">
+                        <strong>🧠 战略逻辑：</strong>捕捉可观察行为以识别政策-实践差距，并通过实证证据验证理论框架
+                    </div>
+                </div>
+            </div>
+
+            <!-- 研究贡献总结 -->
+            <div class="theory-justification">
+                <div class="theory-title">🎯 研究贡献与创新点</div>
+                <div class="theory-grid">
+                    <div class="theory-card">
+                        <div class="theory-card-title">
+                            <span class="theory-icon">🌍</span>
+                            地理学术贡献
+                        </div>
+                        <p><strong>独特价值：</strong>填补孟加拉国EMI研究的国际空白</p>
+                        <div class="theory-choice-reason">
+                            <div class="choice-label">🎯 贡献意义：</div>
+                            <p>为全球EMI研究提供南亚视角，扩展理论适用性，为政策制定者提供本土化证据</p>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <div class="theory-card-title">
+                            <span class="theory-icon">🔬</span>
+                            理论整合创新
+                        </div>
+                        <p><strong>创新点：</strong>首次系统整合三大理论框架</p>
+                        <div class="theory-choice-reason">
+                            <div class="choice-label">🎯 理论价值：</div>
+                            <p>将Spolsky语言政策三分法、跨语理论与跨符号化视角有机结合，构建多维分析框架</p>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <div class="theory-card-title">
+                            <span class="theory-icon">⚖️</span>
+                            实践政策意义
+                        </div>
+                        <p><strong>应用价值：</strong>为政策改革提供实证基础</p>
+                        <div class="theory-choice-reason">
+                            <div class="choice-label">🎯 政策影响：</div>
+                            <p>揭示政策-实践差距，为从单语向多语政策转变提供科学依据和实施路径</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 方法论创新 -->
+            <div class="variable-analysis">
+                <div class="variable-title">
+                    <span class="variable-icon">🔍</span>
+                    方法论创新与严谨性
+                </div>
+                <div class="variable-matrix">
+                    <div class="variable-item">
+                        <div class="variable-name">多元数据三角验证</div>
+                        <div class="rationale-box">
+                            <strong>🎯 创新特点：</strong>结合半结构化访谈、课堂观察、刺激回忆访谈三种方法
+                        </div>
+                        <div class="measurement-box">
+                            <strong>📏 严谨性保证：</strong>通过方法学三角验证确保发现的可信度和有效性
+                        </div>
+                    </div>
+
+                    <div class="variable-item">
+                        <div class="variable-name">嵌入式案例设计</div>
+                        <div class="rationale-box">
+                            <strong>🎯 设计优势：</strong>单案例双子单元（教育者+学生）深度探索
+                        </div>
+                        <div class="measurement-box">
+                            <strong>📏 分析深度：</strong>既保证案例的代表性又确保分析的全面性和深度
+                        </div>
+                    </div>
+
+                    <div class="variable-item">
+                        <div class="variable-name">跨模态分析整合</div>
+                        <div class="rationale-box">
+                            <strong>🎯 方法创新：</strong>语言实践与符号资源的整合分析
+                        </div>
+                        <div class="measurement-box">
+                            <strong>📏 技术手段：</strong>音频记录、实地笔记、多模态转录相结合
+                        </div>
+                    </div>
+
+                    <div class="variable-item">
+                        <div class="variable-name">实时刺激回忆</div>
+                        <div class="rationale-box">
+                            <strong>🎯 方法特色：</strong>观察后立即进行刺激回忆访谈
+                        </div>
+                        <div class="measurement-box">
+                            <strong>📏 数据质量：</strong>获取教育者语言选择背后的即时认知过程</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 研究局限与未来方向 -->
+            <div class="gap-analysis">
+                <div class="gap-title">
+                    <span class="gap-icon">🔮</span>
+                    研究局限与未来研究方向
+                </div>
+                <p>基于当前研究设计，作者诚实地承认研究局限，并为未来研究指明方向：</p>
+                
+                <div class="legitimacy-factors">
+                    <div class="factor-card">
+                        <div class="factor-title">
+                            <span class="factor-icon">📍</span>
+                            地理范围局限
+                        </div>
+                        <p><strong>当前局限：</strong>单一国家、单一机构案例研究</p>
+                        <p><strong>未来方向：</strong>跨国比较研究，探索区域差异和共性</p>
+                    </div>
+
+                    <div class="factor-card">
+                        <div class="factor-title">
+                            <span class="factor-icon">⏰</span>
+                            时间跨度限制
+                        </div>
+                        <p><strong>当前局限：</strong>横截面研究设计，缺乏纵向追踪</p>
+                        <p><strong>未来方向：</strong>纵向研究跟踪政策变化对实践的长期影响</p>
+                    </div>
+
+                    <div class="factor-card">
+                        <div class="factor-title">
+                            <span class="factor-icon">👥</span>
+                            参与者多样性
+                        </div>
+                        <p><strong>当前局限：</strong>样本规模相对较小，代表性有限</p>
+                        <p><strong>未来方向：</strong>扩大样本，包含更多学科和教育层次</p>
+                    </div>
+
+                    <div class="factor-card">
+                        <div class="factor-title">
+                            <span class="factor-icon">🔬</span>
+                            方法论拓展
+                        </div>
+                        <p><strong>当前局限：</strong>主要依赖定性方法</p>
+                        <p><strong>未来方向：</strong>混合方法研究，结合量化测量和实验设计</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let isEnglish = true;
+            const toggleButton = document.getElementById('langToggle');
+            const englishContent = document.getElementById('english-content');
+            const chineseContent = document.getElementById('chinese-content');
+
+            toggleButton.addEventListener('click', function() {
+                if (isEnglish) {
+                    // Switch to Chinese
+                    englishContent.classList.add('hidden');
+                    chineseContent.classList.remove('hidden');
+                    toggleButton.textContent = 'English';
+                    isEnglish = false;
+                } else {
+                    // Switch to English
+                    chineseContent.classList.add('hidden');
+                    englishContent.classList.remove('hidden');
+                    toggleButton.textContent = '中文';
+                    isEnglish = true;
+                }
+            });
+
+            // Animation effects
+            const cards = document.querySelectorAll('.argument-step, .theory-card, .factor-card, .variable-item');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+
+            // Interactive effects
+            const stepNumbers = document.querySelectorAll('.step-number');
+            stepNumbers.forEach(step => {
+                step.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.9)';
+                    this.style.background = 'linear-gradient(45deg, #ff6b6b, #ffa726)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                        this.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
+                    }, 200);
+                });
+            });
+
+            const justificationIcons = document.querySelectorAll('.justification-icon');
+            justificationIcons.forEach(icon => {
+                icon.addEventListener('mouseenter', function() {
+                    this.style.transform = 'rotate(360deg) scale(1.2)';
+                    this.style.transition = 'transform 0.5s ease';
+                });
+                
+                icon.addEventListener('mouseleave', function() {
+                    this.style.transform = 'rotate(0deg) scale(1)';
+                });
+            });
+
+            const theoryIcons = document.querySelectorAll('.theory-icon');
+            theoryIcons.forEach(icon => {
+                icon.addEventListener('mouseenter', function() {
+                    this.style.transform = 'rotate(360deg)';
+                    this.style.transition = 'transform 0.5s ease';
+                });
+                
+                icon.addEventListener('mouseleave', function() {
+                    this.style.transform = 'rotate(0deg)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
+            <!-- Argumentative Logic Flow -->
+            <div class="logic-flow">
+                <div class="argument-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">
+                        <span class="justification-icon">🌍</span>
+                        Global Context Establishment
+                    </div>
+                    <div class="step-content">
+                        <div class="strategy-box">
+                            <div class="strategy-label">🎯 Strategy:</div>
+                            <p>Authors begin with macro-level global trend to establish immediate relevance and urgency</p>
+                        </div>
+                        <div class="quote-box">
+                            "Universities worldwide adopt English-medium instruction (EMI) due to the global role and status of English."
+                            <div class="quote-attribution">- Opening Statement</div>
+                        </div>
+                        <div class="legitimacy-box">
+                            <div class="legitimacy-label">✅ Legitimacy Function:</div>
+                            <p>Positions study within globally significant educational phenomenon, making research immediately relevant to international audiences</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="argument-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">
+                        <span class="justification-icon">⚠️</span>
+                        Problem Identification
+                    </div>
+                    <div class="step-content">
+                        <div class="strategy-box">
+                            <div class="strategy-label">🎯 Strategy:</div>
+                            <p>Reveal critical oversight in current EMI policies to create research necessity</p>
+                        </div>
+                        <div class="quote-box">
+                            "However, policies advocating for EMI often overlook the importance of other languages, semiotic resources, and modalities in communication."
+                            <div class="quote-attribution">- Problem Statement</div>
+                        </div>
+                        <div class="legitimacy-box">
+                            <div class="legitimacy-label">✅ Legitimacy Function:</div>
+                            <p>Creates clear gap between policy intentions and pedagogical realities, justifying need for investigation</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="argument-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">
+                        <span class="justification-icon">🔬</span>
+                        Theoretical Framework Introduction
+                    </div>
+                    <div class="step-content">
+                        <div class="strategy-box">
+                            <div class="strategy-label">🎯 Strategy:</div>
+                            <p>Introduce sophisticated theoretical lenses that can address the identified problem</p>
+                        </div>
+                        <div class="quote-box">
+                            "Building on an expanded language policy framework as well as translanguaging and trans-semiotizing perspectives, we investigated..."
+                            <div class="quote-attribution">- Theoretical Positioning</div>
+                        </div>
+                        <div class="legitimacy-box">
+                            <div class="legitimacy-label">✅ Legitimacy Function:</div>
+                            <p>Demonstrates theoretical sophistication and positions study within established scholarly frameworks</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="argument-step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">
+                        <span class="justification-icon">📊</span>
+                        Multi-level Analysis Justification
+                    </div>
+                    <div class="step-content">
+                        <div class="strategy-box">
+                            <div class="strategy-label">🎯 Strategy:</div>
+                            <p>Establish need for examining policy at different levels (macro, meso, micro)</p>
+                        </div>
+                        <div class="quote-box">
+                            "Therefore, research should not only unearth the driving forces behind EMI policies but also explore how these policies are interpreted and implemented at different levels."
+                            <div class="quote-attribution">- Multi-level Rationale</div>
+                        </div>
+                        <div class="legitimacy-box">
+                            <div class="legitimacy-label">✅ Legitimacy Function:</div>
+                            <p>Justifies complex analytical approach and demonstrates understanding of policy implementation dynamics</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="argument-step">
+                    <div class="step-number">5</div>
+                    <div class="step-title">
+                        <span class="justification-icon">🎯</span>
+                        Contextual Specificity
+                    </div>
+                    <div class="step-content">
+                        <div class="strategy-box">
+                            <div class="strategy-label">🎯 Strategy:</div>
+                            <p>Narrow focus to Bangladesh as underrepresented yet significant case</p>
+                        </div>
+                        <div class="quote-box">
+                            "To date, much remains unknown about how EMI policies created at the meso level are interpreted and enacted at the micro level in Bangladesh, a country that is underrepresented in international scholarship on language policy."
+                            <div class="quote-attribution">- Context Justification</div>
+                        </div>
+                        <div class="legitimacy-box">
+                            <div class="legitimacy-label">✅ Legitimacy Function:</div>
+                            <p>Addresses geographical gap in research while highlighting unique value of Bangladeshi context</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Theoretical Choice Justification -->
+            <div class="theory-justification">
+                <div class="theory-title">🧠 Theoretical Framework Justification</div>
+                <div class="theory-grid">
+                    <div class="theory-card">
+                        <div class="theory-card-title">
+                            <span class="theory-icon">📊</span>
+                            Spolsky's Tripartite Model
+                        </div>
+                        <p><strong>Components:</strong> Language ideologies, management, and practices</p>
+                        <div class="quote-box">
+                            "According to Spolsky (2004), language policy comprises 'all the language beliefs, practices, and management decisions of a community or society'"
+                            <div class="quote-attribution">- Theoretical Foundation</div>
+                        </div>
+                        <div class="theory-choice-reason">
+                            <div class="choice-label">🎯 Why This Theory:</div>
+                            <p>Provides comprehensive framework for analyzing EMI at multiple levels and understanding policy-practice gaps through systematic examination of beliefs, management, and actual behaviors</p>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <div class="theory-card-title">
+                            <span class="theory-icon">🔄</span>
+                            Translanguaging Theory
+                        </div>
+                        <p><strong>Core Concept:</strong> Fluid use of full linguistic repertoire</p>
+                        <div class="quote-box">
+                            "Translanguaging refers to the 'deployment of a speaker's full linguistic repertoire without regard for watchful adherence to the socially and politically defined boundaries of named languages'"
+                            <div class="quote-attribution">- Otheguy et al., 2015</div>
+                        </div>
+                        <div class="theory-choice-reason">
+                            <div class="choice-label">🎯 Why This Theory:</div>
+                            <p>Addresses reality of multilingual practices in EMI classrooms, challenging monolingual ideologies and providing framework for understanding natural language behaviors</p>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <div class="theory-card-title">
+                            <span class="theory-icon">🎭</span>
+                            Trans-semiotizing Perspective
+                        </div>
+                        <p><strong>Expansion:</strong> Beyond linguistic to multimodal resources</p>
+                        <div class="quote-box">
+                            "The trans-semiotic perspective expands the process of meaning-making by analysing its relationship with various semiotic resources, such as gestures and bodily movements"
+                            <div class="quote-attribution">- Lin, 2019</div>
+                        </div>
+                        <div class="theory-choice-reason">
+                            <div class="choice-label">🎯 Why This Theory:</div>
+                            <p>Captures full complexity of classroom communication beyond verbal language use, recognizing multimodal nature of actual teaching and learning processes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Research Gap Analysis -->
+            <div class="gap-analysis">
+                <div class="gap-title">
+                    <span class="gap-icon">🎯</span>
+                    Research Gap Identification Strategy
+                </div>
+                <p>Authors systematically build case for research necessity through multiple gap identification techniques:</p>
+                
+                <div class="legitimacy-factors">
+                    <div class="factor-card">
+                        <div class="factor-title">
+                            <span class="factor-icon">🌍</span>
+                            Geographical Gap
+                        </div>
+                        <p>Bangladesh as "underrepresented in international scholarship on language policy" - creates opportunity for unique contribution to global knowledge base</p>
+                    </div>
+
+                    <div class="factor-card">
+                        <div class="factor-title">
+                            <span class="factor-icon">🔬</span>
+                            Theoretical Gap
+                        </div>
+                        <p>"Although extant research has explored translanguaging and EMI separately, there is little inquiry into translanguaging in higher education EMI contexts" - justifies theoretical integration</p>
+                    </div>
+
+                    <div class="factor-card">
+                        <div class="factor-title">
+                            <span class="factor-icon">⚖️</span>
+                            Policy-Practice Gap
+                        </div>
+                        <p>"Despite significant interventions to implement EMI, there is misalignment between the overarching policy objectives, ideological beliefs, and actual language practices" - creates empirical necessity</p>
+                    </div>
+
+                    <div class="factor-card">
+                        <div class="factor-title">
+                            <span class="factor-icon">📊</span>
+                            Methodological Gap
+                        </div>
+                        <p>"Only a handful of studies have examined micro-level language practices in the Bangladeshi EMI context, and their findings are mixed and inconclusive" - justifies new investigation</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Variable Choice Analysis -->
+            <div class="variable-analysis">
+                <div class="variable-title">
+                    <span class="variable-icon">🔍</span>
+                    Variable Selection Logic
+                </div>
+                <div class="variable-matrix">
+                    <div class="variable-item">
+                        <div class="variable-name">Language Ideologies</div>
+                        <div class="rationale-box">
+                            <strong>🎯 Theoretical Rationale:</strong> "Language ideologies are the values assigned to languages and language use, that is, what people think should be done"
+                        </div>
+                        <div class="measurement-box">
+                            <strong>📏 Measurement Approach:</strong> Semi-structured interviews exploring beliefs about EMI and translanguaging to capture belief systems
+                        </div>
+                    </div>
+
+                    <div class="variable-item">
+                        <div class="variable-name">Language Practices</div>
+                        <div class="rationale-box">
+                            <strong>🎯 Theoretical Rationale:</strong> "Language practices refer to individuals' observable language behaviours and actual language choices"
+                        </div>
+                        <div class="measurement-box">
+                            <strong>📏 Measurement Approach:</strong> Classroom observations and stimulated recall interviews to capture actual behaviors vs. intentions
+                        </div>
+                    </div>
+
+                    <div class="variable-item">
+                        <div class="variable-name">Translanguaging Instances</div>
+                        <div class="rationale-box">
+                            <strong>🎯 Theoretical Rationale:</strong> "Translanguaging is a valuable concept for language policy scholars to describe the linguistic situations"
+                        </div>
+                        <div class="measurement-box">
+                            <strong>📏 Measurement Approach:</strong> Analysis of classroom interactions and code-switching patterns to identify multilingual practices
+                        </div>
+                    </div>
+
+                    <div class="variable-item">
+                        <div class="variable-name">Trans-semiotizing Practices</div>
+                        <div class="rationale-box">
+                            <strong>🎯 Theoretical Rationale:</strong> Recognition that "translanguaging encompasses not only linguistic resources but also semiotic resources"
+                        </div>
+                        <div class="measurement-box">
+                            <strong>📏 Measurement Approach:</strong> Analysis of gestures, visual aids, and multimodal communication in classroom settings
+                        </div>
+                    </div>
+                </div>
+            </div
