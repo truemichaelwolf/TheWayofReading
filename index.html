@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Way of Reading — Dashboard Archive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf8f5;
+            --text: #2c2c2c;
+            --muted: #888;
+            --accent: #b45309;
+            --card-bg: #fff;
+            --border: #e8e4de;
+            --hover-bg: #fdf6ee;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 3rem 1.5rem;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h1 {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 600;
+            font-size: 2rem;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .filter-bar {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .filter-bar input {
+            width: 100%;
+            padding: 0.7rem 1rem 0.7rem 2.4rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--card-bg);
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .filter-bar input:focus {
+            border-color: var(--accent);
+        }
+
+        .filter-bar svg {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+        }
+
+        .count {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-bottom: 1rem;
+        }
+
+        .file-list {
+            list-style: none;
+        }
+
+        .file-list li {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .file-list li:first-child {
+            border-top: 1px solid var(--border);
+        }
+
+        .file-list a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 0.5rem;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 0.92rem;
+            transition: background 0.15s, padding-left 0.15s;
+            border-radius: 2px;
+        }
+
+        .file-list a:hover {
+            background: var(--hover-bg);
+            padding-left: 1rem;
+        }
+
+        .file-list .icon {
+            flex-shrink: 0;
+            width: 18px;
+            height: 18px;
+            color: var(--accent);
+            opacity: 0.7;
+        }
+
+        .file-list .name {
+            flex: 1;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .file-list .arrow {
+            color: var(--muted);
+            opacity: 0;
+            transition: opacity 0.15s;
+            font-size: 0.8rem;
+        }
+
+        .file-list a:hover .arrow {
+            opacity: 1;
+        }
+
+        .hidden { display: none; }
+
+        footer {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 1.5rem 1rem; }
+            h1 { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📖 The Way of Reading</h1>
+            <p>Academic Research Dashboards</p>
+        </header>
+
+        <div class="filter-bar">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" id="search" placeholder="搜索文件名..." autocomplete="off">
+        </div>
+
+        <div class="count" id="count"></div>
+
+        <ul class="file-list" id="fileList"></ul>
+
+        <footer>TheWayofReading · GitHub Pages</footer>
+    </div>
+
+    <script>
+        // ========== 在这里添加或删除文件 ==========
+        const files = [
+            "273-syntax_iyam_dashboard.html",
+            "192-methodology.html",
+            "192-overall.html",
+            "193.html",
+            "194.html",
+            "195-us-english-lexis-dashboard.html",
+            "196-love-fraud.html",
+            "197-corpus-linguistics-dashboard.html",
+            "198-dynamic-model-dashboard.html",
+            "200.html",
+            "201.html",
+            "202.html",
+            "203-methods.html",
+            "203-overall.html",
+            // ↓ 如果还有更多文件，继续往下加 ↓
+        ];
+        // ==========================================
+
+        const listEl = document.getElementById('fileList');
+        const countEl = document.getElementById('count');
+        const searchEl = document.getElementById('search');
+
+        function render(filter = '') {
+            const kw = filter.toLowerCase();
+            const matched = files.filter(f => f.toLowerCase().includes(kw));
+            listEl.innerHTML = matched.map(f => `
+                <li>
+                    <a href="${f}">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        <span class="name">${f}</span>
+                        <span class="arrow">→</span>
+                    </a>
+                </li>
+            `).join('');
+            countEl.textContent = `共 ${matched.length} 个文件`;
+        }
+
+        searchEl.addEventListener('input', e => render(e.target.value));
+        render();
+    </script>
+</body>
+</html>
