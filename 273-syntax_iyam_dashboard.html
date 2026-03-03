@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Syntax in Social Interaction — If You Ask Me</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg-deep: #0a0e1a;
+  --bg-card: #111827;
+  --bg-surface: #1a2236;
+  --accent-coral: #ff6b6b;
+  --accent-gold: #fbbf24;
+  --accent-teal: #2dd4bf;
+  --accent-blue: #60a5fa;
+  --accent-purple: #a78bfa;
+  --accent-rose: #fb7185;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --glass: rgba(255,255,255,0.04);
+  --glass-border: rgba(255,255,255,0.08);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: 'DM Sans', 'Noto Sans SC', sans-serif;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* ===== SLIDE CONTAINER ===== */
+.slide-viewport {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 80px;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+  pointer-events: none;
+}
+
+.slide.active {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: all;
+}
+
+.slide.exit-left {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.slide-inner {
+  width: 100%;
+  max-width: 1400px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ===== NAVIGATION ===== */
+.nav-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: rgba(10,14,26,0.92);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  z-index: 1000;
+  padding: 0 24px;
+}
+
+.nav-btn {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+  color: var(--text-secondary);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s;
+}
+.nav-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.slide-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.dot.active {
+  width: 28px;
+  border-radius: 4px;
+  background: var(--accent-teal);
+}
+
+.slide-counter {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-left: 12px;
+}
+
+/* ===== FLOATING LANG TOGGLE ===== */
+.lang-toggle {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  background: rgba(17,24,39,0.9);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.lang-btn {
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  transition: all 0.3s;
+  letter-spacing: 0.5px;
+}
+.lang-btn.active {
+  background: var(--accent-teal);
+  color: var(--bg-deep);
+}
+
+/* ===== KEYBOARD HINT ===== */
+.key-hint {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  z-index: 9999;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.key-hint kbd {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 11px;
+}
+
+/* ===== TYPOGRAPHY ===== */
+.slide-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent-teal);
+  margin-bottom: 16px;
+}
+
+h1.hero-title {
+  font-family: 'Playfair Display', 'Noto Serif SC', serif;
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+
+h2.slide-title {
+  font-family: 'Playfair Display', 'Noto Serif SC', serif;
+  font-size: clamp(28px, 3.5vw, 48px);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 24px;
+}
+
+h3.section-title {
+  font-family: 'DM Sans', 'Noto Sans SC', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+p.body-text {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  max-width: 700px;
+}
+
+/* ===== QUOTE BLOCK ===== */
+.quote-block {
+  background: linear-gradient(135deg, rgba(45,212,191,0.08), rgba(96,165,250,0.06));
+  border-left: 3px solid var(--accent-teal);
+  border-radius: 0 12px 12px 0;
+  padding: 20px 24px;
+  margin: 16px 0;
+  position: relative;
+}
+.quote-block::before {
+  content: '"';
+  font-family: 'Playfair Display', serif;
+  font-size: 48px;
+  color: var(--accent-teal);
+  opacity: 0.3;
+  position: absolute;
+  top: -4px;
+  left: 12px;
+}
+.quote-text {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  font-style: italic;
+  padding-left: 8px;
+}
+.quote-source {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 8px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ===== CARDS ===== */
+.card-grid {
+  display: grid;
+  gap: 20px;
+}
+.card-grid-2 { grid-template-columns: 1fr 1fr; }
+.card-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+.card-grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 28px;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.card:hover {
+  border-color: rgba(255,255,255,0.15);
+  transform: translateY(-2px);
+}
+.card-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin-bottom: 16px;
+}
+
+/* ===== STAT BOXES ===== */
+.stat-row {
+  display: flex;
+  gap: 24px;
+  margin: 20px 0;
+}
+.stat-box {
+  flex: 1;
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  padding: 24px;
+  text-align: center;
+}
+.stat-number {
+  font-family: 'Playfair Display', 'Noto Serif SC', serif;
+  font-size: 42px;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--accent-teal), var(--accent-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.stat-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+/* ===== EXAMPLE BLOCK ===== */
+.example-block {
+  background: var(--bg-surface);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 12px 0;
+  border: 1px solid var(--glass-border);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.example-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--accent-gold);
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.speaker-a { color: var(--accent-blue); }
+.speaker-b { color: var(--accent-coral); }
+.highlight-iyam {
+  background: rgba(45,212,191,0.15);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--accent-teal);
+  font-weight: 600;
+}
+
+/* ===== CHART CONTAINERS ===== */
+.chart-container {
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 24px;
+  position: relative;
+}
+.chart-wrap {
+  position: relative;
+  height: 280px;
+}
+
+/* ===== TAG / PILL ===== */
+.tag {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 3px;
+}
+.tag-teal { background: rgba(45,212,191,0.15); color: var(--accent-teal); }
+.tag-coral { background: rgba(255,107,107,0.15); color: var(--accent-coral); }
+.tag-gold { background: rgba(251,191,36,0.15); color: var(--accent-gold); }
+.tag-blue { background: rgba(96,165,250,0.15); color: var(--accent-blue); }
+.tag-purple { background: rgba(167,139,250,0.15); color: var(--accent-purple); }
+
+/* ===== FLOW DIAGRAM ===== */
+.flow-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 12px 0;
+}
+.flow-box {
+  background: var(--bg-surface);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-size: 14px;
+  text-align: center;
+  flex: 1;
+}
+.flow-arrow {
+  font-size: 24px;
+  color: var(--accent-teal);
+}
+
+/* ===== COMPARISON TABLE ===== */
+.compare-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 14px;
+}
+.compare-table th {
+  text-align: left;
+  padding: 14px 18px;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-weight: 600;
+  border-bottom: 1px solid var(--glass-border);
+}
+.compare-table th:first-child { border-radius: 12px 0 0 0; }
+.compare-table th:last-child { border-radius: 0 12px 0 0; }
+.compare-table td {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+}
+.compare-table tr:last-child td:first-child { border-radius: 0 0 0 12px; }
+.compare-table tr:last-child td:last-child { border-radius: 0 0 12px 0; }
+
+/* ===== INTERACTIVE TOGGLE PANEL ===== */
+.toggle-panel {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.toggle-opt {
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s;
+  font-family: 'DM Sans', sans-serif;
+}
+.toggle-opt.active {
+  background: var(--accent-teal);
+  color: var(--bg-deep);
+  border-color: var(--accent-teal);
+}
+
+/* ===== PROGRESS BAR ===== */
+.progress-item {
+  margin: 10px 0;
+}
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+.progress-bar {
+  height: 8px;
+  background: var(--bg-surface);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 0;
+}
+
+/* ===== TITLE SLIDE SPECIFIC ===== */
+.title-slide-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(45,212,191,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 30%, rgba(96,165,250,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(167,139,250,0.05) 0%, transparent 50%);
+}
+
+.title-meta {
+  display: flex;
+  gap: 24px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+.meta-item {
+  font-size: 13px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== ANIMATIONS ===== */
+.slide.active .fade-up {
+  animation: fadeUp 0.6s ease forwards;
+}
+.slide.active .fade-up-d1 { animation-delay: 0.1s; }
+.slide.active .fade-up-d2 { animation-delay: 0.2s; }
+.slide.active .fade-up-d3 { animation-delay: 0.3s; }
+.slide.active .fade-up-d4 { animation-delay: 0.4s; }
+.slide.active .fade-up-d5 { animation-delay: 0.5s; }
+
+.fade-up {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Scrollable content area */
+.scroll-area {
+  overflow-y: auto;
+  max-height: calc(100vh - 140px);
+  padding-right: 8px;
+}
+.scroll-area::-webkit-scrollbar { width: 4px; }
+.scroll-area::-webkit-scrollbar-track { background: transparent; }
+.scroll-area::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 2px; }
+
+/* Two column layout */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.accent-line {
+  width: 60px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--accent-teal), var(--accent-blue));
+  margin-bottom: 20px;
+}
+
+/* Verb chip cloud */
+.verb-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+.verb-chip {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  cursor: default;
+  transition: transform 0.2s;
+}
+.verb-chip:hover { transform: scale(1.08); }
+
+/* Implications list */
+.impl-item {
+  display: flex;
+  gap: 14px;
+  margin: 14px 0;
+  align-items: flex-start;
+}
+.impl-num {
+  min-width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+}
+</style>
+</head>
+<body>
+
+<!-- FLOATING LANGUAGE TOGGLE -->
+<div class="lang-toggle">
+  <button class="lang-btn active" onclick="setLang('en')">EN</button>
+  <button class="lang-btn" onclick="setLang('zh')">中文</button>
+</div>
+
+<!-- KEYBOARD HINT -->
+<div class="key-hint">
+  <kbd>←</kbd><kbd>→</kbd> <span data-en="Navigate" data-zh="翻页"></span>
+</div>
+
+<!-- ========== SLIDES ========== -->
+<div class="slide-viewport" id="viewport">
+
+<!-- SLIDE 1: TITLE -->
+<div class="slide active" data-slide="0">
+  <div class="title-slide-bg"></div>
+  <div class="slide-inner" style="justify-content:center;">
+    <div class="slide-label fade-up" data-en="Corpus-Based Studies across Humanities · 2026" data-zh="跨人文学科语料库研究 · 2026"></div>
+    <h1 class="hero-title fade-up fade-up-d1">
+      <span data-en="Syntax in Social Interaction" data-zh="社会互动中的句法"></span>
+    </h1>
+    <p class="body-text fade-up fade-up-d2" style="font-size:20px; max-width:800px;">
+      <span data-en='How does the syntax of <em>"if you ask me"</em> interact with conversation, discourse-pragmatics, lexicon, and communication mode?' data-zh='<em>"if you ask me"</em> 的句法如何与会话、语篇语用、词汇和交际模式相互作用？'></span>
+    </p>
+    <div class="title-meta fade-up fade-up-d3">
+      <div class="meta-item">👤 Jesús Olguín Martínez (HKU) & Stefan Th. Gries (UCSB)</div>
+      <div class="meta-item">📊 <span data-en="789 constructions · COCA" data-zh="789个构式 · COCA语料库"></span></div>
+      <div class="meta-item">📄 DOI: 10.1515/csh-2025-0025</div>
+    </div>
+    <div class="stat-row fade-up fade-up-d4" style="margin-top:32px; max-width:700px;">
+      <div class="stat-box">
+        <div class="stat-number">789</div>
+        <div class="stat-label" data-en="Constructions Analyzed" data-zh="分析构式数"></div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number">88.7%</div>
+        <div class="stat-label" data-en="Model Accuracy" data-zh="模型准确率"></div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number">0.943</div>
+        <div class="stat-label" data-en="C-Score" data-zh="C值"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 2: WHAT IS IYAM? -->
+<div class="slide" data-slide="1">
+  <div class="slide-inner">
+    <div class="scroll-area">
+    <div class="slide-label fade-up" data-en="BACKGROUND" data-zh="研究背景"></div>
+    <h2 class="slide-title fade-up fade-up-d1">
+      <span data-en='What is <em>"if you ask me"</em>?' data-zh='什么是 <em>"if you ask me"</em>？'></span>
+    </h2>
+    <div class="two-col fade-up fade-up-d2">
+      <div>
+        <p class="body-text" data-en='"If you ask me" is a <strong>speech-act conditional</strong> — a type of conditional where the protasis and apodosis are not causally related. It functions as a <strong>style disjunct</strong>, similar to adverbials like <em>honestly, frankly, personally</em>.' data-zh='"If you ask me" 是一种<strong>言语行为条件句</strong>——条件从句（前件）和主句（后件）之间没有因果关系。它的功能类似于<strong>语体附加语</strong>，如 <em>honestly, frankly, personally</em> 等副词。'></p>
+        <div class="quote-block" style="margin-top:20px;">
+          <p class="quote-text" data-en="Following Sweetser (1990), if you ask me is similar to if I may say so in that it has become so idiomatic that it has no longer a conditional value; for most speakers it simply marks politeness rather than carrying its literal meaning." data-zh="根据 Sweetser (1990)，if you ask me 与 if I may say so 类似，已变得高度惯用化，不再具有条件意义；对大多数说话者而言，它只是表示礼貌，而非字面含义。"></p>
+          <div class="quote-source">— Olguín Martínez & Gries (2026), p. 3</div>
+        </div>
+      </div>
+      <div>
+        <div class="example-block">
+          <div class="example-label" data-en="EXAMPLE · SPOKEN DISCOURSE" data-zh="示例 · 口语语篇"></div>
+          <p><span class="speaker-a">Speaker A:</span> <span data-en="I can't believe what happened yesterday. That was the epitome of narcissistic abuse <span class='highlight-iyam'>if you ask me</span>!" data-zh="我不敢相信昨天发生的事。那简直是自恋式霸凌的典型 <span class='highlight-iyam'>if you ask me</span>！"></span></p>
+        </div>
+        <div style="margin-top:20px;">
+          <h3 class="section-title" data-en="Two Positions" data-zh="两种位置"></h3>
+          <div class="flow-row">
+            <div class="flow-box">
+              <div class="tag tag-teal" data-en="Preposed 前置" data-zh="前置 Preposed"></div>
+              <p style="font-size:13px; color:var(--text-secondary); margin-top:8px;">
+                <span class="highlight-iyam">If you ask me</span>, you should...
+              </p>
+            </div>
+            <div class="flow-arrow">⇄</div>
+            <div class="flow-box">
+              <div class="tag tag-coral" data-en="Postposed 后置" data-zh="后置 Postposed"></div>
+              <p style="font-size:13px; color:var(--text-secondary); margin-top:8px;">
+                ...was well spent <span class="highlight-iyam">if you ask me</span>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: RESEARCH EXPECTATIONS -->
+<div class="slide" data-slide="2">
+  <div class="slide-inner">
+    <div class="scroll-area">
+    <div class="slide-label fade-up" data-en="EXPECTATIONS" data-zh="研究预期"></div>
+    <h2 class="slide-title fade-up fade-up-d1">
+      <span data-en="Four Research Expectations" data-zh="四项研究预期"></span>
+    </h2>
+    <div class="card-grid card-grid-2 fade-up fade-up-d2">
+      <div class="card">
+        <div class="card-icon" style="background:rgba(45,212,191,0.12); color:var(--accent-teal);">🗣️</div>
+        <h3 class="section-title" data-en="Syntax × Speaker" data-zh="句法 × 说话者"></h3>
+        <p style="font-size:14px; color:var(--text-secondary); line-height:1.65;" data-en="<strong>Preposed</strong> → Different speaker (attention-getter at turn start)<br><strong>Postposed</strong> → Same speaker (prolongs their turn)" data-zh="<strong>前置</strong> → 不同说话者（话轮开始时的注意力吸引）<br><strong>后置</strong> → 同一说话者（延长自己的话轮）"></p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(255,107,107,0.12); color:var(--accent-coral);">⚖️</div>
+        <h3 class="section-title" data-en="Syntax × Function" data-zh="句法 × 功能"></h3>
+        <p style="font-size:14px; color:var(--text-secondary); line-height:1.65;" data-en="<strong>Preposed</strong> → Positive/negative assessment + advice<br><strong>Postposed</strong> → Assessment without getting addressee to act" data-zh="<strong>前置</strong> → 积极/消极评价 + 建议<br><strong>后置</strong> → 评价但不要求对方采取行动"></p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(251,191,36,0.12); color:var(--accent-gold);">📝</div>
+        <h3 class="section-title" data-en="Syntax × Lexicon" data-zh="句法 × 词汇"></h3>
+        <p style="font-size:14px; color:var(--text-secondary); line-height:1.65;" data-en="<strong>Preposed</strong> → Non-dictatorial verbs (<em>should, ought to</em>)<br><strong>Postposed</strong> → Epistemic (<em>seem, look</em>) & propositional attitude verbs" data-zh="<strong>前置</strong> → 非命令性动词（<em>should, ought to</em>）<br><strong>后置</strong> → 认知判断动词（<em>seem, look</em>）和命题态度动词"></p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(96,165,250,0.12); color:var(--accent-blue);">💬</div>
+        <h3 class="section-title" data-en="Syntax × Mode" data-zh="句法 × 交际模式"></h3>
+        <p style="font-size:14px; color:var(--text-secondary); line-height:1.65;" data-en="<em>If you ask me</em> will appear in both preposed and postposed position in spoken and written discourse." data-zh="<em>If you ask me</em> 在口语和书面语中均可出现前置和后置位置。"></p>
+      </div>
+    </div>
+    <div class="quote-block fade-up fade-up-d3" style="margin-top:20px;">
+      <p class="quote-text" data-en="We see constructions as cognitive representations that not only contain lexical, semantic, and syntactic information, but also information about the social contexts in which they have been used." data-zh="我们将构式视为认知表征，它不仅包含词汇、语义和句法信息，还包含使用它们的社会语境信息。"></p>
+      <div class="quote-source">— Olguín Martínez & Gries (2026), p. 4</div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 4: DATA & METHODS -->
+<div class="slide" data-slide="3">
+  <div class="slide-inner">
+    <div class="scroll-area">
+    <div class="slide-label fade-up" data-en="METHODS" data-zh="研究方法"></div>
+    <h2 class="slide-title fade-up fade-up-d1">
+      <span data-en="Data & Statistical Approach" data-zh="数据与统计方法"></span>
+    </h2>
+    <div class="two-col fade-up fade-up-d2">
+      <div>
+        <h3 class="section-title" data-en="Data Pipeline" data-zh="数据处理流程"></h3>
+        <div class="flow-row" style="flex-direction:column; align-items:stretch;">
+          <div class="flow-box" style="text-align:left;">
+            <span class="tag tag-teal">1</span>
+            <span style="margin-left:8px; font-size:14px;" data-en="Exhaustive search of COCA for <em>if you ask me</em>" data-zh="在COCA语料库中穷尽检索 <em>if you ask me</em>"></span>
+          </div>
+          <div style="text-align:center; color:var(--accent-teal);">↓</div>
+          <div class="flow-box" style="text-align:left;">
+            <span class="tag tag-gold">2</span>
+            <span style="margin-left:8px; font-size:14px;" data-en="Manual exclusion of literal uses (false hits)" data-zh="人工排除字面用法（假阳性）"></span>
+          </div>
+          <div style="text-align:center; color:var(--accent-teal);">↓</div>
+          <div class="flow-box" style="text-align:left;">
+            <span class="tag tag-coral">3</span>
+            <span style="margin-left:8px; font-size:14px;" data-en="Manual coding: Position, Speaker, Function, Verb, Mode" data-zh="人工标注：位置、说话者、功能、动词、模式"></span>
+          </div>
+          <div style="text-align:center; color:var(--accent-teal);">↓</div>
+          <div class="flow-box" style="text-align:left;">
+            <span class="tag tag-blue">4</span>
+            <span style="margin-left:8px; font-size:14px;" data-en="GLMM with backward selection (R 4.5.1 / lme4)" data-zh="广义线性混合效应模型，后向选择（R 4.5.1 / lme4）"></span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 class="section-title" data-en="Model Structure" data-zh="模型结构"></h3>
+        <div class="card" style="background:var(--bg-surface); font-family:'JetBrains Mono',monospace; font-size:13px; line-height:2;">
+          <span style="color:var(--accent-gold);">Response:</span> POSITION <span style="color:var(--text-muted);">(preposed / postposed)</span><br>
+          <span style="color:var(--accent-teal);">Fixed:</span> MODE × SPEAKER <span style="color:var(--text-muted);">(significant p&lt;0.00034)</span><br>
+          <span style="color:var(--accent-coral);">Dropped:</span> FUNCTION <span style="color:var(--text-muted);">(ns, p&gt;0.69)</span><br>
+          <span style="color:var(--accent-purple);">Random:</span> VLEMMAAPOD <span style="color:var(--text-muted);">(82 verb lemmas)</span>
+        </div>
+        <div class="stat-row" style="margin-top:20px;">
+          <div class="stat-box">
+            <div class="stat-number" style="font-size:28px;">0.467</div>
+            <div class="stat-label">R² marginal</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number" style="font-size:28px;">0.640</div>
+            <div class="stat-label">R² conditional</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number" style="font-size:28px;">0.575</div>
+            <div class="stat-label">McFadden R²</div>
+          </div>
+        </div>
+        <div class="quote-block" style="margin-top:16px;">
+          <p class="quote-text" data-en="The fixed effects do most of the predictive heavy lifting. It is not the case that all the model does is express verb-specific preferences." data-zh="固定效应承担了大部分预测工作。模型并非仅仅表达动词特定的偏好。"></p>
+          <div class="quote-source">— Olguín Martínez & Gries (2026), p. 17</div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5: KEY FINDING — MODE × SPEAKER -->
+<div class="slide" data-slide="4">
+  <div class="slide-inner">
+    <div class="scroll-area">
+    <div class="slide-label fade-up" data-en="KEY FINDING" data-zh="核心发现"></div>
+    <h2 class="slide-title fade-up fade-up-d1">
+      <span data-en="The MODE × SPEAKER Interaction" data-zh="交际模式 × 说话者 交互效应"></span>
+    </h2>
+    <div class="two-col fade-up fade-up-d2">
+      <div>
+        <div class="chart-container">
+          <h3 class="section-title" style="text-align:center;" data-en="Predicted Prob. of Preposed" data-zh="前置位置的预测概率"></h3>
+          <div class="chart-wrap">
+            <canvas id="chart-mode-speaker"></canvas>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="border-left:3px solid var(--accent-teal); margin-bottom:16px;">
+          <h3 class="section-title" data-en="🔑 Different Speaker" data-zh="🔑 不同说话者"></h3>
+          <p style="font-size:14px; color:var(--text-secondary); line-height:1.65;" data-en="Preposed position is <strong>very likely</strong> regardless of mode — no significant difference between speaking and writing." data-zh="前置位置的可能性<strong>非常高</strong>，无论是口语还是书面语——两者之间没有显著差异。"></p>
+        </div>
+        <div class="card" style="border-left:3px solid var(--accent-coral); margin-bottom:16px;">
+          <h3 class="section-title" data-en="🔑 Same Speaker" data-zh="🔑 同一说话者"></h3>
+          <p style="font-size:14px; color:var(--text-secondary); line-height:1.65;" data-en="Postposed position is likely in speaking, but <strong>even more likely</strong> in writing — a significant difference exists." data-zh="后置位置在口语中较为可能，但在书面语中<strong>更加可能</strong>——存在显著差异。"></p>
+        </div>
+        <div class="quote-block">
+          <p class="quote-text" data-en="Speakers being different always makes POSITION: preposed much more likely than speakers being the same, but that difference is significantly stronger in writing than in speaking." data-zh="不同说话者始终使前置位置的可能性远高于同一说话者，但这种差异在书面语中显著强于口语。"></p>
+          <div class="quote-source">— Olguín Martínez & Gries (2026), p. 19</div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 6: EXAMPLES OF POSITION -->
+<div class="slide" data-slide="5">
+  <div class="slide-inner">
+    <div class="scroll-area">
+    <div class="slide-label fade-up" data-en="EXAMPLES IN CONTEXT" data-zh="语境示例"></div>
+    <h2 class="slide-title fade-up fade-up-d1">
+      <span data-en="Position in Action" data-zh="位置的实际运用"></span>
+    </h2>
+
+    <div class="toggle-panel fade-up fade-up-d2" id="exToggle">
+      <button class="toggle-opt active" onclick="showExPanel('preposed')" data-en="Preposed (Attention-Getter)" data-zh="前置（注意力吸引）"></button>
+      <button class="toggle-opt" onclick="showExPanel('postposed')" data-en="Postposed (Turn-Holding)" data-zh="后置（话轮保持）"></button>
+    </div>
+
+    <div id="panel-preposed" class="fade-up fade-up-d3">
+      <div class="two-col" style="gap:20px;">
+        <div>
+          <div class="example-block">
+            <div class="example-label" data-en="DIFFERENT SPEAKER · SPOKEN" data-zh="不同说话者 · 口语"></div>
+            <p><span class="speaker-a">Speaker A:</span> <span data-en="He said my name. He was right behind me." data-zh="他叫了我的名字。他就在我身后。"></span></p>
+            <p><span class="speaker-b">Speaker B:</span> <span data-en="Kid, I was standing next to you. There was nobody else there." data-zh="孩子，我就站在你旁边。那里没有别人。"></span></p>
+            <p><span class="speaker-a">Speaker A:</span> <span data-en="Mmm, maybe." data-zh="嗯，也许吧。"></span></p>
+            <p><span class="speaker-b">Speaker B:</span> <span data-en="Ah, <span class='highlight-iyam'>if you ask me</span>, I think he's just been working too hard." data-zh="啊，<span class='highlight-iyam'>if you ask me</span>，我觉得他只是工作太辛苦了。"></span></p>
+          </div>
+          <p style="font-size:13px; color:var(--text-muted); margin-top:8px;" data-en="Source: Star Wars Rebels" data-zh="来源：星球大战 反叛军"></p>
+        </div>
+        <div>
+          <div class="example-block">
+            <div class="example-label" data-en="DIFFERENT SPEAKER · ADVICE" data-zh="不同说话者 · 建议"></div>
+            <p><span class="speaker-a">Speaker A:</span> <span data-en="Instead of taking risks, I just keep my head down." data-zh="我不敢冒险，只是默默低头。"></span></p>
+            <p><span class="speaker-b">Speaker B:</span> <span data-en="Well, <span class='highlight-iyam'>if you ask me</span>, you ought to spend more time worrying about yourself and less time worrying about your brother." data-zh="嗯，<span class='highlight-iyam'>if you ask me</span>，你应该多关心自己，少操心你哥哥的事。"></span></p>
+          </div>
+          <p style="font-size:13px; color:var(--text-muted); margin-top:8px;" data-en="Source: The Goldbergs" data-zh="来源：金色年代"></p>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-postposed" style="display:none;" class="fade-up fade-up-d3">
+      <div class="two-col" style="gap:20px;">
+        <div>
+          <div class="example-block">
+            <div class="example-label" data-en="SAME SPEAKER · SPOKEN" data-zh="同一说话者 · 口语"></div>
+            <p><span class="speaker-b">Speaker B:</span> <span data-en="Cost me everything I made this week, but it was money well spent <span class='highlight-iyam'>if you ask me</span>. Even the mailman said so." data-zh="花了我这周所有收入，但这钱花得值 <span class='highlight-iyam'>if you ask me</span>。连邮递员都这么说。"></span></p>
+          </div>
+          <p style="font-size:13px; color:var(--text-muted); margin-top:8px;" data-en="Source: NOS4A2" data-zh="来源：NOS4A2"></p>
+        </div>
+        <div>
+          <div class="example-block">
+            <div class="example-label" data-en="SAME SPEAKER · WRITTEN" data-zh="同一说话者 · 书面语"></div>
+            <p><span class="speaker-b">Speaker B:</span> <span data-en="That is epic fail on the part of the market <span class='highlight-iyam'>if you ask me</span>. Right now the market is causing disincentives for cost effective health care." data-zh="这是市场的重大失败 <span class='highlight-iyam'>if you ask me</span>。目前市场正在制造不利于高效医疗的因素。"></span></p>
+          </div>
+          <p style="font-size:13px; color:var(--text-muted); margin-top:8px;" data-en="Source: The Baseline Scenario (blog)" data-zh="来源：The Baseline Scenario（博客）"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="quote-block fade-up fade-up-d4" style="margin-top:20px;">
+      <p class="quote-text" data-en="Preposed if you ask me in this scenario would disrupt the flow of the story line of the speaker given that the flow of information is usually managed by a speaker through declarative main clauses." data-zh="在这种情境下，前置的 if you ask me 会打断说话者的叙事流程，因为信息流通常由说话者通过陈述性主句来管理。"></p>
+      <div class="quote-source">— Olguín Martínez & Gries (2026), p. 21</div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 7: CONFUSION MATRIX & MODEL PERFORMANCE -->
+<div class="slide" data-slide="6">
+  <div class="slide-inner">
+    <div class="scroll-area">
+    <div class="slide-label fade-up" data-en="MODEL PERFORMANCE" data-zh="模型表现"></div>
+    <h2 class="slide-title fade-up fade-up-d1">
+      <span data-en="Prediction Accuracy" data-zh="预测准确率"></span>
+    </h2>
+    <div class="two-col fade-up fade-up-d2">
+      <div>
+        <h3 class="section-title" data-en="Confusion Matrix" data-zh="混淆矩阵"></h3>
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th data-en="Pred: Postposed" data-zh="预测：后置"></th>
+              <th data-en="Pred: Preposed" data-zh="预测：前置"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600;" data-en="Obs: Postposed" data-zh="实际：后置"></td>
+              <td><span style="color:var(--accent-teal); font-weight:700; font-size:18px;">351</span></td>
+              <td style="color:var(--accent-coral);">47</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;" data-en="Obs: Preposed" data-zh="实际：前置"></td>
+              <td style="color:var(--accent-coral);">42</td>
+              <td><span style="color:var(--accent-teal); font-weight:700; font-size:18px;">349</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="font-size:13px; color:var(--text-muted); margin-top:12px;" data-en="700 out of 789 correct predictions (88.72%)" data-zh="789个中正确预测700个（88.72%）"></p>
+
+        <div class="progress-item" style="margin-top:24px;" id="prog-accuracy">
+          <div class="progress-label">
+            <span data-en="Accuracy" data-zh="准确率">Accuracy</span>
+            <span>88.72%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="background:var(--accent-teal);" data-width="88.72"></div>
+          </div>
+        </div>
+        <div class="progress-item" id="prog-baseline">
+          <div class="progress-label">
+            <span data-en="Baseline (no-information)" data-zh="基线（无信息）"></span>
+            <span>50.44%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="background:var(--text-muted);" data-width="50.44"></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 class="section-title" data-en="Key Metrics" data-zh="关键指标"></h3>
+        <div class="card-grid" style="grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="card" style="padding:20px; text-align:center;">
+            <div style="font-size:32px; font-weight:900; color:var(--accent-teal); font-family:'Playfair Display',serif;">0.943</div>
+            <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">C-score</div>
+          </div>
+          <div class="card" style="padding:20px; text-align:center;">
+            <div style="font-size:32px; font-weight:900; color:var(--accent-blue); font-family:'Playfair Display',serif;">0.744</div>
+            <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">Cohen's κ</div>
+          </div>
+          <div class="card" style="padding:20px; text-align:center;">
+            <div style="font-size:32px; font-weight:900; color:var(--accent-gold); font-family:'Playfair Display',serif;">0.575</div>
+            <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">McFadden R²</div>
+          </div>
+          <div class="card" style="padding:20px; text-align:center;">
+            <div style="font-size:32px; font-weight:900; color:var(--accent-purple); font-family:'Playfair Display',serif;">p&lt;10⁻¹¹⁵</div>
+            <div style="font-size:12px; color:var(--text-muted); margin-top:4px;" data-en="vs. baseline" data-zh="对比基线"></div>
+          </div>
+        </div>
+        <div class="quote-block" style="margin-top:16px;">
+          <p class="quote-text" data-en="The model achieved an accuracy of 700/789, which corresponds to 88.72% and which is significantly better than the baseline of 50.44%." data-zh="模型达到了700/789的准确率，即88.72%，显著优于50.44%的基线水平。"></p>
+          <div class="quote-source">— Olguín Martínez & Gries (2026), p. 18</div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 8: VERB PROTOTYPES -->
+<div class="slide" data-slide="7">
+  <div class="slide-inner">
+    <div class="scroll-area">
+    <div class="slide-label fade-up" data-en="PROTOTYPES" data-zh="原型分析"></div>
+    <h2 class="slide-title fade-up fade-up-d1">
+      <span data-en="Verb Lemma Prototypes" data-zh="动词词元原型"></span>
+    </h2>
+
+    <div class="toggle-panel fade-up fade-up-d2" id="verbToggle">
+      <button class="toggle-opt active" onclick="showVerbPanel('preposed')" data-en="Preposed Prototype" data-zh="前置原型"></button>
+      <button class="toggle-opt" onclick="showVerbPanel('postposed')" data-en="Postposed Prototype" data-zh="后置原型"></button>
+    </div>
+
+    <div class="two-col fade-up fade-up-d3">
+      <div id="verb-panel-preposed">
+        <div class="card" style="border-top:3px solid var(--accent-teal);">
+          <h3 class="section-title" data-en="🟢 Preposed Prototype" data-zh="🟢 前置原型"></h3>
+          <p style="font-size:14px; color:var(--text-secondary); margin-bottom:16px;" data-en="Written discourse + Different speaker + These verbs:<br><em>(Predicted prob. of preposed &gt; 96.87%)</em>" data-zh="书面语 + 不同说话者 + 以下动词：<br><em>（前置预测概率 &gt; 96.87%）</em>"></p>
+          <div class="verb-cloud">
+            <span class="verb-chip" style="background:rgba(45,212,191,0.2); color:var(--accent-teal);">say ★</span>
+            <span class="verb-chip" style="background:rgba(45,212,191,0.15); color:var(--accent-teal);">like</span>
+            <span class="verb-chip" style="background:rgba(45,212,191,0.15); color:var(--accent-teal);">need</span>
+            <span class="verb-chip" style="background:rgba(45,212,191,0.15); color:var(--accent-teal);">blame</span>
+            <span class="verb-chip" style="background:rgba(45,212,191,0.15); color:var(--accent-teal);">side</span>
+            <span class="verb-chip" style="background:rgba(45,212,191,0.12); color:var(--accent-teal);">think</span>
+            <span class="verb-chip" style="background:rgba(45,212,191,0.12); color:var(--accent-teal);">screw</span>
+            <span class="verb-chip" style="background:rgba(45,212,191,0.12); color:var(--accent-teal);">hear</span>
+            <span class="verb-chip" style="background:rgba(45,212,191,0.10); color:var(--accent-teal);">guess</span>
+          </div>
+          <div style="margin-top:16px;">
+            <p style="font-size:13px; color:var(--text-muted);" data-en="Functional categories:" data-zh="功能类别："></p>
+            <div style="margin-top:8px;">
+              <span class="tag tag-teal" data-en="Agreement (like, side)" data-zh="一致性（like, side）"></span>
+              <span class="tag tag-coral" data-en="Accountability (blame, screw)" data-zh="问责性（blame, screw）"></span>
+              <span class="tag tag-gold" data-en="Non-dictatorial (need)" data-zh="非命令性（need）"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="verb-panel-postposed">
+        <div class="card" style="border-top:3px solid var(--accent-coral);">
+          <h3 class="section-title" data-en="🔴 Postposed Prototype" data-zh="🔴 后置原型"></h3>
+          <p style="font-size:14px; color:var(--text-secondary); margin-bottom:16px;" data-en="Written discourse + Same speaker + These verbs:<br><em>(Predicted prob. of postposed &gt; 95%)</em>" data-zh="书面语 + 同一说话者 + 以下动词：<br><em>（后置预测概率 &gt; 95%）</em>"></p>
+          <div class="verb-cloud">
+            <span class="verb-chip" style="background:rgba(255,107,107,0.2); color:var(--accent-coral);">feel ★</span>
+            <span class="verb-chip" style="background:rgba(255,107,107,0.15); color:var(--accent-coral);">look</span>
+            <span class="verb-chip" style="background:rgba(255,107,107,0.15); color:var(--accent-coral);">sound</span>
+            <span class="verb-chip" style="background:rgba(255,107,107,0.15); color:var(--accent-coral);">seem</span>
+            <span class="verb-chip" style="background:rgba(255,107,107,0.12); color:var(--accent-coral);">compensate</span>
+            <span class="verb-chip" style="background:rgba(255,107,107,0.12); color:var(--accent-coral);">deserve</span>
+            <span class="verb-chip" style="background:rgba(255,107,107,0.10); color:var(--accent-coral);">become</span>
+            <span class="verb-chip" style="background:rgba(255,107,107,0.10); color:var(--accent-coral);">get</span>
+          </div>
+          <div style="margin-top:16px;">
+            <p style="font-size:13px; color:var(--text-muted);" data-en="Functional categories:" data-zh="功能类别："></p>
+            <div style="margin-top:8px;">
+              <span class="tag tag-purple" data-en="Epistemic judgment (feel, look, sound, seem)" data-zh="认知判断（feel, look, sound, seem）"></span>
+              <span class="tag tag-blue" data-en="Assessment (compensate, deserve, become, get)" data-zh="评价（compensate, deserve, become, get）"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="quote-block fade-up fade-up-d4" style="margin-top:20px;">
+      <p class="quote-text" data-en="Preposed if you ask me is an attention-getter that is not only reserved for getting an addressee to do something (advice), but also for other types of evaluative functions that do not get an addressee to do something." data-zh="前置的 if you ask me 是一种注意力吸引手段，不仅用于让对方采取行动（建议），还用于其他类型的评价功能，这些功能并不要求对方采取行动。"></p>
+      <div class="quote-source">— Olguín Martínez & Gries (2026), p. 23</div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 9: SEMANTIC COHERENCE -->
+<div class="slide" data-slide="8">
+  <div class="slide-inner">
+    <div class="scroll-area">
+    <div class="slide-label fade-up" data-en="IMPLICATIONS" data-zh="研究启示"></div>
+    <h2 class="slide-title fade-up fade-up-d1">
+      <span data-en="Theoretical Implications" data-zh="理论意义"></span>
+    </h2>
+    <div class="two-col fade-up fade-up-d2">
+      <div>
+        <div class="impl-item">
+          <div class="impl-num" style="background:rgba(45,212,191,0.15); color:var(--accent-teal);">1</div>
+          <div>
+            <h3 class="section-title" data-en="Turn-Taking Revisited" data-zh="话轮转换的新视角"></h3>
+            <p style="font-size:14px; color:var(--text-secondary); line-height:1.65;" data-en="Unlike previous studies focusing on <strong>transition times</strong> (≈200ms gaps), this study shows how <strong>syntactic factors</strong> trigger specific conversational patterns, discourse-pragmatic functions, and lexical choices." data-zh="与以往关注<strong>转换时间</strong>（约200毫秒间隔）的研究不同，本研究揭示了<strong>句法因素</strong>如何触发特定的会话模式、语篇语用功能和词汇选择。"></p>
+          </div>
+        </div>
+        <div class="impl-item">
+          <div class="impl-num" style="background:rgba(251,191,36,0.15); color:var(--accent-gold);">2</div>
+          <div>
+            <h3 class="section-title" data-en="Semantic Coherence Principle" data-zh="语义连贯原则"></h3>
+            <p style="font-size:14px; color:var(--text-secondary); line-height:1.65;" data-en="The meaning of a construction harmonizes with its typical lexical elements (Goldberg 1995). This study shows that <strong>additional constructional properties</strong> (mode, speaker) further shape which verbs fill specific slots." data-zh="构式的意义与其典型词汇元素和谐共存（Goldberg 1995）。本研究表明，<strong>额外的构式属性</strong>（模式、说话者）进一步影响了哪些动词填充特定槽位。"></p>
+          </div>
+        </div>
+        <div class="impl-item">
+          <div class="impl-num" style="background:rgba(167,139,250,0.15); color:var(--accent-purple);">3</div>
+          <div>
+            <h3 class="section-title" data-en="Challenge to Formal Linguistics" data-zh="对形式语言学的挑战"></h3>
+            <p style="font-size:14px; color:var(--text-secondary); line-height:1.65;" data-en="These results challenge theories maintaining a strict distinction between lexicon and syntax, supporting the Usage-Based Construction Grammar view of <strong>non-modularity</strong>." data-zh="这些结果对坚持词库与句法严格区分的理论构成挑战，支持基于使用的构式语法的<strong>非模块化</strong>观点。"></p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="quote-block">
+          <p class="quote-text" data-en="The findings offer a novel perspective on a long-standing theoretical question: how do syntax, semantics, discourse, conversation, and the lexicon interact within a unified model of linguistic architecture?" data-zh="这些发现为一个长期存在的理论问题提供了新视角：句法、语义、语篇、会话和词汇如何在统一的语言架构模型中相互作用？"></p>
+          <div class="quote-source">— Olguín Martínez & Gries (2026), p. 26</div>
+        </div>
+        <div class="chart-container" style="margin-top:20px;">
+          <h3 class="section-title" style="text-align:center;" data-en="Multi-Domain Interaction" data-zh="多领域交互"></h3>
+          <div class="chart-wrap" style="height:240px;">
+            <canvas id="chart-radar"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 10: CONCLUSION -->
+<div class="slide" data-slide="9">
+  <div class="slide-inner">
+    <div class="scroll-area">
+    <div class="slide-label fade-up" data-en="CONCLUSION" data-zh="结论"></div>
+    <h2 class="slide-title fade-up fade-up-d1">
+      <span data-en="Summary & Future Directions" data-zh="总结与未来方向"></span>
+    </h2>
+    <div class="two-col fade-up fade-up-d2">
+      <div>
+        <h3 class="section-title" style="margin-bottom:16px;" data-en="🎯 Key Takeaways" data-zh="🎯 核心要点"></h3>
+        <div class="card" style="margin-bottom:12px; border-left:3px solid var(--accent-teal);">
+          <p style="font-size:14px; color:var(--text-secondary); line-height:1.65;" data-en="<strong>Different speaker → Preposed:</strong> Functions as an <em>attention-getter</em>, orienting someone to a common focus — true across both spoken and written discourse." data-zh="<strong>不同说话者 → 前置：</strong>作为<em>注意力吸引手段</em>，引导他人关注共同焦点——在口语和书面语中均如此。"></p>
+        </div>
+        <div class="card" style="margin-bottom:12px; border-left:3px solid var(--accent-coral);">
+          <p style="font-size:14px; color:var(--text-secondary); line-height:1.65;" data-en="<strong>Same speaker → Postposed:</strong> Helps <em>prolong the turn</em>; postposed in spoken is likely, in written is <em>even more likely</em>." data-zh="<strong>同一说话者 → 后置：</strong>帮助<em>延长话轮</em>；在口语中较可能，在书面语中<em>更加可能</em>。"></p>
+        </div>
+        <div class="card" style="margin-bottom:12px; border-left:3px solid var(--accent-gold);">
+          <p style="font-size:14px; color:var(--text-secondary); line-height:1.65;" data-en="<strong>Verb prototypes</strong> reveal coherent filler-slot relations: epistemic verbs for postposed, agreement/accountability verbs for preposed." data-zh="<strong>动词原型</strong>揭示了连贯的填充-槽位关系：认知动词倾向后置，一致性/问责性动词倾向前置。"></p>
+        </div>
+      </div>
+      <div>
+        <h3 class="section-title" style="margin-bottom:16px;" data-en="🔮 Future Research" data-zh="🔮 未来研究"></h3>
+        <div class="card" style="margin-bottom:12px;">
+          <div class="card-icon" style="background:rgba(96,165,250,0.12); color:var(--accent-blue); width:36px; height:36px; font-size:18px;">🎵</div>
+          <h3 class="section-title" data-en="Prosody" data-zh="韵律"></h3>
+          <p style="font-size:13px; color:var(--text-muted);" data-en="How does intonation interact with the position and function of if you ask me?" data-zh="语调如何与 if you ask me 的位置和功能相互作用？"></p>
+        </div>
+        <div class="card" style="margin-bottom:12px;">
+          <div class="card-icon" style="background:rgba(167,139,250,0.12); color:var(--accent-purple); width:36px; height:36px; font-size:18px;">👥</div>
+          <h3 class="section-title" data-en="Pronoun Variation" data-zh="代词变体"></h3>
+          <p style="font-size:13px; color:var(--text-muted);" data-en='Does "if you ask us" show similar interaction patterns?' data-zh='"if you ask us" 是否表现出类似的交互模式？'></p>
+        </div>
+
+        <div class="quote-block" style="margin-top:16px;">
+          <p class="quote-text" data-en="These results pose a challenge for formal linguistic theories in which a strict distinction between lexicon and syntax has traditionally played a central role." data-zh="这些结果对形式语言学理论构成挑战，在这些理论中，词库与句法之间的严格区分传统上扮演着核心角色。"></p>
+          <div class="quote-source">— Olguín Martínez & Gries (2026), p. 26</div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /viewport -->
+
+<!-- NAVIGATION BAR -->
+<div class="nav-bar">
+  <button class="nav-btn" id="prevBtn" onclick="goSlide(currentSlide-1)">◀</button>
+  <div class="slide-dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn" onclick="goSlide(currentSlide+1)">▶</button>
+  <div class="slide-counter" id="counter">1 / 10</div>
+</div>
+
+<script>
+// ===== SLIDE ENGINE =====
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+let currentLang = 'en';
+
+// Build dots
+const dotsEl = document.getElementById('dots');
+for (let i = 0; i < totalSlides; i++) {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => goSlide(i);
+  dotsEl.appendChild(d);
+}
+
+function goSlide(n) {
+  if (n < 0 || n >= totalSlides) return;
+  const prev = currentSlide;
+  currentSlide = n;
+
+  slides.forEach((s, i) => {
+    s.classList.remove('active', 'exit-left');
+    if (i < n) s.classList.add('exit-left');
+  });
+  slides[n].classList.add('active');
+
+  // dots
+  document.querySelectorAll('.dot').forEach((d, i) => {
+    d.classList.toggle('active', i === n);
+  });
+
+  document.getElementById('counter').textContent = (n + 1) + ' / ' + totalSlides;
+  document.getElementById('prevBtn').disabled = n === 0;
+  document.getElementById('nextBtn').disabled = n === totalSlides - 1;
+
+  // Animate progress bars on slide 6
+  if (n === 6) animateProgress();
+  // Init charts if needed
+  if (n === 4) initModeChart();
+  if (n === 8) initRadarChart();
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goSlide(currentSlide + 1);
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goSlide(currentSlide - 1);
+});
+
+// ===== LANGUAGE TOGGLE =====
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim() === (lang === 'en' ? 'EN' : '中文'));
+  });
+  document.querySelectorAll('[data-en]').forEach(el => {
+    const text = el.getAttribute('data-' + lang);
+    if (text !== null) el.innerHTML = text;
+  });
+}
+
+// ===== EXAMPLE TOGGLE =====
+function showExPanel(type) {
+  document.getElementById('panel-preposed').style.display = type === 'preposed' ? '' : 'none';
+  document.getElementById('panel-postposed').style.display = type === 'postposed' ? '' : 'none';
+  document.querySelectorAll('#exToggle .toggle-opt').forEach((b, i) => {
+    b.classList.toggle('active', (i === 0 && type === 'preposed') || (i === 1 && type === 'postposed'));
+  });
+}
+
+function showVerbPanel(type) {
+  // Just toggle active button styling
+  document.querySelectorAll('#verbToggle .toggle-opt').forEach((b, i) => {
+    b.classList.toggle('active', (i === 0 && type === 'preposed') || (i === 1 && type === 'postposed'));
+  });
+  // Highlight corresponding panel
+  document.getElementById('verb-panel-preposed').style.opacity = type === 'preposed' ? '1' : '0.35';
+  document.getElementById('verb-panel-postposed').style.opacity = type === 'postposed' ? '1' : '0.35';
+}
+
+// ===== PROGRESS BARS =====
+function animateProgress() {
+  setTimeout(() => {
+    document.querySelectorAll('.progress-fill').forEach(bar => {
+      bar.style.width = bar.dataset.width + '%';
+    });
+  }, 300);
+}
+
+// ===== CHARTS =====
+let modeChartInit = false;
+function initModeChart() {
+  if (modeChartInit) return;
+  modeChartInit = true;
+  const ctx = document.getElementById('chart-mode-speaker').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Spoken\nDiff. Speaker', 'Written\nDiff. Speaker', 'Spoken\nSame Speaker', 'Written\nSame Speaker'],
+      datasets: [{
+        label: 'P(Preposed)',
+        data: [0.90, 0.95, 0.32, 0.10],
+        backgroundColor: [
+          'rgba(45,212,191,0.7)',
+          'rgba(45,212,191,0.9)',
+          'rgba(255,107,107,0.5)',
+          'rgba(255,107,107,0.8)'
+        ],
+        borderColor: [
+          'rgba(45,212,191,1)',
+          'rgba(45,212,191,1)',
+          'rgba(255,107,107,1)',
+          'rgba(255,107,107,1)'
+        ],
+        borderWidth: 2,
+        borderRadius: 8,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => 'P(preposed) = ' + (ctx.raw * 100).toFixed(1) + '%'
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true, max: 1,
+          title: { display: true, text: 'P(Preposed)', color: '#94a3b8', font: { size: 12 } },
+          ticks: { color: '#64748b', callback: v => (v * 100) + '%' },
+          grid: { color: 'rgba(255,255,255,0.05)' }
+        },
+        x: {
+          ticks: { color: '#94a3b8', font: { size: 11 } },
+          grid: { display: false }
+        }
+      }
+    }
+  });
+}
+
+let radarChartInit = false;
+function initRadarChart() {
+  if (radarChartInit) return;
+  radarChartInit = true;
+  const ctx = document.getElementById('chart-radar').getContext('2d');
+  new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['Syntax', 'Speaker', 'Mode', 'Lexicon', 'Function'],
+      datasets: [{
+        label: 'Preposed',
+        data: [0.9, 0.95, 0.7, 0.8, 0.6],
+        backgroundColor: 'rgba(45,212,191,0.15)',
+        borderColor: 'rgba(45,212,191,0.8)',
+        pointBackgroundColor: 'rgba(45,212,191,1)',
+        borderWidth: 2,
+      }, {
+        label: 'Postposed',
+        data: [0.9, 0.95, 0.85, 0.75, 0.55],
+        backgroundColor: 'rgba(255,107,107,0.12)',
+        borderColor: 'rgba(255,107,107,0.8)',
+        pointBackgroundColor: 'rgba(255,107,107,1)',
+        borderWidth: 2,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: { color: '#94a3b8', font: { size: 12 } }
+        }
+      },
+      scales: {
+        r: {
+          beginAtZero: true, max: 1,
+          ticks: { display: false },
+          grid: { color: 'rgba(255,255,255,0.06)' },
+          pointLabels: { color: '#94a3b8', font: { size: 12 } },
+          angleLines: { color: 'rgba(255,255,255,0.06)' }
+        }
+      }
+    }
+  });
+}
+
+// Init first slide
+setLang('en');
+goSlide(0);
+</script>
+</body>
+</html>
